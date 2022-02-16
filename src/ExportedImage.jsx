@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 // Dynamic loading with SSR off is necessary as there might be a race condition otherwise,
 // when the image loaded and errored before the JS error handler is attached
 const Image = dynamic(() => import("next/image"), { ssr: false });
-import { useState } from "react";
+import React, { useState } from "react";
 
 const splitFilePath = ({ filePath }) => {
   const filenameWithExtension = filePath.split("\\").pop().split("/").pop();
@@ -39,7 +39,7 @@ const fallbackLoader = ({ src }) => {
   return src;
 };
 
-export default function ExportedImage({ src, ...rest }) {
+function ExportedImage({ src, ...rest }) {
   const [imageError, setImageError] = useState(false);
 
   return (
@@ -54,3 +54,4 @@ export default function ExportedImage({ src, ...rest }) {
     />
   );
 }
+export default ExportedImage;
