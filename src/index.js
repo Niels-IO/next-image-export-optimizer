@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const fs = require("fs");
 const sharp = require("sharp");
 const { createHash } = require("crypto");
@@ -16,11 +18,13 @@ function getHash(items) {
   return hash.digest("base64").replace(/\//g, "-");
 }
 const nextImageExportOptimizer = async function () {
-  console.log("---- next-optimize-images: Begin with optimization... ---- ");
+  console.log(
+    "---- next-image-export-optimizer: Begin with optimization... ---- "
+  );
 
   // Default values
-  let imageFolderPath = "../public/images";
-  let exportFolderPath = "../build";
+  let imageFolderPath = "public/images";
+  let exportFolderPath = "build";
   let deviceSizes = [640, 750, 828, 1080, 1200, 1920, 2048, 3840];
   let imageSizes = [16, 32, 48, 64, 96, 128, 256, 384];
   let quality = 75;
@@ -28,7 +32,7 @@ const nextImageExportOptimizer = async function () {
 
   // Read in the configuration parameters
   try {
-    const nextjsConfig = require(`../next.config.js`);
+    const nextjsConfig = require(`${process.cwd()}/next.config.js`);
 
     if (nextjsConfig.images?.nextImageExportOptimizer?.imageFolderPath) {
       imageFolderPath =
@@ -64,7 +68,7 @@ const nextImageExportOptimizer = async function () {
 
   // Create or read the JSON containing the hashes of the images in the image directory
   let imageHashes = {};
-  const hashFilePath = `${imageFolderPath}/next-optimize-images-hashes.json`;
+  const hashFilePath = `${imageFolderPath}/next-image-export-optimizer-hashes.json`;
   try {
     let rawData = fs.readFileSync(hashFilePath);
     imageHashes = JSON.parse(rawData);
@@ -240,7 +244,7 @@ const nextImageExportOptimizer = async function () {
       `${folderNameForOptImagesInBuildFolder}/${filename}`
     );
   }
-  console.log("---- next-optimize-images: Done ---- ");
+  console.log("---- next-image-export-optimizer: Done ---- ");
 };
 
 if (require.main === module) {

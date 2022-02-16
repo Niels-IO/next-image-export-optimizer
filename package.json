@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Optimizes all static images for Next.js static HTML export functionality",
   "main": "src/index.js",
+  "bin": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
