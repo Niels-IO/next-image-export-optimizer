@@ -1,2 +1,0 @@
-
-//# sourceMappingURL=ExtractedImage.js.map
