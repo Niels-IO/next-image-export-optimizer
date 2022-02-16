@@ -8,6 +8,10 @@
     "build": "npx swc ./src/ExportedImage.jsx -o .dist/ExportedImage.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Niels-IO/next-image-export-optimizer"
+  },
   "keywords": [
     "next.js",
     "next",

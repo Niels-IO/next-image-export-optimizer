@@ -10,7 +10,8 @@ Use Next.js advanced \<Image/> component with the static export functionality. O
 
 This library makes a few assumptions:
 
-- All images are stored inside the public folder like public/images
+- All images that should be optimized are stored inside the public folder like public/images
+- Currently only local images are supported for optimization
 
 ## Installation
 
@@ -18,7 +19,7 @@ This library makes a few assumptions:
 npm install next-image-export-optimized
 ```
 
-Configure the library in your Next.js configuration file:
+Configure the library in your **Next.js** configuration file:
 
 ```javascript
 // next.config.js
@@ -78,9 +79,9 @@ You can see a live example of the use of this library at [reactapp.dev/next-imag
 
 ## How it works
 
-The \<ExportedImage /> component of this library wraps around the \<Image /> component of Next.js. Using the custom loader feature, it generates a [srcset](https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images) for different resolutions of the original image. The browser can then load the correct size based on the current viewport size.
+The **\<ExportedImage />** component of this library wraps around the **\<Image />** component of Next.js. Using the custom loader feature, it generates a [srcset](https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images) for different resolutions of the original image. The browser can then load the correct size based on the current viewport size.
 
-In the development mode, the \<ExportedImage /> component falls back to the original image.
+In the development mode, the **\<ExportedImage />** component falls back to the original image.
 
 To get the optimized images you alter the Next.js export command from
 
