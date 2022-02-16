@@ -251,3 +251,5 @@ if (require.main === module) {
   nextImageExportOptimizer();
 }
 module.exports = nextImageExportOptimizer;
+
+export { default as ExportedImage } from "./ExportedImage";
