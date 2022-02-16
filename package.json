@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "bin": "src/optimizeImages.js",
   "scripts": {
-    "build": "babel src -d lib",
+    "build": "babel src/ExportedImage.jsx -d lib",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -28,7 +28,9 @@
   "devDependencies": {
     "@babel/cli": "^7.17.3",
     "@babel/core": "^7.17.4",
+    "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
+    "babel-preset-env": "^1.7.0",
     "cli-progress": "^3.10.0",
     "sharp": "^0.30.1"
   }
