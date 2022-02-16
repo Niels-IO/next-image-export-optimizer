@@ -1,6 +1,6 @@
 {
   "name": "next-image-export-optimizer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Optimizes all static images for Next.js static HTML export functionality",
   "main": "src/index.js",
   "bin": "src/index.js",
