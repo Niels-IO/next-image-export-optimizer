@@ -2,10 +2,10 @@
   "name": "next-image-export-optimizer",
   "version": "0.2.3",
   "description": "Optimizes all static images for Next.js static HTML export functionality",
-  "main": "src/index.js",
+  "main": "output.js",
   "bin": "src/optimizeImages.js",
   "scripts": {
-    "build": "babel src/ExportedImage.jsx -d lib",
+    "build": "npx swc ./src/ExtractedImage.jsx -o ExtractedImage.js && npx swc ./src/index.js -o index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -26,11 +26,8 @@
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.17.3",
-    "@babel/core": "^7.17.4",
-    "@babel/preset-env": "^7.16.11",
-    "@babel/preset-react": "^7.16.7",
-    "babel-preset-env": "^1.7.0",
+    "@swc/cli": "^0.1.55",
+    "@swc/core": "^1.2.141",
     "cli-progress": "^3.10.0",
     "sharp": "^0.30.1"
   }
