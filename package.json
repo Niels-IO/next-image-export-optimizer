@@ -1,0 +1,24 @@
+{
+  "name": "next-optimize-images",
+  "version": "0.0.1",
+  "description": "Optimizes all static images for next.js static HTML export functionality",
+  "main": "next-optimize-images.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "next.js",
+    "next",
+    "static",
+    "export",
+    "image",
+    "optimization",
+    "webp"
+  ],
+  "author": "Niels Grafen",
+  "license": "MIT",
+  "dependencies": {
+    "cli-progress": "^3.10.0",
+    "sharp": "^0.30.1"
+  }
+}
