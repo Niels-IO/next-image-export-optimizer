@@ -54,4 +54,4 @@ function ExportedImage({ src, ...rest }) {
     />
   );
 }
-export default ExportedImage;
+module.exports = ExportedImage;

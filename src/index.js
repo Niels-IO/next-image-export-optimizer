@@ -1,1 +1,1 @@
-export { default as ExportedImage } from "../output";
+export { default as ExportedImage } from "../lib/ExportedImage";
