@@ -180,7 +180,17 @@ function ExportedImage(_param) {
     }));
 }
 ExportedImage.propTypes = {
-    src: _propTypes.default.string
+    src: _propTypes.default.string.isRequired,
+    width: _propTypes.default.number,
+    height: _propTypes.default.number,
+    layout: _propTypes.default.string,
+    sizes: _propTypes.default.string,
+    priority: _propTypes.default.bool,
+    placeholder: _propTypes.default.string,
+    objectFit: _propTypes.default.string,
+    objectPosition: _propTypes.default.string,
+    onLoadingComplete: _propTypes.default.func,
+    blurDataURL: _propTypes.default.string
 };
 var _default = ExportedImage;
 exports.default = _default;
