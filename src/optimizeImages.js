@@ -38,6 +38,10 @@ const nextImageExportOptimizer = async function () {
       imageFolderPath =
         nextjsConfig.images?.nextImageExportOptimizer.imageFolderPath;
     }
+    if (nextjsConfig.images?.nextImageExportOptimizer?.exportFolderPath) {
+      exportFolderPath =
+        nextjsConfig.images?.nextImageExportOptimizer.exportFolderPath;
+    }
     if (nextjsConfig.images?.nextImageExportOptimizer?.deviceSizes) {
       deviceSizes = nextjsConfig.images?.nextImageExportOptimizer.deviceSizes;
     }
