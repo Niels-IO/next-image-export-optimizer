@@ -5,6 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _dynamic = _interopRequireDefault(require("next/dynamic"));
 var _react = _interopRequireWildcard(require("react"));
+var _propTypes = _interopRequireDefault(require("prop-types"));
 function _arrayLikeToArray(arr, len) {
     if (len == null || len > arr.length) len = arr.length;
     for(var i = 0, arr2 = new Array(len); i < len; i++)arr2[i] = arr[i];
@@ -178,6 +179,9 @@ function ExportedImage(_param) {
         }
     }));
 }
+ExportedImage.propTypes = {
+    src: _propTypes.default.string
+};
 var _default = ExportedImage;
 exports.default = _default;
 

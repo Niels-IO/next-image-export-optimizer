@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 // when the image loaded and errored before the JS error handler is attached
 const Image = dynamic(() => import("next/image"), { ssr: false });
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 
 const splitFilePath = ({ filePath }) => {
   const filenameWithExtension = filePath.split("\\").pop().split("/").pop();
@@ -60,4 +61,6 @@ function ExportedImage({ src, ...rest }) {
     />
   );
 }
+
+ExportedImage.propTypes = { src: PropTypes.string };
 export default ExportedImage;
