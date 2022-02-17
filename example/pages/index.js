@@ -23,6 +23,12 @@ export default function Home() {
           width={500}
           height={300}
         />
+        <ExportedImage
+          src="vercel.svg"
+          layout="fixed"
+          width={500}
+          height={300}
+        />
       </main>
     </div>
   );

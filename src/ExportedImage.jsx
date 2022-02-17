@@ -23,7 +23,13 @@ const splitFilePath = ({ filePath }) => {
 
 const optimizedLoader = ({ src, width }) => {
   const { filename, path, extension } = splitFilePath({ filePath: src });
-
+  if (
+    !["JPG", "JPEG", "WEBP", "PNG", "AVIF"].includes(extension.toUpperCase())
+  ) {
+    // The images has an unsupported extension
+    // We will return the src
+    return src;
+  }
   // If the images are stored as WEBP by the package, then we should change
   // the extension to WEBP to load them correctly
   let processedExtension = extension;
