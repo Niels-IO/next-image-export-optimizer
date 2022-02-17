@@ -16,18 +16,27 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Next-Image-Export-Optimizer</h1>
-
-        <ExportedImage
-          src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
-          layout="fixed"
-          width={500}
-          height={300}
-        />
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            height: "200px",
+            marginBottom: "3rem",
+          }}
+        >
+          <ExportedImage
+            src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
+            layout="fill"
+            objectFit="cover"
+            // width={500}
+            // height={300}
+          />
+        </div>
         <ExportedImage
           src="vercel.svg"
           layout="fixed"
-          width={500}
-          height={300}
+          width={300}
+          height={100}
         />
       </main>
     </div>
