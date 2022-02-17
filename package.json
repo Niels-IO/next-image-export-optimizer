@@ -29,7 +29,7 @@
     "sharp": "^0.30.1"
   },
   "peerDependencies": {
-    "next": ">12.x"
+    "next": "12.x"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.55",
