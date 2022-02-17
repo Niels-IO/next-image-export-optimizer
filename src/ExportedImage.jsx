@@ -64,6 +64,7 @@ function ExportedImage({ src, ...rest }) {
 
 ExportedImage.propTypes = {
   src: PropTypes.string.isRequired,
+  alt: PropTypes.string.isRequired,
   width: PropTypes.number,
   height: PropTypes.number,
   layout: PropTypes.string,

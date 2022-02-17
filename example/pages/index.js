@@ -1,6 +1,7 @@
 import Head from "next/head";
 import ExportedImage from "next-image-export-optimizer";
 import styles from "../styles/Home.module.css";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -28,12 +29,19 @@ export default function Home() {
             src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
             layout="fill"
             objectFit="cover"
-            // width={500}
-            // height={300}
+            priority={true}
           />
         </div>
         <ExportedImage
           src="vercel.svg"
+          layout="fixed"
+          width={300}
+          height={100}
+          alt="VercelLogo"
+        />
+        <Image
+          alt="VercelLogo"
+          src="/vercel.svg"
           layout="fixed"
           width={300}
           height={100}

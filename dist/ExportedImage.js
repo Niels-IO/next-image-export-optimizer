@@ -181,6 +181,7 @@ function ExportedImage(_param) {
 }
 ExportedImage.propTypes = {
     src: _propTypes.default.string.isRequired,
+    alt: _propTypes.default.string.isRequired,
     width: _propTypes.default.number,
     height: _propTypes.default.number,
     layout: _propTypes.default.string,
