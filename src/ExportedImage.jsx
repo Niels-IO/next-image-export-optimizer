@@ -62,5 +62,17 @@ function ExportedImage({ src, ...rest }) {
   );
 }
 
-ExportedImage.propTypes = { src: PropTypes.string };
+ExportedImage.propTypes = {
+  src: PropTypes.string.isRequired,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  layout: PropTypes.string,
+  sizes: PropTypes.string, //PropTypes.arrayOf(PropTypes.number),
+  priority: PropTypes.bool,
+  placeholder: PropTypes.string,
+  objectFit: PropTypes.string,
+  objectPosition: PropTypes.string,
+  onLoadingComplete: PropTypes.func,
+  blurDataURL: PropTypes.string,
+};
 export default ExportedImage;
