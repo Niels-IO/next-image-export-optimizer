@@ -24,6 +24,10 @@
   ],
   "author": "Niels Grafen",
   "license": "MIT",
+  "dependencies": {
+    "cli-progress": "^3.10.0",
+    "sharp": "^0.30.1"
+  },
   "peerDependencies": {
     "next": "^12.0.7",
     "react": "^17.0.2",
@@ -31,8 +35,6 @@
   },
   "devDependencies": {
     "@swc/cli": "^0.1.55",
-    "@swc/core": "^1.2.141",
-    "cli-progress": "^3.10.0",
-    "sharp": "^0.30.1"
+    "@swc/core": "^1.2.141"
   }
 }
