@@ -159,8 +159,10 @@ const nextImageExportOptimizer = async function () {
       const width = widths[indexWidth];
 
       const filename = path.parse(file).name;
+      if (storePicturesInWEBP) {
+        extension = "WEBP";
+      }
       const optimizedFileNameAndPath = `${imageFolderPath}/nextImageExportOptimizer/${filename}-opt-${width}.${extension.toUpperCase()}`;
-
       // Check if file is already in hash and specific size and quality is present in the
       // opt file directory
       if (file in imageHashes && fs.existsSync(optimizedFileNameAndPath)) {
@@ -199,9 +201,6 @@ const nextImageExportOptimizer = async function () {
         transformer.png({ quality });
       } else if (extension === "JPEG" || extension === "JPG") {
         transformer.jpeg({ quality });
-      }
-      if (storePicturesInWEBP) {
-        extension = "WEBP";
       }
 
       // Write the optimized image to the file system
