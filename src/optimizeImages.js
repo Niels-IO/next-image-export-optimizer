@@ -178,6 +178,8 @@ const nextImageExportOptimizer = async function () {
         progressBar.increment({
           sizeOfGeneratedImages: sizeOfGeneratedImages.toFixed(1),
         });
+        allGeneratedImages.push(optimizedFileNameAndPath);
+
         continue;
       }
       // Begin sharp transformation logic
