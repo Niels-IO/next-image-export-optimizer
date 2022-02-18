@@ -8,7 +8,7 @@
     "build": "npx swc ./src/ExportedImage.jsx -o ./dist/ExportedImage.js",
     "test": "jest",
     "test:e2e": "playwright test",
-    "prepublishOnly": "npm run build && npm test && npm test:e2e"
+    "prepublishOnly": "npm run build && npm test && npm run test:e2e"
   },
   "repository": {
     "type": "git",
