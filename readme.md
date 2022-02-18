@@ -25,6 +25,7 @@ Configure the library in your **Next.js** configuration file:
 // next.config.js
 module.exports = {
   images: {
+    loader: "custom",
     nextImageExportOptimizer: {
       imageFolderPath: "public/images",
       exportFolderPath: "out",

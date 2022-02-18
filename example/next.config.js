@@ -1,5 +1,6 @@
 module.exports = {
   images: {
+    loader: "custom",
     nextImageExportOptimizer: {
       imageFolderPath: "public/images",
       exportFolderPath: "out",
