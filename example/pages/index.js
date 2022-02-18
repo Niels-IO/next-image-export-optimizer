@@ -20,7 +20,7 @@ export default function Home() {
         <div
           style={{
             position: "relative",
-            width: "100%",
+            width: "50%",
             height: "200px",
             marginBottom: "3rem",
           }}
@@ -28,6 +28,7 @@ export default function Home() {
           <ExportedImage
             src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
             layout="fill"
+            id="test_image"
             objectFit="cover"
             priority={true}
           />
@@ -38,13 +39,6 @@ export default function Home() {
           width={300}
           height={100}
           alt="VercelLogo"
-        />
-        <Image
-          alt="VercelLogo"
-          src="/vercel.svg"
-          layout="fixed"
-          width={300}
-          height={100}
         />
       </main>
     </div>

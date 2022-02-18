@@ -6,7 +6,9 @@
   "bin": "src/optimizeImages.js",
   "scripts": {
     "build": "npx swc ./src/ExportedImage.jsx -o ./dist/ExportedImage.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test:e2e": "playwright test",
+    "prepublishOnly": "npm run build && npm test && npm test:e2e"
   },
   "repository": {
     "type": "git",
@@ -33,7 +35,9 @@
     "next": "12.x"
   },
   "devDependencies": {
+    "@playwright/test": "^1.19.1",
     "@swc/cli": "^0.1.55",
-    "@swc/core": "^1.2.141"
+    "@swc/core": "^1.2.141",
+    "jest": "^27.5.1"
   }
 }

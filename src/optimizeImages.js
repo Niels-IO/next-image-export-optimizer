@@ -167,6 +167,7 @@ const nextImageExportOptimizer = async function () {
         extension = "WEBP";
       }
       const optimizedFileNameAndPath = `${imageFolderPath}/nextImageExportOptimizer/${filename}-opt-${width}.${extension.toUpperCase()}`;
+
       // Check if file is already in hash and specific size and quality is present in the
       // opt file directory
       if (file in imageHashes && fs.existsSync(optimizedFileNameAndPath)) {
@@ -242,10 +243,9 @@ const nextImageExportOptimizer = async function () {
   for (let index = 0; index < allGeneratedImages.length; index++) {
     const filePath = allGeneratedImages[index];
     const filename = path.parse(filePath).name;
-    fs.copyFileSync(
-      filePath,
-      `${folderNameForOptImagesInBuildFolder}/${filename}`
-    );
+    const fileExtension = path.parse(filePath).ext;
+    const filePathForOptimizedImageInBuildFolder = `${folderNameForOptImagesInBuildFolder}/${filename}${fileExtension}`;
+    fs.copyFileSync(filePath, filePathForOptimizedImageInBuildFolder);
   }
   console.log("---- next-image-export-optimizer: Done ---- ");
 };
