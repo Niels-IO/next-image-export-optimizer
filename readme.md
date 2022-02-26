@@ -16,7 +16,7 @@ This library makes a few assumptions:
 ## Installation
 
 ```
-npm install next-image-export-optimized
+npm install next-image-export-optimizer
 ```
 
 Configure the library in your **Next.js** configuration file:
