@@ -51,7 +51,7 @@ const nextImageExportOptimizer = async function () {
     if (nextjsConfig.images?.nextImageExportOptimizer?.quality) {
       quality = nextjsConfig.images?.nextImageExportOptimizer.quality;
     }
-    if (nextjsConfig.env?.storePicturesInWEBP) {
+    if (nextjsConfig.env?.storePicturesInWEBP !== undefined) {
       storePicturesInWEBP = nextjsConfig.env?.storePicturesInWEBP;
     }
   } catch (e) {
