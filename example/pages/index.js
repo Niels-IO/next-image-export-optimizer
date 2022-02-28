@@ -31,6 +31,7 @@ export default function Home() {
             id="test_image"
             objectFit="cover"
             priority={true}
+            alt={"test_image"}
           />
         </div>
         <ExportedImage
