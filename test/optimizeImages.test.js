@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const assert = require("assert");
 const fs = require("fs");
 const execSync = require("child_process").execSync;
@@ -50,9 +51,35 @@ Array [
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-96.WEBP",
 ]
 `);
-  const allFilesInImageBuildFolder = fs.readdirSync(
-    "example/out/images/nextImageExportOptimizer"
+  const allFilesInImageSubFolder = fs.readdirSync(
+    "example/public/images/nextImageExportOptimizer/subfolder"
   );
+  const allImagesInImageSubFolder = allFilesInImageSubFolder.filter((file) => {
+    let extension = file.split(".").pop().toUpperCase();
+    // Stop if the file is not an image
+    return ["JPG", "JPEG", "WEBP", "PNG", "AVIF"].includes(extension);
+  });
+  expect(allImagesInImageSubFolder).toMatchInlineSnapshot(`
+Array [
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1080.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1200.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-128.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-16.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1920.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-2048.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-256.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-32.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-384.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-3840.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-48.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-64.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-640.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-750.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-828.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-96.WEBP",
+]
+`);
+  const allFilesInImageBuildFolder = fs.readdirSync("example/out/images");
   expect(allFilesInImageBuildFolder).toMatchInlineSnapshot(`
 Array [
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1080.WEBP",
@@ -71,6 +98,31 @@ Array [
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-750.WEBP",
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-828.WEBP",
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-96.WEBP",
+  "subfolder",
+]
+`);
+  const allFilesInImageBuildSubFolder = fs.readdirSync(
+    "example/out/images/subfolder"
+  );
+  expect(allFilesInImageBuildSubFolder).toMatchInlineSnapshot(`
+Array [
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1080.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1200.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-128.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-16.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1920.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-2048.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-256.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-32.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-384.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-3840.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-48.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-64.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-640.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-750.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-828.WEBP",
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-96.WEBP",
+  "subfolder2",
 ]
 `);
   const imageFileStats = [];

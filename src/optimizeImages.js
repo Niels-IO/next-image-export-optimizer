@@ -17,10 +17,51 @@ function getHash(items) {
   // See https://en.wikipedia.org/wiki/Base64#Filenames
   return hash.digest("base64").replace(/\//g, "-");
 }
+
+const getAllFiles = function (basePath, dirPath, arrayOfFiles) {
+  let files = fs.readdirSync(dirPath);
+
+  arrayOfFiles = arrayOfFiles || [];
+  files.forEach(function (file) {
+    if (
+      fs.statSync(dirPath + "/" + file).isDirectory() &&
+      file !== "nextImageExportOptimizer"
+    ) {
+      arrayOfFiles = getAllFiles(basePath, dirPath + "/" + file, arrayOfFiles);
+    } else {
+      const dirPathWithoutBasePath = dirPath
+        .replace(basePath, "") // remove the basePath for later path composition
+        .replace(/^(\/)/, ""); // remove the first trailing slash if there is one at the first position
+      arrayOfFiles.push({ dirPathWithoutBasePath, file });
+    }
+  });
+
+  return arrayOfFiles;
+};
+
+function ensureDirectoryExists(filePath) {
+  const dirName = path.dirname(filePath);
+  if (fs.existsSync(dirName)) {
+    return true;
+  }
+  ensureDirectoryExists(dirName);
+  fs.mkdirSync(dirName);
+}
+
 const nextImageExportOptimizer = async function () {
   console.log(
     "---- next-image-export-optimizer: Begin with optimization... ---- "
   );
+
+  // Give the user a warning, if the public directory of Next.js is not found as the user
+  // may have run the command in a wrong directory
+  if (!fs.existsSync("public")) {
+    console.warn(
+      "\x1b[41m",
+      "Could not find a public folder in this directory. Make sure you run the command in the main directory of your project.",
+      "\x1b[0m"
+    );
+  }
 
   // Default values
   let imageFolderPath = "public/images";
@@ -80,15 +121,19 @@ const nextImageExportOptimizer = async function () {
     // No image hashes yet
   }
 
-  const allFilesInImageFolder = fs.readdirSync(imageFolderPath);
-  const allImagesInImageFolder = allFilesInImageFolder.filter((file) => {
-    let extension = file.split(".").pop().toUpperCase();
-    // Stop if the file is not an image
-    return ["JPG", "JPEG", "WEBP", "PNG", "AVIF"].includes(extension);
-  });
-
+  const allFilesInImageFolderAndSubdirectories = getAllFiles(
+    imageFolderPath,
+    imageFolderPath
+  );
+  const allImagesInImageFolder = allFilesInImageFolderAndSubdirectories.filter(
+    (fileObject) => {
+      let extension = fileObject.file.split(".").pop().toUpperCase();
+      // Only include file with image extensions
+      return ["JPG", "JPEG", "WEBP", "PNG", "AVIF"].includes(extension);
+    }
+  );
   console.log(
-    `Found ${allImagesInImageFolder.length} supported images in ${imageFolderPath}`
+    `Found ${allImagesInImageFolder.length} supported images in ${imageFolderPath} and subdirectories.`
   );
 
   const widths = [...imageSizes, ...deviceSizes];
@@ -149,12 +194,20 @@ const nextImageExportOptimizer = async function () {
 
   // Loop through all images
   for (let index = 0; index < allImagesInImageFolder.length; index++) {
-    const file = allImagesInImageFolder[index];
+    const file = allImagesInImageFolder[index].file;
+    let fileDirectory = allImagesInImageFolder[index].dirPathWithoutBasePath;
 
     let extension = file.split(".").pop().toUpperCase();
-
-    const imageBuffer = fs.readFileSync(`${imageFolderPath}/${file}`);
-    const imageHash = getHash([imageBuffer, ...widths, quality, file]);
+    const imageBuffer = fs.readFileSync(
+      path.join(imageFolderPath, fileDirectory, file)
+    );
+    const imageHash = getHash([
+      imageBuffer,
+      ...widths,
+      quality,
+      fileDirectory,
+      file,
+    ]);
     // Store image hash in temporary object
     imageHashes[file] = imageHash;
 
@@ -166,7 +219,12 @@ const nextImageExportOptimizer = async function () {
       if (storePicturesInWEBP) {
         extension = "WEBP";
       }
-      const optimizedFileNameAndPath = `${imageFolderPath}/nextImageExportOptimizer/${filename}-opt-${width}.${extension.toUpperCase()}`;
+      const optimizedFileNameAndPath = path.join(
+        imageFolderPath,
+        "nextImageExportOptimizer",
+        fileDirectory,
+        `${filename}-opt-${width}.${extension.toUpperCase()}`
+      );
 
       // Check if file is already in hash and specific size and quality is present in the
       // opt file directory
@@ -211,6 +269,7 @@ const nextImageExportOptimizer = async function () {
       }
 
       // Write the optimized image to the file system
+      ensureDirectoryExists(optimizedFileNameAndPath);
       const info = await transformer.toFile(optimizedFileNameAndPath);
       const fileSizeInBytes = info.size;
       const fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
@@ -226,28 +285,17 @@ const nextImageExportOptimizer = async function () {
 
   // Copy the optimized images to the build folder
 
-  // Create the folder for the optimized images in the build directory if it does not exists
-
-  const folderNameForOptImagesInBuildFolder = `${exportFolderPath}/${imageFolderPath
-    .split("public/")
-    .pop()}/nextImageExportOptimizer`;
-  try {
-    if (!fs.existsSync(folderNameForOptImagesInBuildFolder)) {
-      fs.mkdirSync(folderNameForOptImagesInBuildFolder);
-      console.log(
-        `Create image output folder in build folder: ${folderNameForOptImagesInBuildFolder}`
-      );
-    }
-  } catch (err) {
-    console.error(err);
-  }
-  console.log("Copy optimized images...");
+  console.log("Copy optimized images to build folder...");
   for (let index = 0; index < allGeneratedImages.length; index++) {
     const filePath = allGeneratedImages[index];
-    const filename = path.parse(filePath).name;
-    const fileExtension = path.parse(filePath).ext;
-    const filePathForOptimizedImageInBuildFolder = `${folderNameForOptImagesInBuildFolder}/${filename}${fileExtension}`;
-    fs.copyFileSync(filePath, filePathForOptimizedImageInBuildFolder);
+
+    const fileInBuildFolder = path
+      .join(exportFolderPath, filePath.split("public").pop())
+      .replace("nextImageExportOptimizer/", "");
+
+    // Create the folder for the optimized images in the build directory if it does not exists
+    ensureDirectoryExists(fileInBuildFolder);
+    fs.copyFileSync(filePath, fileInBuildFolder);
   }
   console.log("---- next-image-export-optimizer: Done ---- ");
 };
