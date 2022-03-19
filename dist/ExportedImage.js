@@ -160,7 +160,12 @@ var optimizedLoader = function(param) {
     ].includes(extension.toUpperCase())) {
         processedExtension = "WEBP";
     }
-    return "".concat(path).concat(filename, "-opt-").concat(width, ".").concat(processedExtension.toUpperCase());
+    var correctedPath = path;
+    var lastChar = correctedPath.substr(-1);
+    if (lastChar != "/") {
+        correctedPath = correctedPath + "/";
+    }
+    return "".concat(correctedPath, "nextImageExportOptimizer/").concat(filename, "-opt-").concat(width, ".").concat(processedExtension.toUpperCase());
 };
 var fallbackLoader = function(param) {
     var src = param.src;

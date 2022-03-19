@@ -3,24 +3,29 @@ const assert = require("assert");
 const fs = require("fs");
 const execSync = require("child_process").execSync;
 
+const deleteFolder = (folderName) => {
+  if (fs.existsSync(folderName)) {
+    fs.rmSync(folderName, {
+      recursive: true,
+      force: false,
+    });
+  }
+  assert(!fs.existsSync(folderName));
+};
+
 test("Optimize images", async () => {
-  const folderNameForImages = "example/public/images/nextImageExportOptimizer";
-  if (fs.existsSync(folderNameForImages)) {
-    fs.rmSync(folderNameForImages, {
-      recursive: true,
-      force: false,
-    });
-  }
-  assert(!fs.existsSync(folderNameForImages));
-  const folderNameForImagesInBuildFolder =
-    "example/out/images/nextImageExportOptimizer";
-  if (fs.existsSync(folderNameForImagesInBuildFolder)) {
-    fs.rmSync(folderNameForImagesInBuildFolder, {
-      recursive: true,
-      force: false,
-    });
-  }
-  assert(!fs.existsSync(folderNameForImagesInBuildFolder));
+  deleteFolder("example/public/images/nextImageExportOptimizer");
+  deleteFolder("example/public/images/subfolder/nextImageExportOptimizer");
+  deleteFolder(
+    "example/public/images/subfolder/subfolder2/nextImageExportOptimizer"
+  );
+
+  deleteFolder("example/out/images/nextImageExportOptimizer");
+  deleteFolder("example/out/images/subfolder/nextImageExportOptimizer");
+  deleteFolder(
+    "example/out/images/subfolder/subfolder2/nextImageExportOptimizer"
+  );
+
   await execSync("cd example/ && node ../src/optimizeImages.js");
 
   const allFilesInImageFolder = fs.readdirSync(
@@ -52,7 +57,7 @@ Array [
 ]
 `);
   const allFilesInImageSubFolder = fs.readdirSync(
-    "example/public/images/nextImageExportOptimizer/subfolder"
+    "example/public/images/subfolder/nextImageExportOptimizer"
   );
   const allImagesInImageSubFolder = allFilesInImageSubFolder.filter((file) => {
     let extension = file.split(".").pop().toUpperCase();
@@ -79,7 +84,9 @@ Array [
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-96.WEBP",
 ]
 `);
-  const allFilesInImageBuildFolder = fs.readdirSync("example/out/images");
+  const allFilesInImageBuildFolder = fs.readdirSync(
+    "example/out/images/nextImageExportOptimizer"
+  );
   expect(allFilesInImageBuildFolder).toMatchInlineSnapshot(`
 Array [
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1080.WEBP",
@@ -98,11 +105,10 @@ Array [
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-750.WEBP",
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-828.WEBP",
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-96.WEBP",
-  "subfolder",
 ]
 `);
   const allFilesInImageBuildSubFolder = fs.readdirSync(
-    "example/out/images/subfolder"
+    "example/out/images/subfolder/nextImageExportOptimizer"
   );
   expect(allFilesInImageBuildSubFolder).toMatchInlineSnapshot(`
 Array [
@@ -122,36 +128,72 @@ Array [
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-750.WEBP",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-828.WEBP",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-96.WEBP",
-  "subfolder2",
 ]
 `);
-  const imageFileStats = [];
-  for (let index = 0; index < allImagesInImageFolder.length; index++) {
-    const imageFile = allImagesInImageFolder[index];
-    const stats = fs.statSync(
-      `example/public/images/nextImageExportOptimizer/${imageFile}`
-    );
-    const fileSizeInBytes = stats.size;
-    imageFileStats.push(fileSizeInBytes);
-  }
-  expect(imageFileStats).toMatchInlineSnapshot(`
+
+  const imageFolders = [
+    {
+      basePath: "example/public/images/nextImageExportOptimizer",
+      imageFileArray: allImagesInImageFolder,
+    },
+    {
+      basePath: "example/public/images/subfolder/nextImageExportOptimizer",
+      imageFileArray: allFilesInImageBuildSubFolder,
+    },
+  ];
+  for (let index = 0; index < imageFolders.length; index++) {
+    const imageFolderBasePath = imageFolders[index].basePath;
+    const imageFileArray = imageFolders[index].imageFileArray;
+
+    const imageFileStats = [];
+    for (let index = 0; index < imageFileArray.length; index++) {
+      const imageFile = imageFileArray[index];
+      const stats = fs.statSync(`${imageFolderBasePath}/${imageFile}`);
+      const fileSizeInBytes = stats.size;
+      imageFileStats.push(fileSizeInBytes);
+    }
+    if (index == 0) {
+      expect(imageFileStats).toMatchInlineSnapshot(`
+  Array [
+    40418,
+    45568,
+    2352,
+    136,
+    85030,
+    93140,
+    5906,
+    342,
+    10304,
+    219286,
+    578,
+    882,
+    19842,
+    25324,
+    28758,
+    1514,
+  ]
+  `);
+    } else if (index === 1) {
+      expect(imageFileStats).toMatchInlineSnapshot(`
 Array [
-  40418,
-  45568,
-  2352,
-  136,
-  85030,
-  93140,
-  5906,
-  342,
-  10304,
-  219286,
-  578,
-  882,
-  19842,
-  25324,
-  28758,
-  1514,
+  107646,
+  121736,
+  6478,
+  282,
+  242404,
+  270090,
+  15934,
+  806,
+  26660,
+  866440,
+  1512,
+  2462,
+  52038,
+  63662,
+  74588,
+  4448,
 ]
 `);
+    }
+  }
 }, 30000);

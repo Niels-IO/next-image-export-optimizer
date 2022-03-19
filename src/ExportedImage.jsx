@@ -40,7 +40,13 @@ const optimizedLoader = ({ src, width }) => {
   ) {
     processedExtension = "WEBP";
   }
-  return `${path}${filename}-opt-${width}.${processedExtension.toUpperCase()}`;
+  let correctedPath = path;
+  const lastChar = correctedPath.substr(-1); // Selects the last character
+  if (lastChar != "/") {
+    // If the last character is not a slash
+    correctedPath = correctedPath + "/"; // Append a slash to it.
+  }
+  return `${correctedPath}nextImageExportOptimizer/${filename}-opt-${width}.${processedExtension.toUpperCase()}`;
 };
 const fallbackLoader = ({ src }) => {
   return src;

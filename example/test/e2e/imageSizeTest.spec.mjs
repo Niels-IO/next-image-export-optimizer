@@ -2,24 +2,24 @@ import { test, expect } from "@playwright/test";
 
 const widths = [640, 750, 828, 1080, 1200, 1920, 2048, 3840];
 const correctSrc = {
-  640: "http://localhost:8080/images/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-640.WEBP",
-  750: "http://localhost:8080/images/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-750.WEBP",
-  828: "http://localhost:8080/images/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-828.WEBP",
-  1080: "http://localhost:8080/images/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1080.WEBP",
-  1200: "http://localhost:8080/images/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1200.WEBP",
-  1920: "http://localhost:8080/images/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1920.WEBP",
-  2048: "http://localhost:8080/images/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-2048.WEBP",
-  3840: "http://localhost:8080/images/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-3840.WEBP",
+  640: "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-640.WEBP",
+  750: "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-750.WEBP",
+  828: "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-828.WEBP",
+  1080: "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1080.WEBP",
+  1200: "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1200.WEBP",
+  1920: "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1920.WEBP",
+  2048: "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-2048.WEBP",
+  3840: "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-3840.WEBP",
 };
 const correctSrcSubfolder = {
-  640: "http://localhost:8080/images/subfolder/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-640.WEBP",
-  750: "http://localhost:8080/images/subfolder/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-750.WEBP",
-  828: "http://localhost:8080/images/subfolder/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-828.WEBP",
-  1080: "http://localhost:8080/images/subfolder/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1080.WEBP",
-  1200: "http://localhost:8080/images/subfolder/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1200.WEBP",
-  1920: "http://localhost:8080/images/subfolder/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1920.WEBP",
-  2048: "http://localhost:8080/images/subfolder/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-2048.WEBP",
-  3840: "http://localhost:8080/images/subfolder/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-3840.WEBP",
+  640: "http://localhost:8080/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-640.WEBP",
+  750: "http://localhost:8080/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-750.WEBP",
+  828: "http://localhost:8080/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-828.WEBP",
+  1080: "http://localhost:8080/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1080.WEBP",
+  1200: "http://localhost:8080/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1200.WEBP",
+  1920: "http://localhost:8080/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1920.WEBP",
+  2048: "http://localhost:8080/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-2048.WEBP",
+  3840: "http://localhost:8080/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-3840.WEBP",
 };
 for (let index = 0; index < widths.length; index++) {
   const width = widths[index];

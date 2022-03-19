@@ -221,8 +221,8 @@ const nextImageExportOptimizer = async function () {
       }
       const optimizedFileNameAndPath = path.join(
         imageFolderPath,
-        "nextImageExportOptimizer",
         fileDirectory,
+        "nextImageExportOptimizer",
         `${filename}-opt-${width}.${extension.toUpperCase()}`
       );
 
@@ -289,9 +289,10 @@ const nextImageExportOptimizer = async function () {
   for (let index = 0; index < allGeneratedImages.length; index++) {
     const filePath = allGeneratedImages[index];
 
-    const fileInBuildFolder = path
-      .join(exportFolderPath, filePath.split("public").pop())
-      .replace("nextImageExportOptimizer/", "");
+    const fileInBuildFolder = path.join(
+      exportFolderPath,
+      filePath.split("public").pop()
+    );
 
     // Create the folder for the optimized images in the build directory if it does not exists
     ensureDirectoryExists(fileInBuildFolder);
