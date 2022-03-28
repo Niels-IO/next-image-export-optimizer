@@ -73,7 +73,14 @@ const nextImageExportOptimizer = async function () {
 
   // Read in the configuration parameters
   try {
-    const nextjsConfig = require(`${process.cwd()}/next.config.js`);
+    // Path to Next.js config in the current directory
+    const nextConfigPath = path.join(process.cwd(), "next.config.js");
+    const nextjsConfig = require(nextConfigPath);
+
+    // Check if nextjsConfig is an object or is undefined
+    if (typeof nextjsConfig !== "object" || nextjsConfig === null) {
+      throw new Error("next.config.js is not an object");
+    }
 
     if (nextjsConfig.images?.nextImageExportOptimizer?.imageFolderPath) {
       imageFolderPath =
