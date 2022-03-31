@@ -75,7 +75,11 @@ const nextImageExportOptimizer = async function () {
   try {
     // Path to Next.js config in the current directory
     const nextConfigPath = path.join(process.cwd(), "next.config.js");
-    const nextjsConfig = require(nextConfigPath);
+    const importedConfig = require(nextConfigPath);
+    const nextjsConfig =
+      typeof importedConfig === "function"
+        ? importedConfig([() => {}], {}) // Try to obtain config created with next-compose-plugins
+        : importedConfig;
 
     // Check if nextjsConfig is an object or is undefined
     if (typeof nextjsConfig !== "object" || nextjsConfig === null) {
