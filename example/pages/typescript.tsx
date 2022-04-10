@@ -1,6 +1,7 @@
 import Head from "next/head";
 import ExportedImage from "../localTestComponent/ExportedImage";
 import React from "react";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -33,13 +34,30 @@ export default function Home() {
             alt={"test_image"}
           />
         </div>
-        <ExportedImage
-          src="vercel.svg"
-          layout="fixed"
-          width={300}
-          height={100}
-          alt="VercelLogo"
-        />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <ExportedImage
+            src="vercel.svg"
+            width={400}
+            height={400}
+            layout="fixed"
+            alt="VercelLogo"
+          />
+          <Image
+            src={`vercel.svg`}
+            loader={({ src }) => {
+              return src;
+            }}
+            width={400}
+            height={400}
+            layout="fixed"
+            alt="random"
+          />
+        </div>
       </main>
     </div>
   );

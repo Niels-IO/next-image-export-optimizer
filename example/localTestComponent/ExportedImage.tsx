@@ -61,16 +61,34 @@ const fallbackLoader = ({ src }: { src: string }) => {
 };
 
 export interface ExportedImageProps
-  extends Omit<ImageProps, "src" | "loader" | "onError"> {
+  extends Omit<ImageProps, "src" | "loader" | "onError" | "unoptimized"> {
   src: string;
 }
 
-function ExportedImage({ src, ...rest }: ExportedImageProps) {
+function ExportedImage({
+  src,
+  priority = false,
+  loading,
+  lazyRoot = null,
+  lazyBoundary = "200px",
+  className,
+  quality,
+  width,
+  height,
+  objectFit,
+  objectPosition,
+  onLoadingComplete,
+  placeholder = "empty",
+  blurDataURL,
+  ...rest
+}: ExportedImageProps) {
   const [imageError, setImageError] = useState(false);
 
   return (
     <Image
       {...rest}
+      {...(width && { width })}
+      {...(height && { height })}
       loader={imageError ? fallbackLoader : optimizedLoader}
       src={src}
       onError={() => {
