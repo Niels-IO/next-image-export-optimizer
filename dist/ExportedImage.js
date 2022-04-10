@@ -5,7 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _dynamic = _interopRequireDefault(require("next/dynamic"));
 var _react = _interopRequireWildcard(require("react"));
-var _propTypes = _interopRequireDefault(require("prop-types"));
 function _arrayLikeToArray(arr, len) {
     if (len == null || len > arr.length) len = arr.length;
     for(var i = 0, arr2 = new Array(len); i < len; i++)arr2[i] = arr[i];
@@ -128,14 +127,15 @@ var Image = (0, _dynamic).default(function() {
 });
 var splitFilePath = function(param) {
     var filePath = param.filePath;
-    var filenameWithExtension = filePath.split("\\").pop().split("/").pop();
+    var ref;
+    var filenameWithExtension = ((ref = filePath.split("\\").pop()) === null || ref === void 0 ? void 0 : ref.split("/").pop()) || "";
     var filePathWithoutFilename = filePath.split(filenameWithExtension).shift();
     var fileExtension = filePath.split(".").pop();
     var filenameWithoutExtension = filenameWithExtension.substring(0, filenameWithExtension.lastIndexOf(".")) || filenameWithExtension;
     return {
         path: filePathWithoutFilename,
         filename: filenameWithoutExtension,
-        extension: fileExtension
+        extension: fileExtension || ""
     };
 };
 var optimizedLoader = function(param) {
@@ -161,7 +161,7 @@ var optimizedLoader = function(param) {
         processedExtension = "WEBP";
     }
     var correctedPath = path;
-    var lastChar = correctedPath.substr(-1);
+    var lastChar = correctedPath === null || correctedPath === void 0 ? void 0 : correctedPath.substr(-1);
     if (lastChar != "/") {
         correctedPath = correctedPath + "/";
     }
@@ -184,20 +184,6 @@ function ExportedImage(_param) {
         }
     }));
 }
-ExportedImage.propTypes = {
-    src: _propTypes.default.string.isRequired,
-    alt: _propTypes.default.string.isRequired,
-    width: _propTypes.default.number,
-    height: _propTypes.default.number,
-    layout: _propTypes.default.string,
-    sizes: _propTypes.default.string,
-    priority: _propTypes.default.bool,
-    placeholder: _propTypes.default.string,
-    objectFit: _propTypes.default.string,
-    objectPosition: _propTypes.default.string,
-    onLoadingComplete: _propTypes.default.func,
-    blurDataURL: _propTypes.default.string
-};
 var _default = ExportedImage;
 exports.default = _default;
 

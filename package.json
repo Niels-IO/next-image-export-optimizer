@@ -3,9 +3,10 @@
   "version": "0.8.0",
   "description": "Optimizes all static images for Next.js static HTML export functionality",
   "main": "dist/ExportedImage.js",
+  "types": "dist/ExportedImage.d.ts",
   "bin": "src/optimizeImages.js",
   "scripts": {
-    "build": "npx swc ./src/ExportedImage.jsx -o ./dist/ExportedImage.js",
+    "build": "tsc && npx swc ./src/ExportedImage.tsx -o ./dist/ExportedImage.js",
     "test": "jest",
     "test:e2e": "playwright test",
     "prepublishOnly": "npm run build && npm test && npm run test:e2e"
@@ -38,6 +39,7 @@
     "@playwright/test": "^1.19.1",
     "@swc/cli": "^0.1.55",
     "@swc/core": "^1.2.141",
+    "@types/react": "^18.0.0",
     "eslint": "^8.11.0",
     "eslint-plugin-react": "^7.29.4",
     "jest": "^27.5.1"

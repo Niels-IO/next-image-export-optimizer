@@ -72,5 +72,27 @@ for (let index = 0; index < widths.length; index++) {
 
       expect(image.currentSrc).toBe(correctSrcSubfolder[width.toString()]);
     });
+    test("should check the image size for the typescript test page", async ({
+      page,
+    }) => {
+      await page.goto("/typescript");
+
+      await page.click("text=Next-Image-Export-Optimizer");
+
+      const img = await page.locator("#test_image");
+      await img.click();
+
+      const image = await page.evaluate(() => {
+        let img = document.getElementById("test_image");
+        return {
+          src: img.src,
+          currentSrc: img.currentSrc,
+          naturalWidth: img.naturalWidth,
+          width: img.width,
+        };
+      });
+
+      expect(image.currentSrc).toBe(correctSrc[width.toString()]);
+    });
   });
 }
