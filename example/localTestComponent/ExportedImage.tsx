@@ -89,6 +89,17 @@ function ExportedImage({
       {...rest}
       {...(width && { width })}
       {...(height && { height })}
+      {...(priority && { priority })}
+      {...(loading && { loading })}
+      {...(lazyRoot && { lazyRoot })}
+      {...(lazyBoundary && { lazyBoundary })}
+      {...(className && { className })}
+      {...(quality && { quality })}
+      {...(objectFit && { objectFit })}
+      {...(objectPosition && { objectPosition })}
+      {...(onLoadingComplete && { onLoadingComplete })}
+      {...(placeholder && { placeholder })}
+      {...(blurDataURL && { blurDataURL })}
       loader={imageError ? fallbackLoader : optimizedLoader}
       src={src}
       onError={() => {
