@@ -7,6 +7,7 @@ Use Next.js advanced \<Image/> component with the static export functionality. O
 - Conversion of JPEG and PNG files to the modern WEBP format by default
 - Serve the exported React bundle only via a CDN. No server required
 - Minimal configuration necessary
+- Supports TypeScript
 
 This library makes a few assumptions:
 
