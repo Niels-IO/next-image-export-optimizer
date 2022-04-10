@@ -9,7 +9,8 @@
     "build": "tsc && npx swc ./src/ExportedImage.tsx -o ./dist/ExportedImage.js",
     "test": "jest",
     "test:e2e": "playwright test",
-    "prepublishOnly": "npm run build && npm test && npm run test:e2e"
+    "prepublishOnly": "npm run build && npm test && npm run test:e2e",
+    "fetchTags": "git fetch --tags -f"
   },
   "repository": {
     "type": "git",
