@@ -1,9 +1,12 @@
 # Next-Image-Export-Optimizer
 
-Use Next.js advanced \<Image/> component with the static export functionality. Optimizes all static images in an additional step after the Next.js static export.
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg)
+[![npm](https://img.shields.io/npm/v/next-image-export-optimizer)](https://www.npmjs.com/package/next-image-export-optimizer)
+
+Use [Next.js advanced **\<Image/>** component](https://nextjs.org/docs/basic-features/image-optimization) with the static export functionality. Optimizes all static images in an additional step after the Next.js static export.
 
 - Reduces the image size and page load times drastically through responsive images
-- Fast image transformation using sharp.js (also used by the Next.js server in production)
+- Fast image transformation using [sharp.js](https://www.npmjs.com/package/sharp) (also used by the Next.js server in production)
 - Conversion of JPEG and PNG files to the modern WEBP format by default
 - Serve the exported React bundle only via a CDN. No server required
 - Minimal configuration necessary
@@ -18,6 +21,9 @@ This library makes a few assumptions:
 
 ```
 npm install next-image-export-optimizer
+# Or
+yarn add next-image-export-optimizer
+pnpm install next-image-export-optimizer
 ```
 
 Configure the library in your **Next.js** configuration file:
@@ -42,10 +48,16 @@ module.exports = {
 ```
 
 1. Add the above configuration to your **next.config.js**
-2. Specify the folder where all the images are stored. Defaults to _public/images_
-3. Change the export command from
-   ` next build && next export`
-   to ` next build && next export && npx next-image-export-optimizer`
+2. Specify the folder where all the images are stored. Defaults to **public/images**
+3. Change the export command in `package.json`
+
+```diff
+{
+-  "export": "next build && next export",
++  "export": "next build && next export && next-image-export-optimizer"
+}
+```
+
 4. Change the **\<Image />** component to the **\<ExportedImage />** component of this library.
 
    Example:
