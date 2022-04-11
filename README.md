@@ -105,9 +105,9 @@ next build && next export
 to
 
 ```
-next build && next export && npx next-image-export-optimizer
+next build && next export && next-image-export-optimizer
 ```
 
 All images in the specified folder will be optimized and reduced versions will be created based on the requested widths.
 
-The image transformation operation is optimized as it uses hashes to determine whether an images has already been optimized or not.
+The image transformation operation is optimized as it uses hashes to determine whether an image has already been optimized or not.
