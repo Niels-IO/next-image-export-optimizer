@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 // Dynamic loading with SSR off is necessary as there might be a race condition otherwise,
 // when the image loaded and errored before the JS error handler is attached
 const Image = dynamic(() => import("next/image"), { ssr: false });
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { ImageProps } from "next/image";
 
 type SplitFilePathProps = {
@@ -27,7 +27,7 @@ const splitFilePath = ({ filePath }: SplitFilePathProps) => {
   };
 };
 
-const optimizedLoader = ({ src, width }: { src: string; width: number }) => {
+const generateImageURL = (src: string, width: number) => {
   const { filename, path, extension } = splitFilePath({ filePath: src });
 
   if (
@@ -56,6 +56,10 @@ const optimizedLoader = ({ src, width }: { src: string; width: number }) => {
 
   return `${correctedPath}nextImageExportOptimizer/${filename}-opt-${width}.${processedExtension.toUpperCase()}`;
 };
+
+const optimizedLoader = ({ src, width }: { src: string; width: number }) => {
+  return generateImageURL(src, width);
+};
 const fallbackLoader = ({ src }: { src: string }) => {
   return src;
 };
@@ -78,11 +82,19 @@ function ExportedImage({
   objectFit,
   objectPosition,
   onLoadingComplete,
-  placeholder = "empty",
+  placeholder = "blur",
   blurDataURL,
   ...rest
 }: ExportedImageProps) {
   const [imageError, setImageError] = useState(false);
+  const automaticallyCalculatedBlurDataURL = useMemo(() => {
+    if (blurDataURL) {
+      // use the user provided blurDataURL if present
+      return blurDataURL;
+    }
+    // otherwise use the generated image of 32px width as a blurDataURL
+    return generateImageURL(src, 32);
+  }, [blurDataURL, src]);
 
   return (
     <Image
@@ -99,8 +111,8 @@ function ExportedImage({
       {...(objectPosition && { objectPosition })}
       {...(onLoadingComplete && { onLoadingComplete })}
       {...(placeholder && { placeholder })}
-      {...(blurDataURL && { blurDataURL })}
       loader={imageError ? fallbackLoader : optimizedLoader}
+      blurDataURL={automaticallyCalculatedBlurDataURL}
       src={src}
       onError={() => {
         setImageError(true);
