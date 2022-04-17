@@ -38,6 +38,7 @@ test("Optimize images", async () => {
   });
   expect(allImagesInImageFolder).toMatchInlineSnapshot(`
 Array [
+  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-10.WEBP",
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1080.WEBP",
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1200.WEBP",
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-128.WEBP",
@@ -66,6 +67,7 @@ Array [
   });
   expect(allImagesInImageSubFolder).toMatchInlineSnapshot(`
 Array [
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-10.WEBP",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1080.WEBP",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1200.WEBP",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-128.WEBP",
@@ -89,6 +91,7 @@ Array [
   );
   expect(allFilesInImageBuildFolder).toMatchInlineSnapshot(`
 Array [
+  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-10.WEBP",
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1080.WEBP",
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1200.WEBP",
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-128.WEBP",
@@ -112,6 +115,7 @@ Array [
   );
   expect(allFilesInImageBuildSubFolder).toMatchInlineSnapshot(`
 Array [
+  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-10.WEBP",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1080.WEBP",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1200.WEBP",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-128.WEBP",
@@ -155,6 +159,7 @@ Array [
     if (index == 0) {
       expect(imageFileStats).toMatchInlineSnapshot(`
 Array [
+  100,
   40250,
   45584,
   2338,
@@ -176,6 +181,7 @@ Array [
     } else if (index === 1) {
       expect(imageFileStats).toMatchInlineSnapshot(`
 Array [
+  150,
   107796,
   122246,
   6466,
