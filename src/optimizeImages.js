@@ -70,6 +70,7 @@ const nextImageExportOptimizer = async function () {
   let imageSizes = [16, 32, 48, 64, 96, 128, 256, 384];
   let quality = 75;
   let storePicturesInWEBP = true;
+  let blurSize = [];
 
   // Read in the configuration parameters
   try {
@@ -94,17 +95,20 @@ const nextImageExportOptimizer = async function () {
       exportFolderPath =
         nextjsConfig.images?.nextImageExportOptimizer.exportFolderPath;
     }
-    if (nextjsConfig.images?.nextImageExportOptimizer?.deviceSizes) {
-      deviceSizes = nextjsConfig.images?.nextImageExportOptimizer.deviceSizes;
+    if (nextjsConfig.images?.deviceSizes) {
+      deviceSizes = nextjsConfig.images?.deviceSizes;
     }
-    if (nextjsConfig.images?.nextImageExportOptimizer?.imageSizes) {
-      imageSizes = nextjsConfig.images?.nextImageExportOptimizer.imageSizes;
+    if (nextjsConfig.images?.imageSizes) {
+      imageSizes = nextjsConfig.images?.imageSizes;
     }
     if (nextjsConfig.images?.nextImageExportOptimizer?.quality) {
       quality = nextjsConfig.images?.nextImageExportOptimizer.quality;
     }
     if (nextjsConfig.env?.storePicturesInWEBP !== undefined) {
       storePicturesInWEBP = nextjsConfig.env?.storePicturesInWEBP;
+    }
+    if (nextjsConfig.env?.generateAndUseBlurImages !== undefined) {
+      blurSize = [10];
     }
   } catch (e) {
     // Configuration file not found
@@ -147,7 +151,7 @@ const nextImageExportOptimizer = async function () {
     `Found ${allImagesInImageFolder.length} supported images in ${imageFolderPath} and subdirectories.`
   );
 
-  const widths = [...imageSizes, ...deviceSizes];
+  const widths = [...blurSize, ...imageSizes, ...deviceSizes];
 
   const progressBar = new cliProgress.SingleBar(
     {

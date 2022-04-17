@@ -82,7 +82,9 @@ function ExportedImage({
   objectFit,
   objectPosition,
   onLoadingComplete,
-  placeholder = "blur",
+  placeholder = process.env.generateAndUseBlurImages === true
+    ? "blur"
+    : "empty",
   blurDataURL,
   ...rest
 }: ExportedImageProps) {
@@ -92,8 +94,8 @@ function ExportedImage({
       // use the user provided blurDataURL if present
       return blurDataURL;
     }
-    // otherwise use the generated image of 32px width as a blurDataURL
-    return generateImageURL(src, 32);
+    // otherwise use the generated image of 10px width as a blurDataURL
+    return generateImageURL(src, 10);
   }, [blurDataURL, src]);
 
   return (
