@@ -15,7 +15,8 @@ const config = {
     },
   ],
   webServer: {
-    command: "cd example && npm run export && cd out/ && npx http-server",
+    command:
+      "cd example && npm run export && cd out/ && npx http-server@14.1.0",
     port: 8080,
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,

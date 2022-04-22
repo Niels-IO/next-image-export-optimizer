@@ -1,8 +1,6 @@
 import dynamic from "next/dynamic";
 
-// Dynamic loading with SSR off is necessary as there might be a race condition otherwise,
-// when the image loaded and errored before the JS error handler is attached
-const Image = dynamic(() => import("next/image"), { ssr: false });
+import Image from "next/image";
 import React, { useState } from "react";
 import { ImageProps } from "next/image";
 
@@ -108,5 +106,8 @@ function ExportedImage({
     />
   );
 }
-
-export default ExportedImage;
+// Dynamic loading with SSR off is necessary as there is a race condition otherwise,
+// when the image loaded and errored before the JS error handler is attached
+export default dynamic(() => Promise.resolve(ExportedImage), {
+  ssr: false,
+});
