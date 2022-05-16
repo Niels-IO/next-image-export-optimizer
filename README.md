@@ -43,6 +43,7 @@ module.exports = {
   },
   env: {
     storePicturesInWEBP: true,
+    generateAndUseBlurImages: true,
   },
 };
 ```

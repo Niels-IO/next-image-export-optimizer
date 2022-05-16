@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { ImageProps } from "next/image";
 
 type SplitFilePathProps = {
@@ -25,7 +25,7 @@ const splitFilePath = ({ filePath }: SplitFilePathProps) => {
   };
 };
 
-const optimizedLoader = ({ src, width }: { src: string; width: number }) => {
+const generateImageURL = (src: string, width: number) => {
   const { filename, path, extension } = splitFilePath({ filePath: src });
 
   if (
@@ -54,6 +54,10 @@ const optimizedLoader = ({ src, width }: { src: string; width: number }) => {
 
   return `${correctedPath}nextImageExportOptimizer/${filename}-opt-${width}.${processedExtension.toUpperCase()}`;
 };
+
+const optimizedLoader = ({ src, width }: { src: string; width: number }) => {
+  return generateImageURL(src, width);
+};
 const fallbackLoader = ({ src }: { src: string }) => {
   return src;
 };
@@ -76,11 +80,21 @@ function ExportedImage({
   objectFit,
   objectPosition,
   onLoadingComplete,
-  placeholder = "empty",
+  placeholder = process.env.generateAndUseBlurImages === true
+    ? "blur"
+    : "empty",
   blurDataURL,
   ...rest
 }: ExportedImageProps) {
   const [imageError, setImageError] = useState(false);
+  const automaticallyCalculatedBlurDataURL = useMemo(() => {
+    if (blurDataURL) {
+      // use the user provided blurDataURL if present
+      return blurDataURL;
+    }
+    // otherwise use the generated image of 10px width as a blurDataURL
+    return generateImageURL(src, 10);
+  }, [blurDataURL, src]);
 
   return (
     <Image
@@ -97,8 +111,8 @@ function ExportedImage({
       {...(objectPosition && { objectPosition })}
       {...(onLoadingComplete && { onLoadingComplete })}
       {...(placeholder && { placeholder })}
-      {...(blurDataURL && { blurDataURL })}
       loader={imageError ? fallbackLoader : optimizedLoader}
+      blurDataURL={automaticallyCalculatedBlurDataURL}
       src={src}
       onError={() => {
         setImageError(true);
