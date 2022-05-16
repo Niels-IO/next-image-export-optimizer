@@ -9,6 +9,7 @@ Use [Next.js advanced **\<Image/>** component](https://nextjs.org/docs/basic-fea
 - Fast image transformation using [sharp.js](https://www.npmjs.com/package/sharp) (also used by the Next.js server in production)
 - Conversion of JPEG and PNG files to the modern WEBP format by default
 - Serve the exported React bundle only via a CDN. No server required
+- Automatic generation of tiny, blurry placeholder images
 - Minimal configuration necessary
 - Supports TypeScript
 
