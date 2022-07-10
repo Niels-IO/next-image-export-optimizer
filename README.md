@@ -88,6 +88,8 @@ module.exports = {
 
 5. In the development mode, the original image will be served as the optimized images are created at build time only. In the exported, static React app, the responsive images are available as srcset and dynamically loaded by the browser
 
+6. As with the `<Image/>` component You may output original images with no optimization applied with the `unoptimized` prop.
+
 ## Live example
 
 You can see a live example of the use of this library at [reactapp.dev/next-image-export-optimizer](https://reactapp.dev/next-image-export-optimizer)
