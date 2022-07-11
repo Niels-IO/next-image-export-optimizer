@@ -89,13 +89,13 @@ function ExportedImage({
 }: ExportedImageProps) {
   const [imageError, setImageError] = useState(false);
   const automaticallyCalculatedBlurDataURL = useMemo(() => {
-    if (unoptimized === true) {
-      // return the src image when unoptimized
-      return src;
-    }
     if (blurDataURL) {
       // use the user provided blurDataURL if present
       return blurDataURL;
+    }
+    if (unoptimized === true) {
+      // return the src image when unoptimized
+      return src;
     }
     // otherwise use the generated image of 10px width as a blurDataURL
     return generateImageURL(src, 10);
@@ -117,7 +117,9 @@ function ExportedImage({
       {...(onLoadingComplete && { onLoadingComplete })}
       {...(placeholder && { placeholder })}
       {...(unoptimized && { unoptimized })}
-      loader={imageError || unoptimized === true ? fallbackLoader : optimizedLoader}
+      loader={
+        imageError || unoptimized === true ? fallbackLoader : optimizedLoader
+      }
       blurDataURL={automaticallyCalculatedBlurDataURL}
       src={src}
       onError={() => {
