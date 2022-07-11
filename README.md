@@ -88,7 +88,19 @@ module.exports = {
 
 5. In the development mode, the original image will be served as the optimized images are created at build time only. In the exported, static React app, the responsive images are available as srcset and dynamically loaded by the browser
 
-6. As with the `<Image/>` component You may output original images with no optimization applied with the `unoptimized` prop.
+6. You can output the original, unoptimized images using the `unoptimized` prop.
+    Example:
+
+    ```javascript
+    
+    <ExportedImage
+      src="images/image.jpg"
+      alt="Orginal, unoptimized image"
+      layout="fill"
+      objectFit="cover"
+      unoptimized={true}
+    />;
+    ```
 
 ## Live example
 
