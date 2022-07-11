@@ -63,7 +63,7 @@ const fallbackLoader = ({ src }: { src: string }) => {
 };
 
 export interface ExportedImageProps
-  extends Omit<ImageProps, "src" | "loader" | "onError" | "unoptimized"> {
+  extends Omit<ImageProps, "src" | "loader" | "onError"> {
   src: string;
 }
 
@@ -80,6 +80,7 @@ function ExportedImage({
   objectFit,
   objectPosition,
   onLoadingComplete,
+  unoptimized,
   placeholder = process.env.generateAndUseBlurImages === true
     ? "blur"
     : "empty",
@@ -92,9 +93,13 @@ function ExportedImage({
       // use the user provided blurDataURL if present
       return blurDataURL;
     }
+    if (unoptimized === true) {
+      // return the src image when unoptimized
+      return src;
+    }
     // otherwise use the generated image of 10px width as a blurDataURL
     return generateImageURL(src, 10);
-  }, [blurDataURL, src]);
+  }, [blurDataURL, src, unoptimized]);
 
   return (
     <Image
@@ -111,7 +116,10 @@ function ExportedImage({
       {...(objectPosition && { objectPosition })}
       {...(onLoadingComplete && { onLoadingComplete })}
       {...(placeholder && { placeholder })}
-      loader={imageError ? fallbackLoader : optimizedLoader}
+      {...(unoptimized && { unoptimized })}
+      loader={
+        imageError || unoptimized === true ? fallbackLoader : optimizedLoader
+      }
       blurDataURL={automaticallyCalculatedBlurDataURL}
       src={src}
       onError={() => {

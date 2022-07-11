@@ -16,6 +16,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Next-Image-Export-Optimizer</h1>
+        <h2>Optimized example</h2>
         <div
           style={{
             position: "relative",
@@ -31,6 +32,26 @@ export default function Home() {
             objectFit="cover"
             priority={true}
             alt={"test_image"}
+          />
+        </div>
+
+        <h2>Unoptimized example</h2>
+        <div
+          style={{
+            position: "relative",
+            width: "50%",
+            height: "200px",
+            marginBottom: "3rem",
+          }}
+        >
+          <ExportedImage
+            src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
+            layout="fill"
+            id="test_image_unoptimized"
+            objectFit="cover"
+            priority={true}
+            alt={"test_image_unoptimized"}
+            unoptimized={true}
           />
         </div>
         <ExportedImage
