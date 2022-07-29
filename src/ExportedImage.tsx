@@ -40,7 +40,8 @@ const generateImageURL = (src: string, width: number) => {
   let processedExtension = extension;
 
   if (
-    process.env.storePicturesInWEBP === true &&
+    (process.env.storePicturesInWEBP === true ||
+      process.env.nextImageExportOptimizer_storePicturesInWEBP === true) &&
     ["JPG", "JPEG", "PNG"].includes(extension.toUpperCase())
   ) {
     processedExtension = "WEBP";
@@ -81,7 +82,8 @@ function ExportedImage({
   objectPosition,
   onLoadingComplete,
   unoptimized,
-  placeholder = process.env.generateAndUseBlurImages === true
+  placeholder = process.env.generateAndUseBlurImages === true ||
+  process.env.nextImageExportOptimizer_generateAndUseBlurImages === true
     ? "blur"
     : "empty",
   blurDataURL,
