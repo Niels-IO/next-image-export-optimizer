@@ -3,6 +3,8 @@ declare global {
     interface ProcessEnv {
       storePicturesInWEBP: boolean;
       generateAndUseBlurImages: boolean;
+      nextImageExportOptimizer_storePicturesInWEBP: boolean;
+      nextImageExportOptimizer_generateAndUseBlurImages: boolean;
     }
   }
 }
