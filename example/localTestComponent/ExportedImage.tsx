@@ -40,7 +40,8 @@ const generateImageURL = (src: string, width: number) => {
   let processedExtension = extension;
 
   if (
-    process.env.storePicturesInWEBP === true &&
+    (process.env.storePicturesInWEBP === true ||
+      process.env.nextImageExportOptimizer_storePicturesInWEBP === true) &&
     ["JPG", "JPEG", "PNG"].includes(extension.toUpperCase())
   ) {
     processedExtension = "WEBP";
@@ -81,7 +82,8 @@ function ExportedImage({
   objectPosition,
   onLoadingComplete,
   unoptimized,
-  placeholder = process.env.generateAndUseBlurImages === true
+  placeholder = process.env.generateAndUseBlurImages === true ||
+  process.env.nextImageExportOptimizer_generateAndUseBlurImages === true
     ? "blur"
     : "empty",
   blurDataURL,
@@ -89,7 +91,6 @@ function ExportedImage({
 }: ExportedImageProps) {
   const [imageError, setImageError] = useState(false);
   const automaticallyCalculatedBlurDataURL = useMemo(() => {
-    
     if (blurDataURL) {
       // use the user provided blurDataURL if present
       return blurDataURL;
@@ -118,7 +119,9 @@ function ExportedImage({
       {...(onLoadingComplete && { onLoadingComplete })}
       {...(placeholder && { placeholder })}
       {...(unoptimized && { unoptimized })}
-      loader={imageError || unoptimized === true ? fallbackLoader : optimizedLoader}
+      loader={
+        imageError || unoptimized === true ? fallbackLoader : optimizedLoader
+      }
       blurDataURL={automaticallyCalculatedBlurDataURL}
       src={src}
       onError={() => {

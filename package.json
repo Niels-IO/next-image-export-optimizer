@@ -1,6 +1,6 @@
 {
   "name": "next-image-export-optimizer",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "Optimizes all static images for Next.js static HTML export functionality",
   "main": "dist/ExportedImage.js",
   "types": "dist/ExportedImage.d.ts",
@@ -28,15 +28,14 @@
   ],
   "author": "Niels Grafen",
   "license": "MIT",
-  "dependencies": {
-    "cli-progress": "^3.10.0",
-    "sharp": "^0.30.4",
-    "typescript": "^4.7.2"
-  },
+  "dependencies": {},
   "peerDependencies": {
     "next": "12.x"
   },
   "devDependencies": {
+    "cli-progress": "^3.10.0",
+    "sharp": "^0.30.4",
+    "typescript": "^4.7.2",
     "@playwright/test": "^1.19.1",
     "@swc/cli": "^0.1.55",
     "@swc/core": "^1.2.141",

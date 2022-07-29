@@ -36,15 +36,13 @@ module.exports = {
     loader: "custom",
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    nextImageExportOptimizer: {
-      imageFolderPath: "public/images",
-      exportFolderPath: "out",
-      quality: 75,
-    },
   },
   env: {
-    storePicturesInWEBP: true,
-    generateAndUseBlurImages: true,
+    nextImageExportOptimizer_imageFolderPath: "public/images",
+    nextImageExportOptimizer_exportFolderPath: "out",
+    nextImageExportOptimizer_quality: 75,
+    nextImageExportOptimizer_storePicturesInWEBP: true,
+    nextImageExportOptimizer_generateAndUseBlurImages: true,
   },
 };
 ```
@@ -89,18 +87,17 @@ module.exports = {
 5. In the development mode, the original image will be served as the optimized images are created at build time only. In the exported, static React app, the responsive images are available as srcset and dynamically loaded by the browser
 
 6. You can output the original, unoptimized images using the `unoptimized` prop.
-    Example:
+   Example:
 
-    ```javascript
-    
-    <ExportedImage
-      src="images/image.jpg"
-      alt="Orginal, unoptimized image"
-      layout="fill"
-      objectFit="cover"
-      unoptimized={true}
-    />;
-    ```
+   ```javascript
+   <ExportedImage
+     src="images/image.jpg"
+     alt="Orginal, unoptimized image"
+     layout="fill"
+     objectFit="cover"
+     unoptimized={true}
+   />
+   ```
 
 ## Live example
 

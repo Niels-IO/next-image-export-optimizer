@@ -86,28 +86,47 @@ const nextImageExportOptimizer = async function () {
     if (typeof nextjsConfig !== "object" || nextjsConfig === null) {
       throw new Error("next.config.js is not an object");
     }
+    const legacyPath = nextjsConfig.images?.nextImageExportOptimizer;
+    const newPath = nextjsConfig.env;
 
-    if (nextjsConfig.images?.nextImageExportOptimizer?.imageFolderPath) {
-      imageFolderPath =
-        nextjsConfig.images?.nextImageExportOptimizer.imageFolderPath;
+    if (legacyPath?.imageFolderPath !== undefined) {
+      imageFolderPath = legacyPath.imageFolderPath;
+    } else if (
+      newPath?.nextImageExportOptimizer_imageFolderPath !== undefined
+    ) {
+      imageFolderPath = newPath.nextImageExportOptimizer_imageFolderPath;
     }
-    if (nextjsConfig.images?.nextImageExportOptimizer?.exportFolderPath) {
-      exportFolderPath =
-        nextjsConfig.images?.nextImageExportOptimizer.exportFolderPath;
+    if (legacyPath?.exportFolderPath !== undefined) {
+      exportFolderPath = legacyPath.exportFolderPath;
+    } else if (
+      newPath?.nextImageExportOptimizer_exportFolderPath !== undefined
+    ) {
+      exportFolderPath = newPath.nextImageExportOptimizer_exportFolderPath;
     }
-    if (nextjsConfig.images?.deviceSizes) {
-      deviceSizes = nextjsConfig.images?.deviceSizes;
+    if (nextjsConfig.images?.deviceSizes !== undefined) {
+      deviceSizes = nextjsConfig.images.deviceSizes;
     }
-    if (nextjsConfig.images?.imageSizes) {
-      imageSizes = nextjsConfig.images?.imageSizes;
+    if (nextjsConfig.images?.imageSizes !== undefined) {
+      imageSizes = nextjsConfig.images.imageSizes;
     }
-    if (nextjsConfig.images?.nextImageExportOptimizer?.quality) {
-      quality = nextjsConfig.images?.nextImageExportOptimizer.quality;
+    if (legacyPath?.quality !== undefined) {
+      quality = legacyPath.quality;
+    } else if (newPath?.nextImageExportOptimizer_quality !== undefined) {
+      quality = newPath.nextImageExportOptimizer_quality;
     }
     if (nextjsConfig.env?.storePicturesInWEBP !== undefined) {
-      storePicturesInWEBP = nextjsConfig.env?.storePicturesInWEBP;
+      storePicturesInWEBP = nextjsConfig.env.storePicturesInWEBP;
+    } else if (
+      newPath?.nextImageExportOptimizer_storePicturesInWEBP !== undefined
+    ) {
+      storePicturesInWEBP =
+        newPath.nextImageExportOptimizer_storePicturesInWEBP;
     }
     if (nextjsConfig.env?.generateAndUseBlurImages !== undefined) {
+      blurSize = [10];
+    } else if (
+      newPath?.nextImageExportOptimizer_generateAndUseBlurImages !== undefined
+    ) {
       blurSize = [10];
     }
   } catch (e) {
