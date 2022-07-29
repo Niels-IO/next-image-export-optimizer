@@ -28,7 +28,8 @@ const legacyConfig = `module.exports = {
     storePicturesInWEBP: true,
     generateAndUseBlurImages: true,
   },
-};`;
+};
+`;
 const newConfig = `module.exports = {
   images: {
     loader: "custom",
@@ -42,7 +43,8 @@ const newConfig = `module.exports = {
     nextImageExportOptimizer_storePicturesInWEBP: true,
     nextImageExportOptimizer_generateAndUseBlurImages: true,
   },
-};`;
+};
+`;
 
 test.each([legacyConfig, newConfig])(
   `Optimize images -  oldConfig(0) - newConfig(1) - Currently: %#`,
