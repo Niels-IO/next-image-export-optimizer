@@ -1,4 +1,4 @@
-import ExportedImage from "../localTestComponent/ExportedImage";
+import ExportedImage from "../../dist/ExportedImage";
 import Head from "next/head";
 import React from "react";
 import styles from "../styles/Home.module.css";

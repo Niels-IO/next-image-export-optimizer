@@ -25,6 +25,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-      - run: npm i
-      - run: cd example/ && npm i && cd ..
+      - run: npm ci
+      - run: cd example/ && npm ci && cd ..
       - run: npm run prepublishOnly

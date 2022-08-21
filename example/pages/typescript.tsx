@@ -1,5 +1,5 @@
 import Head from "next/head";
-import ExportedImage from "../localTestComponent/ExportedImage";
+import ExportedImage from "../../dist/ExportedImage";
 import React from "react";
 import Image from "next/image";
 
