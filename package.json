@@ -5,6 +5,9 @@
   "main": "dist/ExportedImage.js",
   "types": "dist/ExportedImage.d.ts",
   "bin": "src/optimizeImages.js",
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "scripts": {
     "build": "tsc && npx swc ./src/ExportedImage.tsx -o ./dist/ExportedImage.js",
     "test": "jest",
