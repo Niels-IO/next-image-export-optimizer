@@ -19,22 +19,29 @@ function getHash(items) {
 }
 
 const getAllFiles = function (basePath, dirPath, arrayOfFiles) {
-  let files = fs.readdirSync(dirPath);
-
   arrayOfFiles = arrayOfFiles || [];
-  files.forEach(function (file) {
-    if (
-      fs.statSync(dirPath + "/" + file).isDirectory() &&
-      file !== "nextImageExportOptimizer"
-    ) {
-      arrayOfFiles = getAllFiles(basePath, dirPath + "/" + file, arrayOfFiles);
-    } else {
-      const dirPathWithoutBasePath = dirPath
-        .replace(basePath, "") // remove the basePath for later path composition
-        .replace(/^(\/)/, ""); // remove the first trailing slash if there is one at the first position
-      arrayOfFiles.push({ basePath, dirPathWithoutBasePath, file });
-    }
-  });
+  // check if the path is a directory
+  if (fs.statSync(dirPath).isDirectory()) {
+    let files = fs.readdirSync(dirPath);
+
+    files.forEach(function (file) {
+      if (
+        fs.statSync(dirPath + "/" + file).isDirectory() &&
+        file !== "nextImageExportOptimizer"
+      ) {
+        arrayOfFiles = getAllFiles(
+          basePath,
+          dirPath + "/" + file,
+          arrayOfFiles
+        );
+      } else {
+        const dirPathWithoutBasePath = dirPath
+          .replace(basePath, "") // remove the basePath for later path composition
+          .replace(/^(\/)/, ""); // remove the first trailing slash if there is one at the first position
+        arrayOfFiles.push({ basePath, dirPathWithoutBasePath, file });
+      }
+    });
+  }
 
   return arrayOfFiles;
 };
