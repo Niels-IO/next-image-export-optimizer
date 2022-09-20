@@ -21,6 +21,16 @@ const correctSrcSubfolder = {
   2048: "http://localhost:8080/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-2048.WEBP",
   3840: "http://localhost:8080/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-3840.WEBP",
 };
+const correctSrcStaticImage = {
+  640: "http://localhost:8080/_next/static/media/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-640.WEBP",
+  750: "http://localhost:8080/_next/static/media/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-750.WEBP",
+  828: "http://localhost:8080/_next/static/media/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-828.WEBP",
+  1080: "http://localhost:8080/_next/static/media/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1080.WEBP",
+  1200: "http://localhost:8080/_next/static/media/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1200.WEBP",
+  1920: "http://localhost:8080/_next/static/media/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1920.WEBP",
+  2048: "http://localhost:8080/_next/static/media/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-2048.WEBP",
+  3840: "http://localhost:8080/_next/static/media/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-3840.WEBP",
+};
 for (let index = 0; index < widths.length; index++) {
   const width = widths[index];
 
@@ -48,6 +58,28 @@ for (let index = 0; index < widths.length; index++) {
       });
 
       expect(image.currentSrc).toBe(correctSrc[width.toString()]);
+    });
+    test("should check the image size for the statically imported image", async ({
+      page,
+    }) => {
+      await page.goto("/");
+
+      await page.click("text=Next-Image-Export-Optimizer");
+
+      const img = await page.locator("#test_image_static");
+      await img.click();
+
+      const image = await page.evaluate(() => {
+        let img = document.getElementById("test_image_static");
+        return {
+          src: img.src,
+          currentSrc: img.currentSrc,
+          naturalWidth: img.naturalWidth,
+          width: img.width,
+        };
+      });
+
+      expect(image.currentSrc).toBe(correctSrcStaticImage[width.toString()]);
     });
 
     test("should check the image size for images in subfolder", async ({

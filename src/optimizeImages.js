@@ -32,7 +32,7 @@ const getAllFiles = function (basePath, dirPath, arrayOfFiles) {
       const dirPathWithoutBasePath = dirPath
         .replace(basePath, "") // remove the basePath for later path composition
         .replace(/^(\/)/, ""); // remove the first trailing slash if there is one at the first position
-      arrayOfFiles.push({ dirPathWithoutBasePath, file });
+      arrayOfFiles.push({ basePath, dirPathWithoutBasePath, file });
     }
   });
 
@@ -65,6 +65,7 @@ const nextImageExportOptimizer = async function () {
 
   // Default values
   let imageFolderPath = "public/images";
+  let staticImageFolderPath = ".next/static/media";
   let exportFolderPath = "out";
   let deviceSizes = [640, 750, 828, 1080, 1200, 1920, 2048, 3840];
   let imageSizes = [16, 32, 48, 64, 96, 128, 256, 384];
@@ -159,6 +160,12 @@ const nextImageExportOptimizer = async function () {
     imageFolderPath,
     imageFolderPath
   );
+  const allFilesInStaticImageFolder = getAllFiles(
+    staticImageFolderPath,
+    staticImageFolderPath
+  );
+  // append the static image folder to the image folder
+  allFilesInImageFolderAndSubdirectories.push(...allFilesInStaticImageFolder);
   const allImagesInImageFolder = allFilesInImageFolderAndSubdirectories.filter(
     (fileObject) => {
       let extension = fileObject.file.split(".").pop().toUpperCase();
@@ -167,7 +174,7 @@ const nextImageExportOptimizer = async function () {
     }
   );
   console.log(
-    `Found ${allImagesInImageFolder.length} supported images in ${imageFolderPath} and subdirectories.`
+    `Found ${allImagesInImageFolder.length} supported images in ${imageFolderPath}, static folder and subdirectories.`
   );
 
   const widths = [...blurSize, ...imageSizes, ...deviceSizes];
@@ -230,10 +237,11 @@ const nextImageExportOptimizer = async function () {
   for (let index = 0; index < allImagesInImageFolder.length; index++) {
     const file = allImagesInImageFolder[index].file;
     let fileDirectory = allImagesInImageFolder[index].dirPathWithoutBasePath;
+    let basePath = allImagesInImageFolder[index].basePath;
 
     let extension = file.split(".").pop().toUpperCase();
     const imageBuffer = fs.readFileSync(
-      path.join(imageFolderPath, fileDirectory, file)
+      path.join(basePath, fileDirectory, file)
     );
     const imageHash = getHash([
       imageBuffer,
@@ -253,8 +261,9 @@ const nextImageExportOptimizer = async function () {
       if (storePicturesInWEBP) {
         extension = "WEBP";
       }
+
       const optimizedFileNameAndPath = path.join(
-        imageFolderPath,
+        basePath,
         fileDirectory,
         "nextImageExportOptimizer",
         `${filename}-opt-${width}.${extension.toUpperCase()}`
@@ -322,10 +331,9 @@ const nextImageExportOptimizer = async function () {
   console.log("Copy optimized images to build folder...");
   for (let index = 0; index < allGeneratedImages.length; index++) {
     const filePath = allGeneratedImages[index];
-
     const fileInBuildFolder = path.join(
       exportFolderPath,
-      filePath.split("public").pop()
+      filePath.split("public").pop().replace(".next", "_next")
     );
 
     // Create the folder for the optimized images in the build directory if it does not exists
