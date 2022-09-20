@@ -15,7 +15,7 @@ Use [Next.js advanced **\<Image/>** component](https://nextjs.org/docs/basic-fea
 
 This library makes a few assumptions:
 
-- All images that should be optimized are stored inside the public folder like public/images
+- All images that should be optimized are stored inside the public folder like public/images (except for the statically imported images)
 - Currently only local images are supported for optimization
 
 ## Installation
@@ -82,9 +82,19 @@ module.exports = {
      layout="fill"
      objectFit="cover"
    />;
+
+   // Or with static import
+   import ExportedImage from "next-image-export-optimizer";
+   import testPictureStatic from "PATH_TO_IMAGE/test_static.jpg";
+
+   <ExportedImage
+     src={testPictureStatic}
+     alt="Static Image"
+     layout="responsive"
+   />;
    ```
 
-5. In the development mode, the original image will be served as the optimized images are created at build time only. In the exported, static React app, the responsive images are available as srcset and dynamically loaded by the browser
+5. In the development mode, the original image will be served. The optimized images are created at build time only. In the exported, static React app, the responsive images are available as srcset and dynamically loaded by the browser
 
 6. You can output the original, unoptimized images using the `unoptimized` prop.
    Example:

@@ -1,8 +1,8 @@
 import dynamic from "next/dynamic";
 
 import Image from "next/image";
-import React, { useState, useMemo } from "react";
-import { ImageProps } from "next/image";
+import React, { useMemo, useState } from "react";
+import { ImageProps, StaticImageData } from "next/image";
 
 type SplitFilePathProps = {
   filePath: string;
@@ -52,20 +52,34 @@ const generateImageURL = (src: string, width: number) => {
     // If the last character is not a slash
     correctedPath = correctedPath + "/"; // Append a slash to it.
   }
+  let generatedImageURL = `${correctedPath}nextImageExportOptimizer/${filename}-opt-${width}.${processedExtension.toUpperCase()}`;
+  // if the generatedImageURL hat a slash at the beginning, we remove it
+  if (generatedImageURL.charAt(0) === "/") {
+    generatedImageURL = generatedImageURL.substr(1);
+  }
 
-  return `${correctedPath}nextImageExportOptimizer/${filename}-opt-${width}.${processedExtension.toUpperCase()}`;
+  return generatedImageURL;
 };
 
-const optimizedLoader = ({ src, width }: { src: string; width: number }) => {
-  return generateImageURL(src, width);
+const optimizedLoader = ({
+  src,
+  width,
+}: {
+  src: string | StaticImageData;
+  width: number;
+}) => {
+  const _src = typeof src === "object" ? src.src : src;
+  return generateImageURL(_src, width);
 };
-const fallbackLoader = ({ src }: { src: string }) => {
-  return src;
+
+const fallbackLoader = ({ src }: { src: string | StaticImageData }) => {
+  const _src = typeof src === "object" ? src.src : src;
+  return _src;
 };
 
 export interface ExportedImageProps
   extends Omit<ImageProps, "src" | "loader" | "onError"> {
-  src: string;
+  src: string | StaticImageData;
 }
 
 function ExportedImage({
@@ -95,12 +109,14 @@ function ExportedImage({
       // use the user provided blurDataURL if present
       return blurDataURL;
     }
+    // check if the src is specified as a local file -> then it is an object
+    const _src = typeof src === "object" ? src.src : src;
     if (unoptimized === true) {
       // return the src image when unoptimized
-      return src;
+      return _src;
     }
     // otherwise use the generated image of 10px width as a blurDataURL
-    return generateImageURL(src, 10);
+    return generateImageURL(_src, 10);
   }, [blurDataURL, src, unoptimized]);
 
   return (
@@ -119,6 +135,7 @@ function ExportedImage({
       {...(onLoadingComplete && { onLoadingComplete })}
       {...(placeholder && { placeholder })}
       {...(unoptimized && { unoptimized })}
+      {...(imageError && { unoptimized: true })}
       loader={
         imageError || unoptimized === true ? fallbackLoader : optimizedLoader
       }
