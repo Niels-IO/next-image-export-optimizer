@@ -81,6 +81,46 @@ for (let index = 0; index < widths.length; index++) {
 
       expect(image.currentSrc).toBe(correctSrcStaticImage[width.toString()]);
     });
+    test("should check the image size for the statically imported image in the nested route", async ({
+      page,
+    }) => {
+      await page.goto("/nested/page");
+
+      const img = await page.locator("#test_image_static");
+      await img.click();
+
+      const image = await page.evaluate(() => {
+        let img = document.getElementById("test_image_static");
+        return {
+          src: img.src,
+          currentSrc: img.currentSrc,
+          naturalWidth: img.naturalWidth,
+          width: img.width,
+        };
+      });
+
+      expect(image.currentSrc).toBe(correctSrcStaticImage[width.toString()]);
+    });
+    test("should check the image size for the statically imported image in the nested slug route", async ({
+      page,
+    }) => {
+      await page.goto("/nestedSlug/page");
+
+      const img = await page.locator("#test_image_static");
+      await img.click();
+
+      const image = await page.evaluate(() => {
+        let img = document.getElementById("test_image_static");
+        return {
+          src: img.src,
+          currentSrc: img.currentSrc,
+          naturalWidth: img.naturalWidth,
+          width: img.width,
+        };
+      });
+
+      expect(image.currentSrc).toBe(correctSrcStaticImage[width.toString()]);
+    });
 
     test("should check the image size for images in subfolder", async ({
       page,
