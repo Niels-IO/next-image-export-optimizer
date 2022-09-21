@@ -53,10 +53,6 @@ const generateImageURL = (src: string, width: number) => {
     correctedPath = correctedPath + "/"; // Append a slash to it.
   }
   let generatedImageURL = `${correctedPath}nextImageExportOptimizer/${filename}-opt-${width}.${processedExtension.toUpperCase()}`;
-  // if the generatedImageURL hat a slash at the beginning, we remove it
-  if (generatedImageURL.charAt(0) === "/") {
-    generatedImageURL = generatedImageURL.substr(1);
-  }
 
   return generatedImageURL;
 };
