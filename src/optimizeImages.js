@@ -20,8 +20,8 @@ function getHash(items) {
 
 const getAllFiles = function (basePath, dirPath, arrayOfFiles) {
   arrayOfFiles = arrayOfFiles || [];
-  // check if the path is a directory
-  if (fs.statSync(dirPath).isDirectory()) {
+  // check if the path is existing
+  if (fs.existsSync(dirPath)) {
     let files = fs.readdirSync(dirPath);
 
     files.forEach(function (file) {
