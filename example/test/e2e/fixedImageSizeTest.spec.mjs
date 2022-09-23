@@ -2,14 +2,36 @@ import { test, expect } from "@playwright/test";
 
 const widths = [16, 32, 48, 64, 96, 128, 256, 384];
 const correctSrc = {
-  16: "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-16.WEBP",
-  32: "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-32.WEBP",
-  48: "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-48.WEBP",
-  64: "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-64.WEBP",
-  96: "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-96.WEBP",
-  128: "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-128.WEBP",
-  256: "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-256.WEBP",
-  384: "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-384.WEBP",
+  16: [
+    "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-16.WEBP",
+    "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-32.WEBP",
+  ],
+  32: [
+    "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-32.WEBP",
+    "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-64.WEBP",
+  ],
+  48: [
+    "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-48.WEBP",
+    "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-96.WEBP",
+  ],
+  64: [
+    "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-64.WEBP",
+    "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-128.WEBP",
+  ],
+  96: [
+    "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-96.WEBP",
+    "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-256.WEBP",
+  ],
+  128: [
+    "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-128.WEBP",
+    "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-256.WEBP",
+  ],
+  256: [
+    "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-256.WEBP",
+  ],
+  384: [
+    "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-384.WEBP",
+  ],
 };
 
 for (let index = 0; index < widths.length; index++) {
@@ -21,7 +43,9 @@ for (let index = 0; index < widths.length; index++) {
       deviceScaleFactor: 1,
     });
     test("should check the image size", async ({ page }) => {
-      await page.goto("/fixedImage");
+      await page.goto("/fixedImage", {
+        waitUntil: "networkidle",
+      });
 
       await page.click("text=Next-Image-Export-Optimizer");
 
@@ -38,7 +62,9 @@ for (let index = 0; index < widths.length; index++) {
         };
       }, testWidth);
 
-      expect(image.currentSrc).toBe(correctSrc[width.toString()]);
+      expect(
+        correctSrc[width.toString()].includes(image.currentSrc)
+      ).toBeTruthy();
     });
   });
 }

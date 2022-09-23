@@ -71,13 +71,13 @@ export default function Home() {
             unoptimized={true}
           />
         </div>
-        <ExportedImage
+        {/* <ExportedImage
           src="vercel.svg"
           layout="fixed"
           width={300}
           height={100}
           alt="VercelLogo"
-        />
+        /> */}
       </main>
     </div>
   );

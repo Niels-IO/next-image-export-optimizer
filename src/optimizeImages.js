@@ -173,6 +173,7 @@ const nextImageExportOptimizer = async function () {
   );
   // append the static image folder to the image folder
   allFilesInImageFolderAndSubdirectories.push(...allFilesInStaticImageFolder);
+
   const allImagesInImageFolder = allFilesInImageFolderAndSubdirectories.filter(
     (fileObject) => {
       let extension = fileObject.file.split(".").pop().toUpperCase();
@@ -269,8 +270,13 @@ const nextImageExportOptimizer = async function () {
         extension = "WEBP";
       }
 
+      // for a static image, we copy the image to the <imageFolderPath>/nextImageExportOptimizer
+      // and not the staticImageFolderPath
+      // as the static image folder is deleted before each build
+      const basePathToStoreOptimizedImages =
+        basePath === ".next/static/media" ? imageFolderPath : basePath;
       const optimizedFileNameAndPath = path.join(
-        basePath,
+        basePathToStoreOptimizedImages,
         fileDirectory,
         "nextImageExportOptimizer",
         `${filename}-opt-${width}.${extension.toUpperCase()}`
@@ -340,7 +346,7 @@ const nextImageExportOptimizer = async function () {
     const filePath = allGeneratedImages[index];
     const fileInBuildFolder = path.join(
       exportFolderPath,
-      filePath.split("public").pop().replace(".next", "_next")
+      filePath.split("public").pop()
     );
 
     // Create the folder for the optimized images in the build directory if it does not exists
