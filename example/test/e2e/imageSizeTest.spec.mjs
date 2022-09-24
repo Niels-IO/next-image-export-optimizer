@@ -74,8 +74,6 @@ for (let index = 0; index < widths.length; index++) {
       const img = await page.locator("#test_image_static");
       await img.click();
 
-      await page.waitForTimeout(400);
-
       const image = await page.evaluate(() => {
         let img = document.getElementById("test_image_static");
         return {
@@ -96,7 +94,6 @@ for (let index = 0; index < widths.length; index++) {
 
       const img = await page.locator("#test_image_static");
       await img.click();
-      await page.waitForTimeout(400);
 
       const image = await page.evaluate(() => {
         let img = document.getElementById("test_image_static");
@@ -119,7 +116,6 @@ for (let index = 0; index < widths.length; index++) {
 
       const img = await page.locator("#test_image_static_fixed");
       await img.click();
-      await page.waitForTimeout(400);
 
       const image = await page.evaluate(() => {
         let img = document.getElementById("test_image_static_fixed");
@@ -168,7 +164,6 @@ for (let index = 0; index < widths.length; index++) {
 
       const img = await page.locator("#test_image_static");
       await img.click();
-      await page.waitForTimeout(400);
 
       const image = await page.evaluate(() => {
         let img = document.getElementById("test_image_static");
