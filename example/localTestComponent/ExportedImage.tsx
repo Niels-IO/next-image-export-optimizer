@@ -115,7 +115,12 @@ function ExportedImage({
       return blurDataURL;
     }
     // check if the src is specified as a local file -> then it is an object
-    const _src = typeof src === "object" ? src.src : src;
+    const isStaticImage = typeof src === "object";
+    if (isStaticImage && src.blurDataURL) {
+      // if it is a static image, then we use the blurDataURL from the object
+      return src.blurDataURL;
+    }
+    const _src = isStaticImage ? src.src : src;
     if (unoptimized === true) {
       // return the src image when unoptimized
       return _src;
