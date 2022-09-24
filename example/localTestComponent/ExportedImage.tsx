@@ -1,14 +1,8 @@
-import dynamic from "next/dynamic";
-
 import Image from "next/image";
 import React, { useMemo, useState } from "react";
 import { ImageProps, StaticImageData } from "next/image";
 
-type SplitFilePathProps = {
-  filePath: string;
-};
-
-const splitFilePath = ({ filePath }: SplitFilePathProps) => {
+const splitFilePath = ({ filePath }: { filePath: string }) => {
   const filenameWithExtension =
     filePath.split("\\").pop()?.split("/").pop() || "";
   const filePathWithoutFilename = filePath.split(filenameWithExtension).shift();
@@ -52,7 +46,21 @@ const generateImageURL = (src: string, width: number) => {
     // If the last character is not a slash
     correctedPath = correctedPath + "/"; // Append a slash to it.
   }
-  let generatedImageURL = `${correctedPath}nextImageExportOptimizer/${filename}-opt-${width}.${processedExtension.toUpperCase()}`;
+  let imageFolderPath =
+    process.env.nextImageExportOptimizer_imageFolderPath || "public/images";
+  imageFolderPath = imageFolderPath
+    .replace("/public/", "")
+    .replace("public/", "");
+  const correctedPathForStaticImages = `${imageFolderPath}/`;
+  const isStaticImage = src.includes("_next/static/media");
+
+  let generatedImageURL = `${
+    isStaticImage ? correctedPathForStaticImages : correctedPath
+  }nextImageExportOptimizer/${filename}-opt-${width}.${processedExtension.toUpperCase()}`;
+  // if the generatedImageURL is not starting with a slash, then we add one
+  if (generatedImageURL.charAt(0) !== "/") {
+    generatedImageURL = "/" + generatedImageURL;
+  }
 
   return generatedImageURL;
 };
@@ -64,7 +72,8 @@ const optimizedLoader = ({
   src: string | StaticImageData;
   width: number;
 }) => {
-  const _src = typeof src === "object" ? src.src : src;
+  const isStaticImage = typeof src === "object";
+  const _src = isStaticImage ? src.src : src;
   return generateImageURL(_src, width);
 };
 
@@ -106,7 +115,12 @@ function ExportedImage({
       return blurDataURL;
     }
     // check if the src is specified as a local file -> then it is an object
-    const _src = typeof src === "object" ? src.src : src;
+    const isStaticImage = typeof src === "object";
+    if (isStaticImage && src.blurDataURL) {
+      // if it is a static image, then we use the blurDataURL from the object
+      return src.blurDataURL;
+    }
+    const _src = isStaticImage ? src.src : src;
     if (unoptimized === true) {
       // return the src image when unoptimized
       return _src;
@@ -118,6 +132,8 @@ function ExportedImage({
   return (
     <Image
       {...rest}
+      {...(typeof src === "object" && src.width && { width: src.width })}
+      {...(typeof src === "object" && src.height && { height: src.height })}
       {...(width && { width })}
       {...(height && { height })}
       {...(priority && { priority })}
@@ -136,15 +152,20 @@ function ExportedImage({
         imageError || unoptimized === true ? fallbackLoader : optimizedLoader
       }
       blurDataURL={automaticallyCalculatedBlurDataURL}
-      src={src}
       onError={() => {
         setImageError(true);
       }}
+      onLoadingComplete={(result) => {
+        // for some configurations, the onError handler is not called on an error occurrence
+        // so we need to check if the image is loaded correctly
+        if (result.naturalWidth === 0) {
+          // Broken image, fall back to unoptimized (meaning the original image src)
+          setImageError(true);
+        }
+      }}
+      src={typeof src === "object" ? src.src : src}
     />
   );
 }
-// Dynamic loading with SSR off is necessary as there is a race condition otherwise,
-// when the image loaded and errored before the JS error handler is attached
-export default dynamic(() => Promise.resolve(ExportedImage), {
-  ssr: false,
-});
+
+export default ExportedImage;

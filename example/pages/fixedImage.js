@@ -29,8 +29,8 @@ export default function Home() {
               key={size}
               src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
               layout="fixed"
-              width={`${size}px`}
-              height={`${size}px`}
+              width={size}
+              height={size}
               id={`test_image_${size}`}
               objectFit="cover"
               priority={true}
