@@ -7,7 +7,6 @@ import { ImageProps, StaticImageData } from "next/image";
 type SplitFilePathProps = {
   filePath: string;
 };
-test difference
 
 const splitFilePath = ({ filePath }: SplitFilePathProps) => {
   const filenameWithExtension =
