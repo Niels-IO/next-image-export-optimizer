@@ -31,9 +31,6 @@ const correctSrcStaticImage = {
   2048: "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-2048.WEBP",
   3840: "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-3840.WEBP",
 };
-function imagesHaveLoaded() {
-  return Array.from(document.images).every((i) => i.complete);
-}
 
 for (let index = 0; index < widths.length; index++) {
   const width = widths[index];
@@ -77,8 +74,7 @@ for (let index = 0; index < widths.length; index++) {
       const img = await page.locator("#test_image_static");
       await img.click();
 
-      await page.waitForFunction(imagesHaveLoaded);
-      await page.waitForTimeout(200);
+      await page.waitForTimeout(400);
 
       const image = await page.evaluate(() => {
         let img = document.getElementById("test_image_static");
@@ -100,8 +96,7 @@ for (let index = 0; index < widths.length; index++) {
 
       const img = await page.locator("#test_image_static");
       await img.click();
-      await page.waitForFunction(imagesHaveLoaded);
-      await page.waitForTimeout(200);
+      await page.waitForTimeout(400);
 
       const image = await page.evaluate(() => {
         let img = document.getElementById("test_image_static");
@@ -124,8 +119,7 @@ for (let index = 0; index < widths.length; index++) {
 
       const img = await page.locator("#test_image_static_fixed");
       await img.click();
-      await page.waitForFunction(imagesHaveLoaded);
-      await page.waitForTimeout(200);
+      await page.waitForTimeout(400);
 
       const image = await page.evaluate(() => {
         let img = document.getElementById("test_image_static_fixed");
@@ -174,8 +168,7 @@ for (let index = 0; index < widths.length; index++) {
 
       const img = await page.locator("#test_image_static");
       await img.click();
-      await page.waitForFunction(imagesHaveLoaded);
-      await page.waitForTimeout(200);
+      await page.waitForTimeout(400);
 
       const image = await page.evaluate(() => {
         let img = document.getElementById("test_image_static");
