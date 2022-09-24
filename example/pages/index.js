@@ -32,7 +32,6 @@ export default function Home() {
             id="test_image"
             objectFit="cover"
             priority={true}
-            placeholder="empty"
             alt={"test_image"}
           />
         </div>
