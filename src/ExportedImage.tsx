@@ -1,6 +1,7 @@
 import Image from "next/image";
 import React, { useMemo, useState } from "react";
 import { ImageProps, StaticImageData } from "next/image";
+import dynamic from "next/dynamic";
 
 const splitFilePath = ({ filePath }: { filePath: string }) => {
   const filenameWithExtension =
@@ -116,10 +117,6 @@ function ExportedImage({
     }
     // check if the src is specified as a local file -> then it is an object
     const isStaticImage = typeof src === "object";
-    if (isStaticImage && src.blurDataURL) {
-      // if it is a static image, then we use the blurDataURL from the object
-      return src.blurDataURL;
-    }
     const _src = isStaticImage ? src.src : src;
     if (unoptimized === true) {
       // return the src image when unoptimized
@@ -168,4 +165,22 @@ function ExportedImage({
   );
 }
 
-export default ExportedImage;
+// Dynamic loading with SSR off is necessary as the image component runs into
+// hydration errors otherwise
+const DynamicExportedImage = dynamic(() => Promise.resolve(ExportedImage), {
+  ssr: false,
+});
+
+export default function (props: ExportedImageProps) {
+  const isStaticImage = typeof props.src === "object";
+  const width = (isStaticImage && props.width) || (props.src as any).width;
+  const height = (isStaticImage && props.height) || (props.src as any).height;
+
+  return isStaticImage ? (
+    <div style={isStaticImage ? { aspectRatio: width / height } : {}}>
+      <DynamicExportedImage {...props} />
+    </div>
+  ) : (
+    <DynamicExportedImage {...props} />
+  );
+}
