@@ -74,7 +74,7 @@ async function testConfig(config) {
   );
   const allImagesInImageFolder = allFilesInImageFolder.filter(filterForImages);
   expect(allImagesInImageFolder).toMatchInlineSnapshot(`
-Array [
+[
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-10.WEBP",
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1080.WEBP",
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1200.WEBP",
@@ -117,7 +117,7 @@ Array [
   const allImagesInImageSubFolder =
     allFilesInImageSubFolder.filter(filterForImages);
   expect(allImagesInImageSubFolder).toMatchInlineSnapshot(`
-Array [
+[
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-10.WEBP",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1080.WEBP",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1200.WEBP",
@@ -142,7 +142,7 @@ Array [
     "example/out/images/nextImageExportOptimizer"
   );
   expect(allFilesInImageBuildFolder).toMatchInlineSnapshot(`
-Array [
+[
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-10.WEBP",
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1080.WEBP",
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1200.WEBP",
@@ -183,7 +183,7 @@ Array [
     "example/out/images/subfolder/nextImageExportOptimizer"
   );
   expect(allFilesInImageBuildSubFolder).toMatchInlineSnapshot(`
-Array [
+[
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-10.WEBP",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1080.WEBP",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1200.WEBP",
@@ -227,7 +227,7 @@ Array [
     }
     if (index == 0 || index == 2) {
       expect(imageFileStats).toMatchInlineSnapshot(`
-Array [
+[
   102,
   40250,
   45584,
@@ -266,7 +266,7 @@ Array [
 `);
     } else if (index === 1) {
       expect(imageFileStats).toMatchInlineSnapshot(`
-Array [
+[
   148,
   107796,
   122246,
