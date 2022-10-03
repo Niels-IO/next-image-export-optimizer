@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React, { useMemo, useState } from "react";
 import { ImageProps, StaticImageData } from "next/image";
-import dynamic from "next/dynamic";
+// import dynamic from "next/dynamic";
 
 const splitFilePath = ({ filePath }: { filePath: string }) => {
   const filenameWithExtension =
@@ -145,8 +145,14 @@ function ExportedImage({
       {...(placeholder && { placeholder })}
       {...(unoptimized && { unoptimized })}
       {...(imageError && { unoptimized: true })}
+      {...(process.env.NODE_ENV !== "production" && { placeholder: "empty" })}
+      {...(process.env.NODE_ENV !== "production" && { unoptimized: true })}
       loader={
-        imageError || unoptimized === true ? fallbackLoader : optimizedLoader
+        process.env.NODE_ENV !== "production" ||
+        imageError ||
+        unoptimized === true
+          ? fallbackLoader
+          : optimizedLoader
       }
       blurDataURL={automaticallyCalculatedBlurDataURL}
       onError={() => {
@@ -165,22 +171,23 @@ function ExportedImage({
   );
 }
 
-// Dynamic loading with SSR off is necessary as the image component runs into
-// hydration errors otherwise
-const DynamicExportedImage = dynamic(() => Promise.resolve(ExportedImage), {
-  ssr: false,
-});
+// // Dynamic loading with SSR off is necessary as the image component runs into
+// // hydration errors otherwise
+// const DynamicExportedImage = dynamic(() => Promise.resolve(ExportedImage), {
+//   ssr: false,
+// });
 
-export default function (props: ExportedImageProps) {
-  const isStaticImage = typeof props.src === "object";
-  const width = (isStaticImage && props.width) || (props.src as any).width;
-  const height = (isStaticImage && props.height) || (props.src as any).height;
+// export default function (props: ExportedImageProps) {
+//   const isStaticImage = typeof props.src === "object";
+//   const width = (isStaticImage && props.width) || (props.src as any).width;
+//   const height = (isStaticImage && props.height) || (props.src as any).height;
 
-  return isStaticImage ? (
-    <div style={isStaticImage ? { aspectRatio: width / height } : {}}>
-      <DynamicExportedImage {...props} />
-    </div>
-  ) : (
-    <DynamicExportedImage {...props} />
-  );
-}
+//   return isStaticImage ? (
+//     <div style={isStaticImage ? { aspectRatio: width / height } : {}}>
+//       <DynamicExportedImage {...props} />
+//     </div>
+//   ) : (
+//     <DynamicExportedImage {...props} />
+//   );
+// }
+export default ExportedImage;
