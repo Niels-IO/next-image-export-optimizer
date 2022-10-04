@@ -270,11 +270,11 @@ const nextImageExportOptimizer = async function () {
         extension = "WEBP";
       }
 
-      // for a static image, we copy the image to the <imageFolderPath>/nextImageExportOptimizer
+      // for a static image, we copy the image to public/nextImageExportOptimizer
       // and not the staticImageFolderPath
       // as the static image folder is deleted before each build
       const basePathToStoreOptimizedImages =
-        basePath === ".next/static/media" ? imageFolderPath : basePath;
+        basePath === ".next/static/media" ? "public" : basePath;
       const optimizedFileNameAndPath = path.join(
         basePathToStoreOptimizedImages,
         fileDirectory,

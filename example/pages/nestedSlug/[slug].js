@@ -20,6 +20,7 @@ function Slug() {
           alt="test_image_static"
           id="test_image_static"
           layout="responsive"
+          useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
         />
       </div>
     </div>

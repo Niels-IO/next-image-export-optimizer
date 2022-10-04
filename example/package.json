@@ -10,8 +10,12 @@
   },
   "dependencies": {
     "next": "^12.1.6",
-    "next-image-export-optimizer": "^0.14.6-beta.9",
+    "next-image-export-optimizer": "^0.14.6-beta.15",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "18.8.1",
+    "@types/react": "18.0.21"
   }
 }

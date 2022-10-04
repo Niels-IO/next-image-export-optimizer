@@ -1,5 +1,7 @@
 import Head from "next/head";
 import ExportedImage from "../localTestComponent/ExportedImage";
+// import ExportedImage from "next-image-export-optimizer";
+
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
@@ -31,6 +33,7 @@ export default function Home() {
               layout="fixed"
               width={size}
               height={size}
+              useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
               id={`test_image_${size}`}
               objectFit="cover"
               priority={true}

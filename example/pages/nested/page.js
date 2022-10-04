@@ -20,6 +20,7 @@ function Page() {
           alt="test_image_static"
           id="test_image_static"
           layout="responsive"
+          useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
         />
       </div>
       <h2>Optimized example with fixed size (static import)</h2>
@@ -37,6 +38,7 @@ function Page() {
           id="test_image_static_fixed"
           width={300}
           height={100}
+          useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
           objectFit="cover"
         />
       </div>
@@ -54,7 +56,7 @@ function Page() {
           layout="fill"
           id="test_image"
           objectFit="cover"
-          priority={true}
+          useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
           alt={"test_image"}
         />
       </div>
