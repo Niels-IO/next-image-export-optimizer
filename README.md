@@ -81,6 +81,7 @@ module.exports = {
      alt="Large Image"
      layout="fill"
      objectFit="cover"
+     useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
    />;
 
    // Or with static import
@@ -91,10 +92,11 @@ module.exports = {
      src={testPictureStatic}
      alt="Static Image"
      layout="responsive"
+     useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
    />;
    ```
 
-5. In the development mode, the original image will be served. The optimized images are created at build time only. In the exported, static React app, the responsive images are available as srcset and dynamically loaded by the browser
+5. In the development mode, the original image will be served. The optimized images are created at build time only. In the exported, static React app, the responsive images are available as srcset and dynamically loaded by the browser.
 
 6. You can output the original, unoptimized images using the `unoptimized` prop.
    Example:
@@ -119,18 +121,6 @@ The **\<ExportedImage />** component of this library wraps around the **\<Image 
 
 In the development mode, the **\<ExportedImage />** component falls back to the original image.
 
-To get the optimized images you alter the Next.js export command from
-
-```
-next build && next export
-```
-
-to
-
-```
-next build && next export && next-image-export-optimizer
-```
-
-All images in the specified folder will be optimized and reduced versions will be created based on the requested widths.
+All images in the specified folder, as well as all statically imported images will be optimized and reduced versions will be created based on the requested widths.
 
 The image transformation operation is optimized as it uses hashes to determine whether an image has already been optimized or not.

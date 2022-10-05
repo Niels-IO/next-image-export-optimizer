@@ -1,7 +1,6 @@
 import Image from "next/image";
 import React, { useMemo, useState } from "react";
 import { ImageProps, StaticImageData } from "next/image";
-import dynamic from "next/dynamic";
 
 const splitFilePath = ({ filePath }: { filePath: string }) => {
   const filenameWithExtension =
@@ -20,7 +19,7 @@ const splitFilePath = ({ filePath }: { filePath: string }) => {
   };
 };
 
-const generateImageURL = (src: string, width: number) => {
+const generateImageURL = (src: string, width: number, useWebp: boolean) => {
   const { filename, path, extension } = splitFilePath({ filePath: src });
 
   if (
@@ -34,29 +33,21 @@ const generateImageURL = (src: string, width: number) => {
   // the extension to WEBP to load them correctly
   let processedExtension = extension;
 
-  if (
-    (process.env.storePicturesInWEBP === true ||
-      process.env.nextImageExportOptimizer_storePicturesInWEBP === true) &&
-    ["JPG", "JPEG", "PNG"].includes(extension.toUpperCase())
-  ) {
+  if (useWebp && ["JPG", "JPEG", "PNG"].includes(extension.toUpperCase())) {
     processedExtension = "WEBP";
   }
+
   let correctedPath = path;
   const lastChar = correctedPath?.substr(-1); // Selects the last character
   if (lastChar != "/") {
     // If the last character is not a slash
     correctedPath = correctedPath + "/"; // Append a slash to it.
   }
-  let imageFolderPath =
-    process.env.nextImageExportOptimizer_imageFolderPath || "public/images";
-  imageFolderPath = imageFolderPath
-    .replace("/public/", "")
-    .replace("public/", "");
-  const correctedPathForStaticImages = `${imageFolderPath}/`;
+
   const isStaticImage = src.includes("_next/static/media");
 
   let generatedImageURL = `${
-    isStaticImage ? correctedPathForStaticImages : correctedPath
+    isStaticImage ? "" : correctedPath
   }nextImageExportOptimizer/${filename}-opt-${width}.${processedExtension.toUpperCase()}`;
   // if the generatedImageURL is not starting with a slash, then we add one
   if (generatedImageURL.charAt(0) !== "/") {
@@ -69,13 +60,16 @@ const generateImageURL = (src: string, width: number) => {
 const optimizedLoader = ({
   src,
   width,
+  useWebp,
 }: {
   src: string | StaticImageData;
   width: number;
+  useWebp: boolean;
 }) => {
   const isStaticImage = typeof src === "object";
   const _src = isStaticImage ? src.src : src;
-  return generateImageURL(_src, width);
+
+  return generateImageURL(_src, width, useWebp);
 };
 
 const fallbackLoader = ({ src }: { src: string | StaticImageData }) => {
@@ -86,6 +80,7 @@ const fallbackLoader = ({ src }: { src: string | StaticImageData }) => {
 export interface ExportedImageProps
   extends Omit<ImageProps, "src" | "loader" | "onError"> {
   src: string | StaticImageData;
+  useWebp?: boolean;
 }
 
 function ExportedImage({
@@ -100,12 +95,10 @@ function ExportedImage({
   height,
   objectFit,
   objectPosition,
+  useWebp = true,
   onLoadingComplete,
   unoptimized,
-  placeholder = process.env.generateAndUseBlurImages === true ||
-  process.env.nextImageExportOptimizer_generateAndUseBlurImages === true
-    ? "blur"
-    : "empty",
+  placeholder = "blur",
   blurDataURL,
   ...rest
 }: ExportedImageProps) {
@@ -123,7 +116,7 @@ function ExportedImage({
       return _src;
     }
     // otherwise use the generated image of 10px width as a blurDataURL
-    return generateImageURL(_src, 10);
+    return generateImageURL(_src, 10, useWebp);
   }, [blurDataURL, src, unoptimized]);
 
   return (
@@ -133,7 +126,6 @@ function ExportedImage({
       {...(typeof src === "object" && src.height && { height: src.height })}
       {...(width && { width })}
       {...(height && { height })}
-      {...(priority && { priority })}
       {...(loading && { loading })}
       {...(lazyRoot && { lazyRoot })}
       {...(lazyBoundary && { lazyBoundary })}
@@ -144,9 +136,12 @@ function ExportedImage({
       {...(onLoadingComplete && { onLoadingComplete })}
       {...(placeholder && { placeholder })}
       {...(unoptimized && { unoptimized })}
+      {...(priority && { priority })}
       {...(imageError && { unoptimized: true })}
       loader={
-        imageError || unoptimized === true ? fallbackLoader : optimizedLoader
+        imageError || unoptimized === true
+          ? fallbackLoader
+          : (e) => optimizedLoader({ src, width: e.width, useWebp })
       }
       blurDataURL={automaticallyCalculatedBlurDataURL}
       onError={() => {
@@ -165,22 +160,4 @@ function ExportedImage({
   );
 }
 
-// Dynamic loading with SSR off is necessary as the image component runs into
-// hydration errors otherwise
-const DynamicExportedImage = dynamic(() => Promise.resolve(ExportedImage), {
-  ssr: false,
-});
-
-export default function (props: ExportedImageProps) {
-  const isStaticImage = typeof props.src === "object";
-  const width = (isStaticImage && props.width) || (props.src as any).width;
-  const height = (isStaticImage && props.height) || (props.src as any).height;
-
-  return isStaticImage ? (
-    <div style={isStaticImage ? { aspectRatio: width / height } : {}}>
-      <DynamicExportedImage {...props} />
-    </div>
-  ) : (
-    <DynamicExportedImage {...props} />
-  );
-}
+export default ExportedImage;

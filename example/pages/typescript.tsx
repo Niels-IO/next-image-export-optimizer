@@ -33,6 +33,7 @@ export default function Home() {
             objectFit="cover"
             priority={true}
             alt={"test_image"}
+            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
           />
         </div>
 
@@ -48,6 +49,7 @@ export default function Home() {
             alt="test_image_static"
             id="test_image_static"
             layout="responsive"
+            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
           />
         </div>
         <div

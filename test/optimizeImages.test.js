@@ -70,6 +70,7 @@ const newConfigJpeg = `module.exports = {
 
 async function testConfig(config) {
   deleteFolder("example/public/images/nextImageExportOptimizer");
+  deleteFolder("example/public/nextImageExportOptimizer");
   deleteFolder("example/public/images/subfolder/nextImageExportOptimizer");
   deleteFolder(
     "example/public/images/subfolder/subfolder2/nextImageExportOptimizer"
@@ -78,6 +79,7 @@ async function testConfig(config) {
   fs.writeFileSync("example/next.config.js", config);
 
   deleteFolder("example/out/images/nextImageExportOptimizer");
+  deleteFolder("example/out/nextImageExportOptimizer");
   deleteFolder("example/out/images/subfolder/nextImageExportOptimizer");
   deleteFolder(
     "example/out/images/subfolder/subfolder2/nextImageExportOptimizer"
@@ -89,6 +91,11 @@ async function testConfig(config) {
     "example/public/images/nextImageExportOptimizer"
   );
   const allImagesInImageFolder = allFilesInImageFolder.filter(filterForImages);
+  const allFilesInStaticImageFolder = fs.readdirSync(
+    "example/public/nextImageExportOptimizer"
+  );
+  const allImagesInStaticImageFolder =
+    allFilesInStaticImageFolder.filter(filterForImages);
 
   const allFilesInImageSubFolder = fs.readdirSync(
     "example/public/images/subfolder/nextImageExportOptimizer"
@@ -99,248 +106,28 @@ async function testConfig(config) {
   const allFilesInImageBuildFolder = fs.readdirSync(
     "example/out/images/nextImageExportOptimizer"
   );
+  const allFilesInStaticImageBuildFolder = fs.readdirSync(
+    "example/out/nextImageExportOptimizer"
+  );
 
   const allFilesInImageBuildSubFolder = fs.readdirSync(
     "example/out/images/subfolder/nextImageExportOptimizer"
   );
   if (config === newConfig || config === legacyConfig) {
-    expect(allImagesInImageFolder).toMatchInlineSnapshot(`
-[
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-10.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1080.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1200.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-128.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-16.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1920.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-2048.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-256.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-32.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-384.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-3840.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-48.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-64.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-640.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-750.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-828.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-96.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-10.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1080.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1200.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-128.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-16.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1920.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-2048.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-256.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-32.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-3840.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-48.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-64.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-640.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-750.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-828.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-96.WEBP",
-]
-`);
-    expect(allImagesInImageSubFolder).toMatchInlineSnapshot(`
-[
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-10.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1080.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1200.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-128.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-16.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1920.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-2048.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-256.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-32.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-384.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-3840.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-48.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-64.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-640.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-750.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-828.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-96.WEBP",
-]
-`);
-    expect(allFilesInImageBuildFolder).toMatchInlineSnapshot(`
-[
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-10.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1080.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1200.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-128.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-16.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1920.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-2048.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-256.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-32.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-384.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-3840.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-48.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-64.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-640.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-750.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-828.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-96.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-10.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1080.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1200.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-128.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-16.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1920.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-2048.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-256.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-32.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-3840.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-48.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-64.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-640.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-750.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-828.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-96.WEBP",
-]
-`);
-    expect(allFilesInImageBuildSubFolder).toMatchInlineSnapshot(`
-[
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-10.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1080.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1200.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-128.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-16.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1920.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-2048.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-256.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-32.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-384.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-3840.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-48.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-64.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-640.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-750.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-828.WEBP",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-96.WEBP",
-]
-`);
+    expect(allImagesInImageFolder).toMatchSnapshot();
+    expect(allImagesInStaticImageFolder).toMatchSnapshot();
+
+    expect(allImagesInImageSubFolder).toMatchSnapshot();
+    expect(allFilesInImageBuildFolder).toMatchSnapshot();
+    expect(allFilesInStaticImageFolder).toMatchSnapshot();
+    expect(allFilesInImageBuildSubFolder).toMatchSnapshot();
   } else {
-    expect(allImagesInImageFolder).toMatchInlineSnapshot(`
-[
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-10.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1080.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1200.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-128.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-16.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1920.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-2048.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-256.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-32.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-384.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-3840.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-48.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-64.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-640.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-750.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-828.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-96.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-10.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1080.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1200.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-128.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-16.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1920.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-2048.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-256.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-32.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-3840.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-48.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-64.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-640.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-750.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-828.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-96.JPG",
-]
-`);
-    expect(allImagesInImageSubFolder).toMatchInlineSnapshot(`
-[
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-10.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1080.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1200.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-128.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-16.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1920.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-2048.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-256.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-32.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-384.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-3840.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-48.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-64.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-640.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-750.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-828.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-96.JPG",
-]
-`);
-    expect(allFilesInImageBuildFolder).toMatchInlineSnapshot(`
-[
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-10.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1080.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1200.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-128.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-16.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1920.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-2048.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-256.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-32.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-384.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-3840.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-48.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-64.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-640.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-750.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-828.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-96.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-10.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1080.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1200.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-128.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-16.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1920.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-2048.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-256.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-32.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-3840.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-48.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-64.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-640.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-750.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-828.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-96.JPG",
-]
-`);
-    expect(allFilesInImageBuildSubFolder).toMatchInlineSnapshot(`
-[
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-10.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1080.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1200.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-128.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-16.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1920.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-2048.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-256.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-32.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-384.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-3840.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-48.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-64.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-640.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-750.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-828.JPG",
-  "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-96.JPG",
-]
-`);
+    expect(allImagesInImageFolder).toMatchSnapshot();
+    expect(allImagesInStaticImageFolder).toMatchSnapshot();
+    expect(allImagesInImageSubFolder).toMatchSnapshot();
+    expect(allFilesInImageBuildFolder).toMatchSnapshot();
+    expect(allFilesInStaticImageBuildFolder).toMatchSnapshot();
+    expect(allFilesInImageBuildSubFolder).toMatchSnapshot();
   }
 
   const imageFolders = [
@@ -351,6 +138,10 @@ async function testConfig(config) {
     {
       basePath: "example/public/images/subfolder/nextImageExportOptimizer",
       imageFileArray: allFilesInImageBuildSubFolder,
+    },
+    {
+      basePath: "example/public/nextImageExportOptimizer",
+      imageFileArray: allImagesInStaticImageFolder,
     },
   ];
   for (let index = 0; index < imageFolders.length; index++) {
@@ -371,538 +162,16 @@ async function testConfig(config) {
     }
     if (config === newConfig || config === legacyConfig) {
       if (index == 0 || index == 2) {
-        expect(imageFileStats).toMatchInlineSnapshot(`
-[
-  [
-    "webp",
-    10,
-    7,
-  ],
-  [
-    "webp",
-    1080,
-    720,
-  ],
-  [
-    "webp",
-    1200,
-    800,
-  ],
-  [
-    "webp",
-    128,
-    85,
-  ],
-  [
-    "webp",
-    16,
-    11,
-  ],
-  [
-    "webp",
-    1920,
-    1280,
-  ],
-  [
-    "webp",
-    2048,
-    1365,
-  ],
-  [
-    "webp",
-    256,
-    171,
-  ],
-  [
-    "webp",
-    32,
-    21,
-  ],
-  [
-    "webp",
-    384,
-    256,
-  ],
-  [
-    "webp",
-    3840,
-    2560,
-  ],
-  [
-    "webp",
-    48,
-    32,
-  ],
-  [
-    "webp",
-    64,
-    43,
-  ],
-  [
-    "webp",
-    640,
-    427,
-  ],
-  [
-    "webp",
-    750,
-    500,
-  ],
-  [
-    "webp",
-    828,
-    552,
-  ],
-  [
-    "webp",
-    96,
-    64,
-  ],
-  [
-    "webp",
-    10,
-    7,
-  ],
-  [
-    "webp",
-    1080,
-    720,
-  ],
-  [
-    "webp",
-    1200,
-    800,
-  ],
-  [
-    "webp",
-    128,
-    85,
-  ],
-  [
-    "webp",
-    16,
-    11,
-  ],
-  [
-    "webp",
-    1920,
-    1280,
-  ],
-  [
-    "webp",
-    2048,
-    1365,
-  ],
-  [
-    "webp",
-    256,
-    171,
-  ],
-  [
-    "webp",
-    32,
-    21,
-  ],
-  [
-    "webp",
-    384,
-    256,
-  ],
-  [
-    "webp",
-    3840,
-    2560,
-  ],
-  [
-    "webp",
-    48,
-    32,
-  ],
-  [
-    "webp",
-    64,
-    43,
-  ],
-  [
-    "webp",
-    640,
-    427,
-  ],
-  [
-    "webp",
-    750,
-    500,
-  ],
-  [
-    "webp",
-    828,
-    552,
-  ],
-  [
-    "webp",
-    96,
-    64,
-  ],
-]
-`);
+        expect(imageFileStats).toMatchSnapshot();
       } else if (index === 1) {
-        expect(imageFileStats).toMatchInlineSnapshot(`
-[
-  [
-    "webp",
-    10,
-    15,
-  ],
-  [
-    "webp",
-    1080,
-    1620,
-  ],
-  [
-    "webp",
-    1200,
-    1800,
-  ],
-  [
-    "webp",
-    128,
-    192,
-  ],
-  [
-    "webp",
-    16,
-    24,
-  ],
-  [
-    "webp",
-    1920,
-    2880,
-  ],
-  [
-    "webp",
-    2048,
-    3072,
-  ],
-  [
-    "webp",
-    256,
-    384,
-  ],
-  [
-    "webp",
-    32,
-    48,
-  ],
-  [
-    "webp",
-    384,
-    576,
-  ],
-  [
-    "webp",
-    3840,
-    5760,
-  ],
-  [
-    "webp",
-    48,
-    72,
-  ],
-  [
-    "webp",
-    64,
-    96,
-  ],
-  [
-    "webp",
-    640,
-    960,
-  ],
-  [
-    "webp",
-    750,
-    1125,
-  ],
-  [
-    "webp",
-    828,
-    1242,
-  ],
-  [
-    "webp",
-    96,
-    144,
-  ],
-]
-`);
+        expect(imageFileStats).toMatchSnapshot();
       }
     }
     if (config === newConfigJpeg) {
       if (index == 0 || index == 2) {
-        expect(imageFileStats).toMatchInlineSnapshot(`
-[
-  [
-    "jpeg",
-    10,
-    7,
-  ],
-  [
-    "jpeg",
-    1080,
-    720,
-  ],
-  [
-    "jpeg",
-    1200,
-    800,
-  ],
-  [
-    "jpeg",
-    128,
-    85,
-  ],
-  [
-    "jpeg",
-    16,
-    11,
-  ],
-  [
-    "jpeg",
-    1920,
-    1280,
-  ],
-  [
-    "jpeg",
-    2048,
-    1365,
-  ],
-  [
-    "jpeg",
-    256,
-    171,
-  ],
-  [
-    "jpeg",
-    32,
-    21,
-  ],
-  [
-    "jpeg",
-    384,
-    256,
-  ],
-  [
-    "jpeg",
-    3840,
-    2560,
-  ],
-  [
-    "jpeg",
-    48,
-    32,
-  ],
-  [
-    "jpeg",
-    64,
-    43,
-  ],
-  [
-    "jpeg",
-    640,
-    427,
-  ],
-  [
-    "jpeg",
-    750,
-    500,
-  ],
-  [
-    "jpeg",
-    828,
-    552,
-  ],
-  [
-    "jpeg",
-    96,
-    64,
-  ],
-  [
-    "jpeg",
-    10,
-    7,
-  ],
-  [
-    "jpeg",
-    1080,
-    720,
-  ],
-  [
-    "jpeg",
-    1200,
-    800,
-  ],
-  [
-    "jpeg",
-    128,
-    85,
-  ],
-  [
-    "jpeg",
-    16,
-    11,
-  ],
-  [
-    "jpeg",
-    1920,
-    1280,
-  ],
-  [
-    "jpeg",
-    2048,
-    1365,
-  ],
-  [
-    "jpeg",
-    256,
-    171,
-  ],
-  [
-    "jpeg",
-    32,
-    21,
-  ],
-  [
-    "jpeg",
-    384,
-    256,
-  ],
-  [
-    "jpeg",
-    3840,
-    2560,
-  ],
-  [
-    "jpeg",
-    48,
-    32,
-  ],
-  [
-    "jpeg",
-    64,
-    43,
-  ],
-  [
-    "jpeg",
-    640,
-    427,
-  ],
-  [
-    "jpeg",
-    750,
-    500,
-  ],
-  [
-    "jpeg",
-    828,
-    552,
-  ],
-  [
-    "jpeg",
-    96,
-    64,
-  ],
-]
-`);
+        expect(imageFileStats).toMatchSnapshot();
       } else if (index === 1) {
-        expect(imageFileStats).toMatchInlineSnapshot(`
-[
-  [
-    "jpeg",
-    10,
-    15,
-  ],
-  [
-    "jpeg",
-    1080,
-    1620,
-  ],
-  [
-    "jpeg",
-    1200,
-    1800,
-  ],
-  [
-    "jpeg",
-    128,
-    192,
-  ],
-  [
-    "jpeg",
-    16,
-    24,
-  ],
-  [
-    "jpeg",
-    1920,
-    2880,
-  ],
-  [
-    "jpeg",
-    2048,
-    3072,
-  ],
-  [
-    "jpeg",
-    256,
-    384,
-  ],
-  [
-    "jpeg",
-    32,
-    48,
-  ],
-  [
-    "jpeg",
-    384,
-    576,
-  ],
-  [
-    "jpeg",
-    3840,
-    5760,
-  ],
-  [
-    "jpeg",
-    48,
-    72,
-  ],
-  [
-    "jpeg",
-    64,
-    96,
-  ],
-  [
-    "jpeg",
-    640,
-    960,
-  ],
-  [
-    "jpeg",
-    750,
-    1125,
-  ],
-  [
-    "jpeg",
-    828,
-    1242,
-  ],
-  [
-    "jpeg",
-    96,
-    144,
-  ],
-]
-`);
+        expect(imageFileStats).toMatchSnapshot();
       }
     }
   }
