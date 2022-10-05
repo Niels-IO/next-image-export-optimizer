@@ -96,7 +96,7 @@ module.exports = {
    />;
    ```
 
-5. In the development mode, the original image will be served. The optimized images are created at build time only. In the exported, static React app, the responsive images are available as srcset and dynamically loaded by the browser.
+5. In the development mode, either the original image will be served as a fallback when the optimized images are not yet generated or the optimized image once the image transformation was executed for the specific image. The optimized images are created at build time only. In the exported, static React app, the responsive images are available as srcset and dynamically loaded by the browser.
 
 6. You can output the original, unoptimized images using the `unoptimized` prop.
    Example:
