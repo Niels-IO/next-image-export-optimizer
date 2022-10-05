@@ -42,6 +42,12 @@ module.exports = {
     nextImageExportOptimizer_exportFolderPath: "out",
     nextImageExportOptimizer_quality: 75,
     nextImageExportOptimizer_storePicturesInWEBP: true,
+
+    // You either need to set this environment variable to true or pass
+    // `placeholder="none"` to all <ExportedImage> components.
+    //
+    // If generateAndUseBlurImages is false and you forget to set
+    // `placeholder="none"`, you'll see 404 errors in the console.
     nextImageExportOptimizer_generateAndUseBlurImages: true,
   },
 };
