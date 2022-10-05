@@ -258,6 +258,11 @@ const nextImageExportOptimizer = async function () {
       fileDirectory,
       file,
     ]);
+
+    let hashContentChanged = false;
+    if (imageHashes[file] !== imageHash) {
+      hashContentChanged = true;
+    }
     // Store image hash in temporary object
     imageHashes[file] = imageHash;
 
@@ -284,7 +289,11 @@ const nextImageExportOptimizer = async function () {
 
       // Check if file is already in hash and specific size and quality is present in the
       // opt file directory
-      if (file in imageHashes && fs.existsSync(optimizedFileNameAndPath)) {
+      if (
+        !hashContentChanged &&
+        file in imageHashes &&
+        fs.existsSync(optimizedFileNameAndPath)
+      ) {
         const stats = fs.statSync(optimizedFileNameAndPath);
         const fileSizeInBytes = stats.size;
         const fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
