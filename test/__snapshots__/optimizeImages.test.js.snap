@@ -24,28 +24,6 @@ exports[`legacyConfig 1`] = `
 
 exports[`legacyConfig 2`] = `
 [
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-10.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1080.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1200.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-128.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-16.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1920.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-2048.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-256.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-32.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-3840.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-48.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-64.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-640.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-750.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-828.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-96.WEBP",
-]
-`;
-
-exports[`legacyConfig 3`] = `
-[
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-10.WEBP",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1080.WEBP",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1200.WEBP",
@@ -66,7 +44,7 @@ exports[`legacyConfig 3`] = `
 ]
 `;
 
-exports[`legacyConfig 4`] = `
+exports[`legacyConfig 3`] = `
 [
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-10.WEBP",
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1080.WEBP",
@@ -88,29 +66,7 @@ exports[`legacyConfig 4`] = `
 ]
 `;
 
-exports[`legacyConfig 5`] = `
-[
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-10.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1080.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1200.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-128.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-16.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1920.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-2048.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-256.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-32.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-3840.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-48.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-64.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-640.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-750.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-828.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-96.WEBP",
-]
-`;
-
-exports[`legacyConfig 6`] = `
+exports[`legacyConfig 4`] = `
 [
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-10.WEBP",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1080.WEBP",
@@ -132,7 +88,7 @@ exports[`legacyConfig 6`] = `
 ]
 `;
 
-exports[`legacyConfig 7`] = `
+exports[`legacyConfig 5`] = `
 [
   [
     "webp",
@@ -222,7 +178,7 @@ exports[`legacyConfig 7`] = `
 ]
 `;
 
-exports[`legacyConfig 8`] = `
+exports[`legacyConfig 6`] = `
 [
   [
     "webp",
@@ -308,96 +264,6 @@ exports[`legacyConfig 8`] = `
     "webp",
     96,
     144,
-  ],
-]
-`;
-
-exports[`legacyConfig 9`] = `
-[
-  [
-    "webp",
-    10,
-    7,
-  ],
-  [
-    "webp",
-    1080,
-    720,
-  ],
-  [
-    "webp",
-    1200,
-    800,
-  ],
-  [
-    "webp",
-    128,
-    85,
-  ],
-  [
-    "webp",
-    16,
-    11,
-  ],
-  [
-    "webp",
-    1920,
-    1280,
-  ],
-  [
-    "webp",
-    2048,
-    1365,
-  ],
-  [
-    "webp",
-    256,
-    171,
-  ],
-  [
-    "webp",
-    32,
-    21,
-  ],
-  [
-    "webp",
-    384,
-    256,
-  ],
-  [
-    "webp",
-    3840,
-    2560,
-  ],
-  [
-    "webp",
-    48,
-    32,
-  ],
-  [
-    "webp",
-    64,
-    43,
-  ],
-  [
-    "webp",
-    640,
-    427,
-  ],
-  [
-    "webp",
-    750,
-    500,
-  ],
-  [
-    "webp",
-    828,
-    552,
-  ],
-  [
-    "webp",
-    96,
-    64,
   ],
 ]
 `;
@@ -426,28 +292,6 @@ exports[`newConfig 1`] = `
 
 exports[`newConfig 2`] = `
 [
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-10.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1080.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1200.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-128.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-16.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1920.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-2048.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-256.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-32.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-3840.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-48.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-64.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-640.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-750.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-828.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-96.WEBP",
-]
-`;
-
-exports[`newConfig 3`] = `
-[
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-10.WEBP",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1080.WEBP",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1200.WEBP",
@@ -468,7 +312,7 @@ exports[`newConfig 3`] = `
 ]
 `;
 
-exports[`newConfig 4`] = `
+exports[`newConfig 3`] = `
 [
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-10.WEBP",
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1080.WEBP",
@@ -490,29 +334,7 @@ exports[`newConfig 4`] = `
 ]
 `;
 
-exports[`newConfig 5`] = `
-[
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-10.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1080.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1200.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-128.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-16.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1920.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-2048.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-256.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-32.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-3840.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-48.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-64.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-640.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-750.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-828.WEBP",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-96.WEBP",
-]
-`;
-
-exports[`newConfig 6`] = `
+exports[`newConfig 4`] = `
 [
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-10.WEBP",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1080.WEBP",
@@ -534,7 +356,7 @@ exports[`newConfig 6`] = `
 ]
 `;
 
-exports[`newConfig 7`] = `
+exports[`newConfig 5`] = `
 [
   [
     "webp",
@@ -624,7 +446,7 @@ exports[`newConfig 7`] = `
 ]
 `;
 
-exports[`newConfig 8`] = `
+exports[`newConfig 6`] = `
 [
   [
     "webp",
@@ -710,96 +532,6 @@ exports[`newConfig 8`] = `
     "webp",
     96,
     144,
-  ],
-]
-`;
-
-exports[`newConfig 9`] = `
-[
-  [
-    "webp",
-    10,
-    7,
-  ],
-  [
-    "webp",
-    1080,
-    720,
-  ],
-  [
-    "webp",
-    1200,
-    800,
-  ],
-  [
-    "webp",
-    128,
-    85,
-  ],
-  [
-    "webp",
-    16,
-    11,
-  ],
-  [
-    "webp",
-    1920,
-    1280,
-  ],
-  [
-    "webp",
-    2048,
-    1365,
-  ],
-  [
-    "webp",
-    256,
-    171,
-  ],
-  [
-    "webp",
-    32,
-    21,
-  ],
-  [
-    "webp",
-    384,
-    256,
-  ],
-  [
-    "webp",
-    3840,
-    2560,
-  ],
-  [
-    "webp",
-    48,
-    32,
-  ],
-  [
-    "webp",
-    64,
-    43,
-  ],
-  [
-    "webp",
-    640,
-    427,
-  ],
-  [
-    "webp",
-    750,
-    500,
-  ],
-  [
-    "webp",
-    828,
-    552,
-  ],
-  [
-    "webp",
-    96,
-    64,
   ],
 ]
 `;
@@ -828,28 +560,6 @@ exports[`newConfigJpeg 1`] = `
 
 exports[`newConfigJpeg 2`] = `
 [
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-10.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1080.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1200.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-128.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-16.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1920.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-2048.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-256.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-32.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-3840.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-48.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-64.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-640.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-750.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-828.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-96.JPG",
-]
-`;
-
-exports[`newConfigJpeg 3`] = `
-[
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-10.JPG",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1080.JPG",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1200.JPG",
@@ -870,7 +580,7 @@ exports[`newConfigJpeg 3`] = `
 ]
 `;
 
-exports[`newConfigJpeg 4`] = `
+exports[`newConfigJpeg 3`] = `
 [
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-10.JPG",
   "chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1080.JPG",
@@ -892,29 +602,7 @@ exports[`newConfigJpeg 4`] = `
 ]
 `;
 
-exports[`newConfigJpeg 5`] = `
-[
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-10.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1080.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1200.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-128.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-16.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1920.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-2048.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-256.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-32.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-3840.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-48.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-64.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-640.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-750.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-828.JPG",
-  "chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-96.JPG",
-]
-`;
-
-exports[`newConfigJpeg 6`] = `
+exports[`newConfigJpeg 4`] = `
 [
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-10.JPG",
   "ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1080.JPG",
@@ -936,7 +624,7 @@ exports[`newConfigJpeg 6`] = `
 ]
 `;
 
-exports[`newConfigJpeg 7`] = `
+exports[`newConfigJpeg 5`] = `
 [
   [
     "jpeg",
@@ -1026,7 +714,7 @@ exports[`newConfigJpeg 7`] = `
 ]
 `;
 
-exports[`newConfigJpeg 8`] = `
+exports[`newConfigJpeg 6`] = `
 [
   [
     "jpeg",
@@ -1112,96 +800,6 @@ exports[`newConfigJpeg 8`] = `
     "jpeg",
     96,
     144,
-  ],
-]
-`;
-
-exports[`newConfigJpeg 9`] = `
-[
-  [
-    "jpeg",
-    10,
-    7,
-  ],
-  [
-    "jpeg",
-    1080,
-    720,
-  ],
-  [
-    "jpeg",
-    1200,
-    800,
-  ],
-  [
-    "jpeg",
-    128,
-    85,
-  ],
-  [
-    "jpeg",
-    16,
-    11,
-  ],
-  [
-    "jpeg",
-    1920,
-    1280,
-  ],
-  [
-    "jpeg",
-    2048,
-    1365,
-  ],
-  [
-    "jpeg",
-    256,
-    171,
-  ],
-  [
-    "jpeg",
-    32,
-    21,
-  ],
-  [
-    "jpeg",
-    384,
-    256,
-  ],
-  [
-    "jpeg",
-    3840,
-    2560,
-  ],
-  [
-    "jpeg",
-    48,
-    32,
-  ],
-  [
-    "jpeg",
-    64,
-    43,
-  ],
-  [
-    "jpeg",
-    640,
-    427,
-  ],
-  [
-    "jpeg",
-    750,
-    500,
-  ],
-  [
-    "jpeg",
-    828,
-    552,
-  ],
-  [
-    "jpeg",
-    96,
-    64,
   ],
 ]
 `;

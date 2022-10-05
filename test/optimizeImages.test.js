@@ -85,17 +85,12 @@ async function testConfig(config) {
     "example/out/images/subfolder/subfolder2/nextImageExportOptimizer"
   );
 
-  await execSync("cd example/ && node ../src/optimizeImages.js");
+  execSync("cd example/ && node ../src/optimizeImages.js");
 
   const allFilesInImageFolder = fs.readdirSync(
     "example/public/images/nextImageExportOptimizer"
   );
   const allImagesInImageFolder = allFilesInImageFolder.filter(filterForImages);
-  const allFilesInStaticImageFolder = fs.readdirSync(
-    "example/public/nextImageExportOptimizer"
-  );
-  const allImagesInStaticImageFolder =
-    allFilesInStaticImageFolder.filter(filterForImages);
 
   const allFilesInImageSubFolder = fs.readdirSync(
     "example/public/images/subfolder/nextImageExportOptimizer"
@@ -106,29 +101,25 @@ async function testConfig(config) {
   const allFilesInImageBuildFolder = fs.readdirSync(
     "example/out/images/nextImageExportOptimizer"
   );
-  const allFilesInStaticImageBuildFolder = fs.readdirSync(
-    "example/out/nextImageExportOptimizer"
-  );
 
   const allFilesInImageBuildSubFolder = fs.readdirSync(
     "example/out/images/subfolder/nextImageExportOptimizer"
   );
+
   if (config === newConfig || config === legacyConfig) {
     expect(allImagesInImageFolder).toMatchSnapshot();
-    expect(allImagesInStaticImageFolder).toMatchSnapshot();
-
     expect(allImagesInImageSubFolder).toMatchSnapshot();
     expect(allFilesInImageBuildFolder).toMatchSnapshot();
-    expect(allFilesInStaticImageFolder).toMatchSnapshot();
     expect(allFilesInImageBuildSubFolder).toMatchSnapshot();
   } else {
     expect(allImagesInImageFolder).toMatchSnapshot();
-    expect(allImagesInStaticImageFolder).toMatchSnapshot();
     expect(allImagesInImageSubFolder).toMatchSnapshot();
     expect(allFilesInImageBuildFolder).toMatchSnapshot();
-    expect(allFilesInStaticImageBuildFolder).toMatchSnapshot();
     expect(allFilesInImageBuildSubFolder).toMatchSnapshot();
   }
+
+  expect(fs.existsSync("example/public/nextImageExportOptimizer")).toBe(false);
+  expect(fs.existsSync("example/out/nextImageExportOptimizer")).toBe(false);
 
   const imageFolders = [
     {
@@ -139,10 +130,6 @@ async function testConfig(config) {
       basePath: "example/public/images/subfolder/nextImageExportOptimizer",
       imageFileArray: allFilesInImageBuildSubFolder,
     },
-    {
-      basePath: "example/public/nextImageExportOptimizer",
-      imageFileArray: allImagesInStaticImageFolder,
-    },
   ];
   for (let index = 0; index < imageFolders.length; index++) {
     const imageFolderBasePath = imageFolders[index].basePath;
@@ -151,7 +138,7 @@ async function testConfig(config) {
     const imageFileStats = [];
     for (let index = 0; index < imageFileArray.length; index++) {
       const imageFile = imageFileArray[index];
-      const image = await sharp(`${imageFolderBasePath}/${imageFile}`);
+      const image = sharp(`${imageFolderBasePath}/${imageFile}`);
       const metadata = await image.metadata();
       const statsToBeChecked = [
         metadata.format,
