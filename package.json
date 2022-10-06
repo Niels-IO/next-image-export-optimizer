@@ -13,7 +13,7 @@
     "test": "jest",
     "test:e2e": "npx playwright install && playwright test",
     "exportExample": "cd example && npm run export && cd ..",
-    "prepublishOnly": "npm run build && npm run exportExample && npm test && npm run test:e2e",
+    "prepublishOnly": "npm run build && npm test && npm run test:e2e",
     "fetchTags": "git fetch --tags -f"
   },
   "repository": {

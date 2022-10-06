@@ -77,8 +77,7 @@ const fallbackLoader = ({ src }: { src: string | StaticImageData }) => {
   return _src;
 };
 
-export interface ExportedImageProps
-  extends Omit<ImageProps, "src" | "loader" | "onError"> {
+export interface ExportedImageProps extends Omit<ImageProps, "src" | "loader"> {
   src: string | StaticImageData;
   useWebp?: boolean;
 }
@@ -100,6 +99,7 @@ function ExportedImage({
   unoptimized,
   placeholder = "blur",
   blurDataURL,
+  onError,
   ...rest
 }: ExportedImageProps) {
   const [imageError, setImageError] = useState(false);
@@ -144,8 +144,10 @@ function ExportedImage({
           : (e) => optimizedLoader({ src, width: e.width, useWebp })
       }
       blurDataURL={automaticallyCalculatedBlurDataURL}
-      onError={() => {
+      onError={(error) => {
         setImageError(true);
+        // execute the onError function if provided
+        onError && onError(error);
       }}
       onLoadingComplete={(result) => {
         // for some configurations, the onError handler is not called on an error occurrence
@@ -154,6 +156,8 @@ function ExportedImage({
           // Broken image, fall back to unoptimized (meaning the original image src)
           setImageError(true);
         }
+        // execute the onLoadingComplete callback if present
+        onLoadingComplete && onLoadingComplete(result);
       }}
       src={typeof src === "object" ? src.src : src}
     />
