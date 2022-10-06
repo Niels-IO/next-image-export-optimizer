@@ -85,7 +85,7 @@ async function testConfig(config) {
     "example/out/images/subfolder/subfolder2/nextImageExportOptimizer"
   );
 
-  await execSync("cd example/ && node ../src/optimizeImages.js");
+  execSync("cd example/ && npm run export && node ../src/optimizeImages.js");
 
   const allFilesInImageFolder = fs.readdirSync(
     "example/public/images/nextImageExportOptimizer"

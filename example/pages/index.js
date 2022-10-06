@@ -1,6 +1,6 @@
 import Head from "next/head";
-// import ExportedImage from "../localTestComponent/ExportedImage";
-import ExportedImage from "next-image-export-optimizer";
+import ExportedImage from "../localTestComponent/ExportedImage";
+// import ExportedImage from "next-image-export-optimizer";
 
 import styles from "../styles/Home.module.css";
 import testPictureStatic from "../public/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.jpg";
