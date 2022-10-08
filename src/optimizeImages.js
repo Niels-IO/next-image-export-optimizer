@@ -266,6 +266,9 @@ const nextImageExportOptimizer = async function () {
     // Store image hash in temporary object
     imageHashes[file] = imageHash;
 
+    let optimizedOriginalWidthImagePath;
+    let optimizedOriginalWidthImageSizeInMegabytes;
+
     // Loop through all widths
     for (let indexWidth = 0; indexWidth < widths.length; indexWidth++) {
       const width = widths[indexWidth];
@@ -305,16 +308,41 @@ const nextImageExportOptimizer = async function () {
 
         continue;
       }
+
+      // If the original image's width is X, the optimized images are
+      // identical for all widths >= X. Once we have generated the first of
+      // these identical images, we can simply copy that file instead of redoing
+      // the optimization.
+      if (
+        optimizedOriginalWidthImagePath &&
+        optimizedOriginalWidthImageSizeInMegabytes
+      ) {
+        fs.copyFileSync(
+          optimizedOriginalWidthImagePath,
+          optimizedFileNameAndPath
+        );
+
+        sizeOfGeneratedImages += optimizedOriginalWidthImageSizeInMegabytes;
+        progressBar.increment({
+          sizeOfGeneratedImages: sizeOfGeneratedImages.toFixed(1),
+        });
+        allGeneratedImages.push(optimizedFileNameAndPath);
+
+        continue;
+      }
+
       // Begin sharp transformation logic
       const transformer = sharp(imageBuffer);
 
-      await transformer.rotate();
+      transformer.rotate();
 
       const { width: metaWidth } = await transformer.metadata();
 
-      if (metaWidth && metaWidth > width) {
+      const resize = metaWidth && metaWidth > width;
+      if (resize) {
         transformer.resize(width);
       }
+
       if (extension === "AVIF") {
         if (transformer.avif) {
           const avifQuality = quality - 15;
@@ -343,6 +371,11 @@ const nextImageExportOptimizer = async function () {
         sizeOfGeneratedImages: sizeOfGeneratedImages.toFixed(1),
       });
       allGeneratedImages.push(optimizedFileNameAndPath);
+
+      if (!resize) {
+        optimizedOriginalWidthImagePath = optimizedFileNameAndPath;
+        optimizedOriginalWidthImageSizeInMegabytes = fileSizeInMegabytes;
+      }
     }
   }
   let data = JSON.stringify(imageHashes, null, 4);
