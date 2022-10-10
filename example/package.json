@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "next": "^12.1.6",
-    "next-image-export-optimizer": "^0.14.6-beta.15",
+    "next-image-export-optimizer": "^0.16.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
