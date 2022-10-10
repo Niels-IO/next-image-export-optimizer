@@ -177,7 +177,7 @@ async function testConfig(config) {
   }
 }
 
-jest.setTimeout(90000);
+jest.setTimeout(180000);
 test("legacyConfig", async () => {
   await testConfig(legacyConfig);
 });
