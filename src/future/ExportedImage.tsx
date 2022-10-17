@@ -1,6 +1,6 @@
-import Image from "next/image";
+import Image from "next/future/image";
 import React, { useMemo, useState } from "react";
-import { ImageProps, StaticImageData } from "next/image";
+import { ImageProps, StaticImageData } from "next/future/image";
 
 const splitFilePath = ({ filePath }: { filePath: string }) => {
   const filenameWithExtension =
@@ -87,18 +87,15 @@ function ExportedImage({
   src,
   priority = false,
   loading,
-  lazyRoot = null,
-  lazyBoundary = "200px",
   className,
   width,
   height,
-  objectFit,
-  objectPosition,
   useWebp = true,
   onLoadingComplete,
   unoptimized,
   placeholder = "blur",
   blurDataURL,
+  style,
   onError,
   ...rest
 }: ExportedImageProps) {
@@ -119,7 +116,26 @@ function ExportedImage({
     return generateImageURL(_src, 10, useWebp);
   }, [blurDataURL, src, unoptimized]);
 
-  return (
+  const [blurComplete, setBlurComplete] = useState(false);
+
+  // Currently, we have to handle the blurDataURL ourselves as the new Image component
+  // is expecting a base64 encoded string, but the generated blurDataURL is a normal URL
+  const blurStyle =
+    placeholder === "blur" &&
+    automaticallyCalculatedBlurDataURL &&
+    automaticallyCalculatedBlurDataURL.startsWith("/") &&
+    !blurComplete
+      ? {
+          backgroundSize: style?.objectFit || "cover",
+          backgroundPosition: style?.objectPosition || "50% 50%",
+          backgroundRepeat: "no-repeat",
+          backgroundImage: `url(${automaticallyCalculatedBlurDataURL})`,
+          filter: "url(#sharpBlur)",
+        }
+      : undefined;
+  console.log(blurStyle);
+
+  const ImageElement = (
     <Image
       {...rest}
       {...(typeof src === "object" && src.width && { width: src.width })}
@@ -127,16 +143,14 @@ function ExportedImage({
       {...(width && { width })}
       {...(height && { height })}
       {...(loading && { loading })}
-      {...(lazyRoot && { lazyRoot })}
-      {...(lazyBoundary && { lazyBoundary })}
       {...(className && { className })}
-      {...(objectFit && { objectFit })}
-      {...(objectPosition && { objectPosition })}
       {...(onLoadingComplete && { onLoadingComplete })}
-      {...(placeholder && { placeholder })}
+      // if the blurStyle is not "empty", then we take care of the blur behavior ourselves
+      {...(placeholder && { placeholder: blurStyle ? "empty" : placeholder })}
       {...(unoptimized && { unoptimized })}
       {...(priority && { priority })}
       {...(imageError && { unoptimized: true })}
+      style={{ ...style, ...blurStyle }}
       loader={
         imageError || unoptimized === true
           ? fallbackLoader
@@ -145,6 +159,7 @@ function ExportedImage({
       blurDataURL={automaticallyCalculatedBlurDataURL}
       onError={(error) => {
         setImageError(true);
+        setBlurComplete(true);
         // execute the onError function if provided
         onError && onError(error);
       }}
@@ -155,11 +170,68 @@ function ExportedImage({
           // Broken image, fall back to unoptimized (meaning the original image src)
           setImageError(true);
         }
+        setBlurComplete(true);
+
         // execute the onLoadingComplete callback if present
         onLoadingComplete && onLoadingComplete(result);
       }}
       src={typeof src === "object" ? src.src : src}
     />
+  );
+
+  // When we present a placeholder, we add a svg filter to the image and remove it after either
+  // the image is loaded or an error occurred
+  return blurStyle ? (
+    <>
+      {/* In case javascript is disabled, we show a fallback without blurry placeholder */}
+      <noscript>
+        <Image
+          {...rest}
+          {...(typeof src === "object" && src.width && { width: src.width })}
+          {...(typeof src === "object" && src.height && { height: src.height })}
+          {...(width && { width })}
+          {...(height && { height })}
+          {...(loading && { loading })}
+          {...(className && { className })}
+          placeholder="empty"
+          {...(unoptimized && { unoptimized })}
+          {...(priority && { priority })}
+          style={style}
+          loader={fallbackLoader}
+          src={typeof src === "object" ? src.src : src}
+        />
+      </noscript>
+      {ImageElement}
+      <svg
+        style={{
+          border: 0,
+          clip: "rect(0 0 0 0)",
+          height: "1px",
+          margin: "-1px",
+          overflow: "hidden",
+          padding: 0,
+          position: "absolute",
+          width: "1px",
+          display: "none",
+        }}
+      >
+        <filter id="sharpBlur">
+          <feGaussianBlur
+            stdDeviation="20"
+            colorInterpolationFilters="sRGB"
+          ></feGaussianBlur>
+          <feColorMatrix
+            type="matrix"
+            colorInterpolationFilters="sRGB"
+            values="1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 9 0"
+          ></feColorMatrix>
+
+          <feComposite in2="SourceGraphic" operator="in"></feComposite>
+        </filter>
+      </svg>
+    </>
+  ) : (
+    ImageElement
   );
 }
 

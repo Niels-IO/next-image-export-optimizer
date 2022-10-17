@@ -77,7 +77,8 @@ const fallbackLoader = ({ src }: { src: string | StaticImageData }) => {
   return _src;
 };
 
-export interface ExportedImageProps extends Omit<ImageProps, "src" | "loader"> {
+export interface ExportedImageProps
+  extends Omit<ImageProps, "src" | "loader" | "quality"> {
   src: string | StaticImageData;
   useWebp?: boolean;
 }
@@ -89,7 +90,6 @@ function ExportedImage({
   lazyRoot = null,
   lazyBoundary = "200px",
   className,
-  quality,
   width,
   height,
   objectFit,
@@ -130,7 +130,6 @@ function ExportedImage({
       {...(lazyRoot && { lazyRoot })}
       {...(lazyBoundary && { lazyBoundary })}
       {...(className && { className })}
-      {...(quality && { quality })}
       {...(objectFit && { objectFit })}
       {...(objectPosition && { objectPosition })}
       {...(onLoadingComplete && { onLoadingComplete })}
