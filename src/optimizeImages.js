@@ -139,7 +139,7 @@ const nextImageExportOptimizer = async function () {
   if (!fs.existsSync(imageFolderPath)) {
     console.warn(
       "\x1b[41m",
-      "Could not find a public folder in this directory. Make sure you run the command in the main directory of your project.",
+      `Could not find an image folder (${imageFolderPath}) in this directory. Make sure you run the command in the main directory of your project.`,
       "\x1b[0m"
     );
   }
