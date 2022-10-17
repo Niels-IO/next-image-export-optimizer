@@ -176,7 +176,7 @@ async function testConfig(config) {
       ];
       imageFileStats.push(statsToBeChecked);
     }
-    if (config === newConfig || config === legacyConfig) {
+    if (config === newConfig || config === legacyConfig || config === newConfigWithStrings) {
       if (index == 0 || index == 2) {
         expect(imageFileStats).toMatchSnapshot();
       } else if (index === 1) {

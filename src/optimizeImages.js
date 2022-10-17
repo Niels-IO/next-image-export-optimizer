@@ -122,11 +122,11 @@ const nextImageExportOptimizer = async function () {
     if (nextjsConfig.env?.storePicturesInWEBP !== undefined) {
       storePicturesInWEBP = nextjsConfig.env.storePicturesInWEBP;
     } else if (
-      newPath?.nextImageExportOptimizer_storePicturesInWEBP === true ||
-      newPath?.nextImageExportOptimizer_storePicturesInWEBP === "true"
+      newPath?.nextImageExportOptimizer_storePicturesInWEBP !== undefined
     ) {
       storePicturesInWEBP =
-        newPath.nextImageExportOptimizer_storePicturesInWEBP;
+        newPath.nextImageExportOptimizer_storePicturesInWEBP === true ||
+        newPath?.nextImageExportOptimizer_storePicturesInWEBP === "true";
     }
     if (nextjsConfig.env?.generateAndUseBlurImages !== undefined) {
       blurSize = [10];
