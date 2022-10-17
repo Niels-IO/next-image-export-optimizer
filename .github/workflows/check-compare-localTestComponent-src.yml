@@ -1,0 +1,19 @@
+name: "check-compare-localTestComponent-src"
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  test_something:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: LouisBrunner/diff-action@v0.1.0
+      with:
+        old: src/ExportedImage.tsx
+        new: example/localTestComponent/ExportedImage.tsx
+        mode: addition
+        tolerance: same
+        output: out.txt

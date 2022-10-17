@@ -30,6 +30,7 @@ function Subfolder() {
             layout="fill"
             id="test_image_subfolder"
             objectFit="cover"
+            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
             priority={true}
             alt={"test_image_subfolder"}
           />
@@ -47,6 +48,7 @@ function Subfolder() {
             layout="fill"
             id="test_image_subfolder2"
             objectFit="cover"
+            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
             priority={true}
             alt={"test_image_subfolder2"}
           />

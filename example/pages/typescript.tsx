@@ -2,6 +2,7 @@ import Head from "next/head";
 import ExportedImage from "../localTestComponent/ExportedImage";
 import React from "react";
 import Image from "next/image";
+import testPictureStatic from "../public/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.jpg";
 
 export default function Home() {
   return (
@@ -32,6 +33,23 @@ export default function Home() {
             objectFit="cover"
             priority={true}
             alt={"test_image"}
+            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
+          />
+        </div>
+
+        <div
+          style={{
+            position: "relative",
+            marginBottom: "3rem",
+            width: "100%",
+          }}
+        >
+          <ExportedImage
+            src={testPictureStatic}
+            alt="test_image_static"
+            id="test_image_static"
+            layout="responsive"
+            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
           />
         </div>
         <div

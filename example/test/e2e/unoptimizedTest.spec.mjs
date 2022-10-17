@@ -6,7 +6,9 @@ test.describe(`Test unoptimized image prop`, () => {
     deviceScaleFactor: 1,
   });
   test("should check the image size", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/", {
+      waitUntil: "networkidle",
+    });
 
     await page.click("text=Next-Image-Export-Optimizer");
 

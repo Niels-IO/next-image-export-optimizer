@@ -15,7 +15,7 @@ Use [Next.js advanced **\<Image/>** component](https://nextjs.org/docs/basic-fea
 
 This library makes a few assumptions:
 
-- All images that should be optimized are stored inside the public folder like public/images
+- All images that should be optimized are stored inside the public folder like public/images (except for the statically imported images)
 - Currently only local images are supported for optimization
 
 ## Installation
@@ -42,6 +42,14 @@ module.exports = {
     nextImageExportOptimizer_exportFolderPath: "out",
     nextImageExportOptimizer_quality: 75,
     nextImageExportOptimizer_storePicturesInWEBP: true,
+
+    // If you do not want to use blurry placeholder images, then you can set
+    // nextImageExportOptimizer_generateAndUseBlurImages to false and pass
+    // `placeholder="none"` to all <ExportedImage> components.
+    //
+    // If nextImageExportOptimizer_generateAndUseBlurImages is false and you
+    // forget to set `placeholder="none"`, you'll see 404 errors for the missing
+    // placeholder images in the console.
     nextImageExportOptimizer_generateAndUseBlurImages: true,
   },
 };
@@ -87,10 +95,22 @@ If your nextjs project is not at the root directory where you are running the co
      alt="Large Image"
      layout="fill"
      objectFit="cover"
+     useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
+   />;
+
+   // Or with static import
+   import ExportedImage from "next-image-export-optimizer";
+   import testPictureStatic from "PATH_TO_IMAGE/test_static.jpg";
+
+   <ExportedImage
+     src={testPictureStatic}
+     alt="Static Image"
+     layout="responsive"
+     useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
    />;
    ```
 
-5. In the development mode, the original image will be served as the optimized images are created at build time only. In the exported, static React app, the responsive images are available as srcset and dynamically loaded by the browser
+5. In the development mode, either the original image will be served as a fallback when the optimized images are not yet generated or the optimized image once the image transformation was executed for the specific image. The optimized images are created at build time only. In the exported, static React app, the responsive images are available as srcset and dynamically loaded by the browser.
 
 6. You can output the original, unoptimized images using the `unoptimized` prop.
    Example:
@@ -105,6 +125,14 @@ If your nextjs project is not at the root directory where you are running the co
    />
    ```
 
+7. Overriding presets:
+
+   **Placeholder images:**
+   If you do not want the automatic generation of tiny, blurry placeholder images, set the `nextImageExportOptimizer_generateAndUseBlurImages` environment variable to `false` and set the `placeholder` prop from the **\<ExportedImage />** component to `none`.
+
+   **Usage of the WEBP format:**
+   If you do not want to use the WEBP format, set the `nextImageExportOptimizer_storePicturesInWEBP` environment variable to `false` and set the `useWebp` prop from the **\<ExportedImage />** component to `false`.
+
 ## Live example
 
 You can see a live example of the use of this library at [reactapp.dev/next-image-export-optimizer](https://reactapp.dev/next-image-export-optimizer)
@@ -115,18 +143,6 @@ The **\<ExportedImage />** component of this library wraps around the **\<Image 
 
 In the development mode, the **\<ExportedImage />** component falls back to the original image.
 
-To get the optimized images you alter the Next.js export command from
-
-```
-next build && next export
-```
-
-to
-
-```
-next build && next export && next-image-export-optimizer
-```
-
-All images in the specified folder will be optimized and reduced versions will be created based on the requested widths.
+All images in the specified folder, as well as all statically imported images will be optimized and reduced versions will be created based on the requested widths.
 
 The image transformation operation is optimized as it uses hashes to determine whether an image has already been optimized or not.

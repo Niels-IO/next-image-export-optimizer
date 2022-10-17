@@ -1,14 +1,8 @@
-import dynamic from "next/dynamic";
-
 import Image from "next/image";
-import React, { useState, useMemo } from "react";
-import { ImageProps } from "next/image";
+import React, { useMemo, useState } from "react";
+import { ImageProps, StaticImageData } from "next/image";
 
-type SplitFilePathProps = {
-  filePath: string;
-};
-
-const splitFilePath = ({ filePath }: SplitFilePathProps) => {
+const splitFilePath = ({ filePath }: { filePath: string }) => {
   const filenameWithExtension =
     filePath.split("\\").pop()?.split("/").pop() || "";
   const filePathWithoutFilename = filePath.split(filenameWithExtension).shift();
@@ -25,7 +19,7 @@ const splitFilePath = ({ filePath }: SplitFilePathProps) => {
   };
 };
 
-const generateImageURL = (src: string, width: number) => {
+const generateImageURL = (src: string, width: number, useWebp: boolean) => {
   const { filename, path, extension } = splitFilePath({ filePath: src });
 
   if (
@@ -39,13 +33,10 @@ const generateImageURL = (src: string, width: number) => {
   // the extension to WEBP to load them correctly
   let processedExtension = extension;
 
-  if (
-    (process.env.storePicturesInWEBP === true ||
-      process.env.nextImageExportOptimizer_storePicturesInWEBP === true) &&
-    ["JPG", "JPEG", "PNG"].includes(extension.toUpperCase())
-  ) {
+  if (useWebp && ["JPG", "JPEG", "PNG"].includes(extension.toUpperCase())) {
     processedExtension = "WEBP";
   }
+
   let correctedPath = path;
   const lastChar = correctedPath?.substr(-1); // Selects the last character
   if (lastChar != "/") {
@@ -53,19 +44,42 @@ const generateImageURL = (src: string, width: number) => {
     correctedPath = correctedPath + "/"; // Append a slash to it.
   }
 
-  return `${correctedPath}nextImageExportOptimizer/${filename}-opt-${width}.${processedExtension.toUpperCase()}`;
+  const isStaticImage = src.includes("_next/static/media");
+
+  let generatedImageURL = `${
+    isStaticImage ? "" : correctedPath
+  }nextImageExportOptimizer/${filename}-opt-${width}.${processedExtension.toUpperCase()}`;
+  // if the generatedImageURL is not starting with a slash, then we add one
+  if (generatedImageURL.charAt(0) !== "/") {
+    generatedImageURL = "/" + generatedImageURL;
+  }
+
+  return generatedImageURL;
 };
 
-const optimizedLoader = ({ src, width }: { src: string; width: number }) => {
-  return generateImageURL(src, width);
-};
-const fallbackLoader = ({ src }: { src: string }) => {
-  return src;
+const optimizedLoader = ({
+  src,
+  width,
+  useWebp,
+}: {
+  src: string | StaticImageData;
+  width: number;
+  useWebp: boolean;
+}) => {
+  const isStaticImage = typeof src === "object";
+  const _src = isStaticImage ? src.src : src;
+
+  return generateImageURL(_src, width, useWebp);
 };
 
-export interface ExportedImageProps
-  extends Omit<ImageProps, "src" | "loader" | "onError"> {
-  src: string;
+const fallbackLoader = ({ src }: { src: string | StaticImageData }) => {
+  const _src = typeof src === "object" ? src.src : src;
+  return _src;
+};
+
+export interface ExportedImageProps extends Omit<ImageProps, "src" | "loader"> {
+  src: string | StaticImageData;
+  useWebp?: boolean;
 }
 
 function ExportedImage({
@@ -80,13 +94,12 @@ function ExportedImage({
   height,
   objectFit,
   objectPosition,
+  useWebp = true,
   onLoadingComplete,
   unoptimized,
-  placeholder = process.env.generateAndUseBlurImages === true ||
-  process.env.nextImageExportOptimizer_generateAndUseBlurImages === true
-    ? "blur"
-    : "empty",
+  placeholder = "blur",
   blurDataURL,
+  onError,
   ...rest
 }: ExportedImageProps) {
   const [imageError, setImageError] = useState(false);
@@ -95,20 +108,24 @@ function ExportedImage({
       // use the user provided blurDataURL if present
       return blurDataURL;
     }
+    // check if the src is specified as a local file -> then it is an object
+    const isStaticImage = typeof src === "object";
+    const _src = isStaticImage ? src.src : src;
     if (unoptimized === true) {
       // return the src image when unoptimized
-      return src;
+      return _src;
     }
     // otherwise use the generated image of 10px width as a blurDataURL
-    return generateImageURL(src, 10);
+    return generateImageURL(_src, 10, useWebp);
   }, [blurDataURL, src, unoptimized]);
 
   return (
     <Image
       {...rest}
+      {...(typeof src === "object" && src.width && { width: src.width })}
+      {...(typeof src === "object" && src.height && { height: src.height })}
       {...(width && { width })}
       {...(height && { height })}
-      {...(priority && { priority })}
       {...(loading && { loading })}
       {...(lazyRoot && { lazyRoot })}
       {...(lazyBoundary && { lazyBoundary })}
@@ -119,19 +136,32 @@ function ExportedImage({
       {...(onLoadingComplete && { onLoadingComplete })}
       {...(placeholder && { placeholder })}
       {...(unoptimized && { unoptimized })}
+      {...(priority && { priority })}
+      {...(imageError && { unoptimized: true })}
       loader={
-        imageError || unoptimized === true ? fallbackLoader : optimizedLoader
+        imageError || unoptimized === true
+          ? fallbackLoader
+          : (e) => optimizedLoader({ src, width: e.width, useWebp })
       }
       blurDataURL={automaticallyCalculatedBlurDataURL}
-      src={src}
-      onError={() => {
+      onError={(error) => {
         setImageError(true);
+        // execute the onError function if provided
+        onError && onError(error);
       }}
+      onLoadingComplete={(result) => {
+        // for some configurations, the onError handler is not called on an error occurrence
+        // so we need to check if the image is loaded correctly
+        if (result.naturalWidth === 0) {
+          // Broken image, fall back to unoptimized (meaning the original image src)
+          setImageError(true);
+        }
+        // execute the onLoadingComplete callback if present
+        onLoadingComplete && onLoadingComplete(result);
+      }}
+      src={typeof src === "object" ? src.src : src}
     />
   );
 }
-// Dynamic loading with SSR off is necessary as there is a race condition otherwise,
-// when the image loaded and errored before the JS error handler is attached
-export default dynamic(() => Promise.resolve(ExportedImage), {
-  ssr: false,
-});
+
+export default ExportedImage;

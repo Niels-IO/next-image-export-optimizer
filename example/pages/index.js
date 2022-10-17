@@ -1,6 +1,9 @@
 import Head from "next/head";
 import ExportedImage from "../localTestComponent/ExportedImage";
+// import ExportedImage from "next-image-export-optimizer";
+
 import styles from "../styles/Home.module.css";
+import testPictureStatic from "../public/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.jpg";
 
 export default function Home() {
   return (
@@ -31,7 +34,26 @@ export default function Home() {
             id="test_image"
             objectFit="cover"
             priority={true}
+            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
             alt={"test_image"}
+          />
+        </div>
+        <h2>Optimized example (static import)</h2>
+
+        <div
+          style={{
+            position: "relative",
+            marginBottom: "3rem",
+            width: "100%",
+          }}
+        >
+          <ExportedImage
+            src={testPictureStatic}
+            alt="test_image_static"
+            id="test_image_static"
+            layout="responsive"
+            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
+            priority
           />
         </div>
 
@@ -54,13 +76,13 @@ export default function Home() {
             unoptimized={true}
           />
         </div>
-        <ExportedImage
+        {/* <ExportedImage
           src="vercel.svg"
           layout="fixed"
           width={300}
           height={100}
           alt="VercelLogo"
-        />
+        /> */}
       </main>
     </div>
   );

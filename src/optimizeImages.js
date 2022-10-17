@@ -27,22 +27,29 @@ function getHash(items) {
 }
 
 const getAllFiles = function (basePath, dirPath, arrayOfFiles) {
-  let files = fs.readdirSync(dirPath);
-
   arrayOfFiles = arrayOfFiles || [];
-  files.forEach(function (file) {
-    if (
-      fs.statSync(dirPath + "/" + file).isDirectory() &&
-      file !== "nextImageExportOptimizer"
-    ) {
-      arrayOfFiles = getAllFiles(basePath, dirPath + "/" + file, arrayOfFiles);
-    } else {
-      const dirPathWithoutBasePath = dirPath
-        .replace(basePath, "") // remove the basePath for later path composition
-        .replace(/^(\/)/, ""); // remove the first trailing slash if there is one at the first position
-      arrayOfFiles.push({ dirPathWithoutBasePath, file });
-    }
-  });
+  // check if the path is existing
+  if (fs.existsSync(dirPath)) {
+    let files = fs.readdirSync(dirPath);
+
+    files.forEach(function (file) {
+      if (
+        fs.statSync(dirPath + "/" + file).isDirectory() &&
+        file !== "nextImageExportOptimizer"
+      ) {
+        arrayOfFiles = getAllFiles(
+          basePath,
+          dirPath + "/" + file,
+          arrayOfFiles
+        );
+      } else {
+        const dirPathWithoutBasePath = dirPath
+          .replace(basePath, "") // remove the basePath for later path composition
+          .replace(/^(\/)/, ""); // remove the first trailing slash if there is one at the first position
+        arrayOfFiles.push({ basePath, dirPathWithoutBasePath, file });
+      }
+    });
+  }
 
   return arrayOfFiles;
 };
@@ -63,6 +70,7 @@ const nextImageExportOptimizer = async function () {
 
   // Default values
   let imageFolderPath = "public/images";
+  let staticImageFolderPath = ".next/static/media";
   let exportFolderPath = "out";
   let deviceSizes = [640, 750, 828, 1080, 1200, 1920, 2048, 3840];
   let imageSizes = [16, 32, 48, 64, 96, 128, 256, 384];
@@ -169,6 +177,13 @@ const nextImageExportOptimizer = async function () {
     imageFolderPath,
     imageFolderPath
   );
+  const allFilesInStaticImageFolder = getAllFiles(
+    staticImageFolderPath,
+    staticImageFolderPath
+  );
+  // append the static image folder to the image folder
+  allFilesInImageFolderAndSubdirectories.push(...allFilesInStaticImageFolder);
+
   const allImagesInImageFolder = allFilesInImageFolderAndSubdirectories.filter(
     (fileObject) => {
       let extension = fileObject.file.split(".").pop().toUpperCase();
@@ -177,7 +192,7 @@ const nextImageExportOptimizer = async function () {
     }
   );
   console.log(
-    `Found ${allImagesInImageFolder.length} supported images in ${imageFolderPath} and subdirectories.`
+    `Found ${allImagesInImageFolder.length} supported images in ${imageFolderPath}, static folder and subdirectories.`
   );
 
   const widths = [...blurSize, ...imageSizes, ...deviceSizes];
@@ -240,10 +255,11 @@ const nextImageExportOptimizer = async function () {
   for (let index = 0; index < allImagesInImageFolder.length; index++) {
     const file = allImagesInImageFolder[index].file;
     let fileDirectory = allImagesInImageFolder[index].dirPathWithoutBasePath;
+    let basePath = allImagesInImageFolder[index].basePath;
 
     let extension = file.split(".").pop().toUpperCase();
     const imageBuffer = fs.readFileSync(
-      path.join(imageFolderPath, fileDirectory, file)
+      path.join(basePath, fileDirectory, file)
     );
     const imageHash = getHash([
       imageBuffer,
@@ -252,8 +268,16 @@ const nextImageExportOptimizer = async function () {
       fileDirectory,
       file,
     ]);
+
+    let hashContentChanged = false;
+    if (imageHashes[file] !== imageHash) {
+      hashContentChanged = true;
+    }
     // Store image hash in temporary object
     imageHashes[file] = imageHash;
+
+    let optimizedOriginalWidthImagePath;
+    let optimizedOriginalWidthImageSizeInMegabytes;
 
     // Loop through all widths
     for (let indexWidth = 0; indexWidth < widths.length; indexWidth++) {
@@ -263,8 +287,14 @@ const nextImageExportOptimizer = async function () {
       if (storePicturesInWEBP) {
         extension = "WEBP";
       }
+
+      // for a static image, we copy the image to public/nextImageExportOptimizer
+      // and not the staticImageFolderPath
+      // as the static image folder is deleted before each build
+      const basePathToStoreOptimizedImages =
+        basePath === ".next/static/media" ? "public" : basePath;
       const optimizedFileNameAndPath = path.join(
-        imageFolderPath,
+        basePathToStoreOptimizedImages,
         fileDirectory,
         "nextImageExportOptimizer",
         `${filename}-opt-${width}.${extension.toUpperCase()}`
@@ -272,7 +302,11 @@ const nextImageExportOptimizer = async function () {
 
       // Check if file is already in hash and specific size and quality is present in the
       // opt file directory
-      if (file in imageHashes && fs.existsSync(optimizedFileNameAndPath)) {
+      if (
+        !hashContentChanged &&
+        file in imageHashes &&
+        fs.existsSync(optimizedFileNameAndPath)
+      ) {
         const stats = fs.statSync(optimizedFileNameAndPath);
         const fileSizeInBytes = stats.size;
         const fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
@@ -284,16 +318,41 @@ const nextImageExportOptimizer = async function () {
 
         continue;
       }
+
+      // If the original image's width is X, the optimized images are
+      // identical for all widths >= X. Once we have generated the first of
+      // these identical images, we can simply copy that file instead of redoing
+      // the optimization.
+      if (
+        optimizedOriginalWidthImagePath &&
+        optimizedOriginalWidthImageSizeInMegabytes
+      ) {
+        fs.copyFileSync(
+          optimizedOriginalWidthImagePath,
+          optimizedFileNameAndPath
+        );
+
+        sizeOfGeneratedImages += optimizedOriginalWidthImageSizeInMegabytes;
+        progressBar.increment({
+          sizeOfGeneratedImages: sizeOfGeneratedImages.toFixed(1),
+        });
+        allGeneratedImages.push(optimizedFileNameAndPath);
+
+        continue;
+      }
+
       // Begin sharp transformation logic
       const transformer = sharp(imageBuffer);
 
-      await transformer.rotate();
+      transformer.rotate();
 
       const { width: metaWidth } = await transformer.metadata();
 
-      if (metaWidth && metaWidth > width) {
+      const resize = metaWidth && metaWidth > width;
+      if (resize) {
         transformer.resize(width);
       }
+
       if (extension === "AVIF") {
         if (transformer.avif) {
           const avifQuality = quality - 15;
@@ -322,6 +381,11 @@ const nextImageExportOptimizer = async function () {
         sizeOfGeneratedImages: sizeOfGeneratedImages.toFixed(1),
       });
       allGeneratedImages.push(optimizedFileNameAndPath);
+
+      if (!resize) {
+        optimizedOriginalWidthImagePath = optimizedFileNameAndPath;
+        optimizedOriginalWidthImageSizeInMegabytes = fileSizeInMegabytes;
+      }
     }
   }
   let data = JSON.stringify(imageHashes, null, 4);
@@ -332,7 +396,6 @@ const nextImageExportOptimizer = async function () {
   console.log("Copy optimized images to build folder...");
   for (let index = 0; index < allGeneratedImages.length; index++) {
     const filePath = allGeneratedImages[index];
-
     const fileInBuildFolder = path.join(
       exportFolderPath,
       filePath.split("public").pop()
