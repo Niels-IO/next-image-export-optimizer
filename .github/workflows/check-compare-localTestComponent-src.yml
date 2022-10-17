@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: LouisBrunner/diff-action@v0.1.0
         with:
-          old: src/Future/ExportedImage.tsx
+          old: src/future/ExportedImage.tsx
           new: example/localTestComponent/ExportedImageFuture.tsx
           mode: addition
           tolerance: same
