@@ -35,7 +35,7 @@ export default function Home() {
             layout="fill"
             id="test_image"
             objectFit="cover"
-            // priority={true}
+            priority
             useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
             alt={"test_image"}
           />
@@ -55,7 +55,7 @@ export default function Home() {
             id="test_image_static"
             layout="responsive"
             useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
-            // priority
+            priority
           />
         </div>
         <h2>Optimized example future</h2>
