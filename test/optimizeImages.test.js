@@ -46,8 +46,24 @@ const newConfig = `module.exports = {
 };
 `;
 
-test.each([legacyConfig, newConfig])(
-  `Optimize images -  oldConfig(0) - newConfig(1) - Currently: %#`,
+const newConfigWithStrings = `module.exports = {
+  images: {
+    loader: "custom",
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+  },
+  env: {
+    nextImageExportOptimizer_imageFolderPath: "public/images",
+    nextImageExportOptimizer_exportFolderPath: "out",
+    nextImageExportOptimizer_quality: "75",
+    nextImageExportOptimizer_storePicturesInWEBP: 'true',
+    nextImageExportOptimizer_generateAndUseBlurImages: 'true',
+  },
+};
+`;
+
+test.each([legacyConfig, newConfig, newConfigWithStrings])(
+  `Optimize images -  oldConfig(0) - newConfig(1) - newConfigWithStrings(2) - Currently: %#`,
   async (config) => {
     deleteFolder("example/public/images/nextImageExportOptimizer");
     deleteFolder("example/public/images/subfolder/nextImageExportOptimizer");
