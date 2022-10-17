@@ -1,5 +1,7 @@
 import Head from "next/head";
 import ExportedImage from "../localTestComponent/ExportedImage";
+import ExportedImageFuture from "../localTestComponent/ExportedImageFuture";
+import smallImage from "../public/images/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.jpg";
 
 import styles from "../styles/Home.module.css";
 
@@ -32,6 +34,20 @@ export default function Home() {
             id="test_image"
             objectFit="cover"
             priority={true}
+            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
+            alt={"test_image"}
+          />
+        </div>
+        <h2>Optimized example future</h2>
+
+        <div
+          style={{
+            marginBottom: "3rem",
+          }}
+        >
+          <ExportedImageFuture
+            src={smallImage}
+            id="test_image_future"
             useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
             alt={"test_image"}
           />

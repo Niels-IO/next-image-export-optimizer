@@ -241,6 +241,8 @@ const nextImageExportOptimizer = async function () {
   let sizeOfGeneratedImages = 0;
   const allGeneratedImages = [];
 
+  const updatedImageHashes = {};
+
   // Loop through all images
   for (let index = 0; index < allImagesInImageFolder.length; index++) {
     const file = allImagesInImageFolder[index].file;
@@ -258,13 +260,14 @@ const nextImageExportOptimizer = async function () {
       fileDirectory,
       file,
     ]);
+    const keyForImageHashes = `${fileDirectory}/${file}`;
 
     let hashContentChanged = false;
-    if (imageHashes[file] !== imageHash) {
+    if (imageHashes[keyForImageHashes] !== imageHash) {
       hashContentChanged = true;
     }
     // Store image hash in temporary object
-    imageHashes[file] = imageHash;
+    updatedImageHashes[keyForImageHashes] = imageHash;
 
     let optimizedOriginalWidthImagePath;
     let optimizedOriginalWidthImageSizeInMegabytes;
@@ -294,7 +297,7 @@ const nextImageExportOptimizer = async function () {
       // opt file directory
       if (
         !hashContentChanged &&
-        file in imageHashes &&
+        keyForImageHashes in imageHashes &&
         fs.existsSync(optimizedFileNameAndPath)
       ) {
         const stats = fs.statSync(optimizedFileNameAndPath);
@@ -378,7 +381,7 @@ const nextImageExportOptimizer = async function () {
       }
     }
   }
-  let data = JSON.stringify(imageHashes, null, 4);
+  let data = JSON.stringify(updatedImageHashes, null, 4);
   fs.writeFileSync(hashFilePath, data);
 
   // Copy the optimized images to the build folder

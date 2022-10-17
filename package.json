@@ -1,6 +1,6 @@
 {
   "name": "next-image-export-optimizer",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "description": "Optimizes all static images for Next.js static HTML export functionality",
   "main": "dist/ExportedImage.js",
   "types": "dist/ExportedImage.d.ts",
@@ -8,12 +8,17 @@
   "engines": {
     "node": ">=16.0.0"
   },
+  "exports": {
+    ".": "./dist/ExportedImage.js",
+    "./future/ExportedImage": "./dist/future/ExportedImage.js"
+  },
   "scripts": {
-    "build": "tsc && npx swc ./src/ExportedImage.tsx -o ./dist/ExportedImage.js",
+    "build": "tsc && npx swc ./src/ExportedImage.tsx -o ./dist/ExportedImage.js && npx swc ./src/future/ExportedImage.tsx -o ./dist/future/ExportedImage.js",
     "test": "jest",
+    "testFileContent": "node ./fileComparison.js",
     "test:e2e": "npx playwright install && playwright test",
     "exportExample": "cd example && npm run export && cd ..",
-    "prepublishOnly": "npm run build && npm test && npm run test:e2e",
+    "prepublishOnly": "npm run testFileContent && npm run build && npm test && npm run test:e2e",
     "fetchTags": "git fetch --tags -f"
   },
   "repository": {

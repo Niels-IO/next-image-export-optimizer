@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import getImageById from "./getImageById.js";
 
 test.describe(`Test unoptimized image prop`, () => {
   test.use({
@@ -15,15 +16,7 @@ test.describe(`Test unoptimized image prop`, () => {
     const img = await page.locator("#test_image_unoptimized");
     await img.click();
 
-    const image = await page.evaluate(() => {
-      let img = document.getElementById("test_image_unoptimized");
-      return {
-        src: img.src,
-        currentSrc: img.currentSrc,
-        naturalWidth: img.naturalWidth,
-        width: img.width,
-      };
-    });
+    const image = await getImageById(page, "test_image_unoptimized");
 
     expect(image.currentSrc).toBe(
       "http://localhost:8080/images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"

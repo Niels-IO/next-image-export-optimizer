@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import getImageById from "./getImageById.js";
 
 const widths = [16, 32, 48, 64, 96, 128, 256, 384];
 const correctSrc = {
@@ -52,18 +53,19 @@ for (let index = 0; index < widths.length; index++) {
       const img = await page.locator(`#test_image_${width}`);
       await img.click();
       const testWidth = width;
-      const image = await page.evaluate((testWidth) => {
-        let img = document.getElementById(`test_image_${testWidth}`);
-        return {
-          src: img.src,
-          currentSrc: img.currentSrc,
-          naturalWidth: img.naturalWidth,
-          width: img.width,
-        };
-      }, testWidth);
+
+      const image = await getImageById(page, `test_image_${testWidth}`);
 
       expect(
         correctSrc[width.toString()].includes(image.currentSrc)
+      ).toBeTruthy();
+      const image_future = await getImageById(
+        page,
+        `test_image_${testWidth}_future`
+      );
+
+      expect(
+        correctSrc[width.toString()].includes(image_future.currentSrc)
       ).toBeTruthy();
     });
   });

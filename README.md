@@ -127,6 +127,20 @@ module.exports = {
    **Usage of the WEBP format:**
    If you do not want to use the WEBP format, set the `nextImageExportOptimizer_storePicturesInWEBP` environment variable to `false` and set the `useWebp` prop from the **\<ExportedImage />** component to `false`.
 
+8. Using the next/future/image component is now supported: (More information: https://nextjs.org/docs/api-reference/next/image)
+
+   ```javascript
+   import ExportedImage from "next-image-export-optimizer/future/ExportedImage";
+
+   import testPictureStatic from "PATH_TO_IMAGE/test_static.jpg";
+
+   <ExportedImage
+     src={testPictureStatic}
+     alt="Static Image"
+     useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
+   />;
+   ```
+
 ## Live example
 
 You can see a live example of the use of this library at [reactapp.dev/next-image-export-optimizer](https://reactapp.dev/next-image-export-optimizer)
