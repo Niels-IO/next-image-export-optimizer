@@ -1,6 +1,5 @@
-import Image from "next/future/image";
 import React, { useMemo, useState } from "react";
-import { ImageProps, StaticImageData } from "next/future/image";
+import Image, { ImageProps, StaticImageData } from "next/future/image";
 
 const splitFilePath = ({ filePath }: { filePath: string }) => {
   const filenameWithExtension =
@@ -133,7 +132,6 @@ function ExportedImage({
           filter: "url(#sharpBlur)",
         }
       : undefined;
-  console.log(blurStyle);
 
   const ImageElement = (
     <Image
@@ -197,7 +195,11 @@ function ExportedImage({
           {...(unoptimized && { unoptimized })}
           {...(priority && { priority })}
           style={style}
-          loader={fallbackLoader}
+          loader={
+            imageError || unoptimized === true
+              ? fallbackLoader
+              : (e) => optimizedLoader({ src, width: e.width, useWebp })
+          }
           src={typeof src === "object" ? src.src : src}
         />
       </noscript>
