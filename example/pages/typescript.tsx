@@ -30,6 +30,24 @@ export default function Home() {
             marginBottom: "3rem",
           }}
         >
+          <ExportedImage
+            src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
+            id="test_image"
+            layout="fill"
+            objectFit="cover"
+            priority={true}
+            alt={"test_image"}
+            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
+          />
+        </div>
+        <div
+          style={{
+            position: "relative",
+            width: "50%",
+            height: "200px",
+            marginBottom: "3rem",
+          }}
+        >
           <ExportedImageFuture
             src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
             id="test_image_future"
