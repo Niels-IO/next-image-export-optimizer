@@ -68,22 +68,6 @@ const newConfigJpeg = `module.exports = {
 };
 `;
 
-const newConfigWithStrings = `module.exports = {
-  images: {
-    loader: "custom",
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-  },
-  env: {
-    nextImageExportOptimizer_imageFolderPath: "public/images",
-    nextImageExportOptimizer_exportFolderPath: "out",
-    nextImageExportOptimizer_quality: "75",
-    nextImageExportOptimizer_storePicturesInWEBP: "true",
-    nextImageExportOptimizer_generateAndUseBlurImages: "true",
-  },
-};
-`;
-
 async function testConfig(config) {
   deleteFolder("example/public/images/nextImageExportOptimizer");
   deleteFolder("example/public/nextImageExportOptimizer");
@@ -176,7 +160,7 @@ async function testConfig(config) {
       ];
       imageFileStats.push(statsToBeChecked);
     }
-    if (config === newConfig || config === legacyConfig || config === newConfigWithStrings) {
+    if (config === newConfig || config === legacyConfig) {
       if (index == 0 || index == 2) {
         expect(imageFileStats).toMatchSnapshot();
       } else if (index === 1) {
@@ -199,9 +183,6 @@ test("legacyConfig", async () => {
 });
 test("newConfigJpeg", async () => {
   await testConfig(newConfigJpeg);
-});
-test("newConfigWithStrings", async () => {
-  await testConfig(newConfigWithStrings);
 });
 test("newConfig", async () => {
   await testConfig(newConfig);

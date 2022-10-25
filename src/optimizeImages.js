@@ -8,8 +8,10 @@ const cliProgress = require("cli-progress");
 
 const scriptArgs = process.argv.slice(2);
 let nextConfigPath;
-if(scriptArgs[0]) {
-  nextConfigPath = path.isAbsolute(scriptArgs[0]) ? scriptArgs[0] : path.join(process.cwd() , scriptArgs[0]);
+if (scriptArgs[0]) {
+  nextConfigPath = path.isAbsolute(scriptArgs[0])
+    ? scriptArgs[0]
+    : path.join(process.cwd(), scriptArgs[0]);
 } else {
   nextConfigPath = path.join(process.cwd(), "next.config.js");
 }
@@ -117,7 +119,7 @@ const nextImageExportOptimizer = async function () {
     if (legacyPath?.quality !== undefined) {
       quality = legacyPath.quality;
     } else if (newPath?.nextImageExportOptimizer_quality !== undefined) {
-      quality = parseInt(newPath.nextImageExportOptimizer_quality);
+      quality = newPath.nextImageExportOptimizer_quality;
     }
     if (nextjsConfig.env?.storePicturesInWEBP !== undefined) {
       storePicturesInWEBP = nextjsConfig.env.storePicturesInWEBP;
@@ -125,14 +127,12 @@ const nextImageExportOptimizer = async function () {
       newPath?.nextImageExportOptimizer_storePicturesInWEBP !== undefined
     ) {
       storePicturesInWEBP =
-        newPath.nextImageExportOptimizer_storePicturesInWEBP === true ||
-        newPath?.nextImageExportOptimizer_storePicturesInWEBP === "true";
+        newPath.nextImageExportOptimizer_storePicturesInWEBP;
     }
     if (nextjsConfig.env?.generateAndUseBlurImages !== undefined) {
       blurSize = [10];
     } else if (
-      newPath?.nextImageExportOptimizer_generateAndUseBlurImages === true ||
-      newPath?.nextImageExportOptimizer_generateAndUseBlurImages === "true"
+      newPath?.nextImageExportOptimizer_generateAndUseBlurImages !== undefined
     ) {
       blurSize = [10];
     }
@@ -141,7 +141,7 @@ const nextImageExportOptimizer = async function () {
     console.log("Could not find a next.config.js file. Use of default values");
   }
 
-  // Give the user a warning, if the public directory of Next.js is not found as the user
+  // Give the user a warning, if the images directory is not found as the user
   // may have run the command in a wrong directory
   if (!fs.existsSync(imageFolderPath)) {
     console.warn(
