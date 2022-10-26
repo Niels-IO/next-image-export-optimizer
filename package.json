@@ -1,6 +1,6 @@
 {
   "name": "next-image-export-optimizer",
-  "version": "0.17.1",
+  "version": "1.0.0-beta.0",
   "description": "Optimizes all static images for Next.js static HTML export functionality",
   "main": "dist/ExportedImage.js",
   "types": "dist/ExportedImage.d.ts",
@@ -63,8 +63,8 @@
     "typescript": "^4.7.2"
   },
   "peerDependencies": {
-    "next": "12.x",
-    "react": "^17.0.2 || ^18.0.0-0"
+    "next": "^13.0.0",
+    "react": "^18.0.0-0"
   },
   "devDependencies": {
     "@playwright/test": "^1.19.1",
