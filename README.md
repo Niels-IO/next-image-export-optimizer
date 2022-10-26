@@ -62,12 +62,18 @@ module.exports = {
 2. Specify the folder where all the images are stored. Defaults to **public/images**
 3. Change the export command in `package.json`
 
-```diff
-{
--  "export": "next build && next export",
-+  "export": "next build && next export && next-image-export-optimizer"
-}
-```
+   ```diff
+   {
+   -  "export": "next build && next export",
+   +  "export": "next build && next export && next-image-export-optimizer"
+   }
+   ```
+
+   If your nextjs project is not at the root directory where you are running the commands, for example if you are using a monorepo, you can specify the location of the next.config.js as an argument to the script:
+
+   ```json
+   "export": "next build && next export && next-image-export-optimizer path/to/my/next.config.js"
+   ```
 
 4. Change the **\<Image />** component to the **\<ExportedImage />** component of this library.
 
