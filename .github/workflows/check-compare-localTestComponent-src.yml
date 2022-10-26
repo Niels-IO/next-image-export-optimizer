@@ -17,14 +17,14 @@ jobs:
           mode: addition
           tolerance: same
           output: out.txt
-  test_future:
+  test_legacy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - uses: LouisBrunner/diff-action@v0.1.0
         with:
-          old: src/future/ExportedImage.tsx
-          new: example/localTestComponent/ExportedImageFuture.tsx
+          old: src/legacy/ExportedImage.tsx
+          new: example/localTestComponent/ExportedImageLegacy.tsx
           mode: addition
           tolerance: same
           output: out.txt

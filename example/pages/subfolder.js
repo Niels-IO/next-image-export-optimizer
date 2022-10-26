@@ -1,4 +1,4 @@
-import ExportedImage from "../localTestComponent/ExportedImage";
+import ExportedImageLegacy from "../localTestComponent/ExportedImageLegacy";
 import Head from "next/head";
 import React from "react";
 import styles from "../styles/Home.module.css";
@@ -25,7 +25,7 @@ function Subfolder() {
             marginBottom: "3rem",
           }}
         >
-          <ExportedImage
+          <ExportedImageLegacy
             src="images/subfolder/ollie-barker-jones-K52HVSPVvKI-unsplash.jpg"
             layout="fill"
             id="test_image_subfolder"
@@ -43,7 +43,7 @@ function Subfolder() {
             marginBottom: "3rem",
           }}
         >
-          <ExportedImage
+          <ExportedImageLegacy
             src="images/subfolder/subfolder2/ollie-barker-jones-K52HVSPVvKI-unsplash.jpg"
             layout="fill"
             id="test_image_subfolder2"

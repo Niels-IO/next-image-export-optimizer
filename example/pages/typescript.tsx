@@ -1,8 +1,8 @@
 import Head from "next/head";
-import ExportedImageFuture_Local from "../localTestComponent/ExportedImageFuture";
 import ExportedImage_Local from "../localTestComponent/ExportedImage";
+import ExportedImageLegacy_Local from "../localTestComponent/ExportedImageLegacy";
 import ExportedImage from "next-image-export-optimizer";
-import ExportedImageFuture from "next-image-export-optimizer/future/ExportedImage";
+import ExportedImageLegacy from "next-image-export-optimizer/legacy/ExportedImage";
 
 import React from "react";
 import Image from "next/image";
@@ -30,7 +30,7 @@ export default function Home() {
             marginBottom: "3rem",
           }}
         >
-          <ExportedImage
+          <ExportedImageLegacy
             src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
             id="test_image"
             layout="fill"
@@ -48,7 +48,7 @@ export default function Home() {
             marginBottom: "3rem",
           }}
         >
-          <ExportedImageFuture
+          <ExportedImage
             src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
             id="test_image_future"
             fill
@@ -65,7 +65,7 @@ export default function Home() {
             marginBottom: "3rem",
           }}
         >
-          <ExportedImageFuture_Local
+          <ExportedImage_Local
             src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
             id="test_image_future_local"
             fill
@@ -82,7 +82,7 @@ export default function Home() {
             width: "100%",
           }}
         >
-          <ExportedImage
+          <ExportedImageLegacy
             src={testPictureStatic}
             alt="test_image_static"
             id="test_image_static"
@@ -97,7 +97,7 @@ export default function Home() {
             width: "100%",
           }}
         >
-          <ExportedImage_Local
+          <ExportedImageLegacy_Local
             src={testPictureStatic}
             alt="test_image_static"
             id="test_image_static_local"
@@ -115,7 +115,6 @@ export default function Home() {
             src="vercel.svg"
             width={400}
             height={400}
-            layout="fixed"
             alt="VercelLogo"
           />
           <Image
@@ -125,8 +124,7 @@ export default function Home() {
             }}
             width={400}
             height={400}
-            layout="fixed"
-            alt="random"
+            alt="SVG"
           />
         </div>
       </main>

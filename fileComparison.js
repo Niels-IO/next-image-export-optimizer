@@ -14,11 +14,11 @@ function testFiles(name, path1, path2) {
 
 testFiles(
   "legacy",
-  "./example/localTestComponent/ExportedImage.tsx",
-  "./src/ExportedImage.tsx"
+  "./example/localTestComponent/ExportedImageLegacy.tsx",
+  "./src/legacy/ExportedImage.tsx"
 );
 testFiles(
-  "future",
-  "./example/localTestComponent/ExportedImageFuture.tsx",
-  "./src/future/ExportedImage.tsx"
+  "current",
+  "./example/localTestComponent/ExportedImage.tsx",
+  "./src/ExportedImage.tsx"
 );

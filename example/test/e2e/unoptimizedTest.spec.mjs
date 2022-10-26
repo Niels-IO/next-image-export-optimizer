@@ -21,5 +21,16 @@ test.describe(`Test unoptimized image prop`, () => {
     expect(image.currentSrc).toBe(
       "http://localhost:8080/images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
     );
+    const img_legacy = await page.locator("#test_image_unoptimized_legacy");
+    await img_legacy.click();
+
+    const image_legacy = await getImageById(
+      page,
+      "test_image_unoptimized_legacy"
+    );
+
+    expect(image_legacy.currentSrc).toBe(
+      "http://localhost:8080/images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
+    );
   });
 });

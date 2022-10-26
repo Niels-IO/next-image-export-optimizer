@@ -1,6 +1,7 @@
 import Head from "next/head";
+import ExportedImageLegacy from "../localTestComponent/ExportedImageLegacy";
 import ExportedImage from "../localTestComponent/ExportedImage";
-import ExportedImageFuture from "../localTestComponent/ExportedImageFuture";
+
 import smallImage from "../public/images/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.jpg";
 
 import styles from "../styles/Home.module.css";
@@ -19,7 +20,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Next-Image-Export-Optimizer</h1>
-        <h2>Optimized example</h2>
+        <h2>Optimized example - Legacy</h2>
         <div
           style={{
             position: "relative",
@@ -28,7 +29,7 @@ export default function Home() {
             marginBottom: "3rem",
           }}
         >
-          <ExportedImage
+          <ExportedImageLegacy
             src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.jpg"
             layout="fill"
             id="test_image"
@@ -38,14 +39,14 @@ export default function Home() {
             alt={"test_image"}
           />
         </div>
-        <h2>Optimized example future</h2>
+        <h2>Optimized example</h2>
 
         <div
           style={{
             marginBottom: "3rem",
           }}
         >
-          <ExportedImageFuture
+          <ExportedImage
             src={smallImage}
             id="test_image_future"
             useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
