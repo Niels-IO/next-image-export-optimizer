@@ -48,10 +48,10 @@ module.exports = {
 
     // If you do not want to use blurry placeholder images, then you can set
     // nextImageExportOptimizer_generateAndUseBlurImages to false and pass
-    // `placeholder="none"` to all <ExportedImage> components.
+    // `placeholder="empty"` to all <ExportedImage> components.
     //
     // If nextImageExportOptimizer_generateAndUseBlurImages is false and you
-    // forget to set `placeholder="none"`, you'll see 404 errors for the missing
+    // forget to set `placeholder="empty"`, you'll see 404 errors for the missing
     // placeholder images in the console.
     nextImageExportOptimizer_generateAndUseBlurImages: true,
   },
@@ -129,7 +129,7 @@ module.exports = {
 7. Overriding presets:
 
    **Placeholder images:**
-   If you do not want the automatic generation of tiny, blurry placeholder images, set the `nextImageExportOptimizer_generateAndUseBlurImages` environment variable to `false` and set the `placeholder` prop from the **\<ExportedImage />** component to `none`.
+   If you do not want the automatic generation of tiny, blurry placeholder images, set the `nextImageExportOptimizer_generateAndUseBlurImages` environment variable to `false` and set the `placeholder` prop from the **\<ExportedImage />** component to `empty`.
 
    **Usage of the WEBP format:**
    If you do not want to use the WEBP format, set the `nextImageExportOptimizer_storePicturesInWEBP` environment variable to `false` and set the `useWebp` prop from the **\<ExportedImage />** component to `false`.
