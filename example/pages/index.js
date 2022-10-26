@@ -143,6 +143,7 @@ export default function Home() {
             priority={true}
             alt={"test_image_unoptimized"}
             unoptimized={true}
+            fill
             style={{ objectFit: "cover" }}
           />
         </div>
