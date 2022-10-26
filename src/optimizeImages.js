@@ -141,12 +141,16 @@ const nextImageExportOptimizer = async function () {
     console.log("Could not find a next.config.js file. Use of default values");
   }
 
-  // Give the user a warning, if the images directory is not found as the user
+  // Give the user a warning, if the public directory of Next.js is not found as the user
   // may have run the command in a wrong directory
-  if (!fs.existsSync(imageFolderPath)) {
+  if (
+    !fs.existsSync(
+      path.join(nextConfigPath.replace("next.config.js", ""), "public")
+    )
+  ) {
     console.warn(
       "\x1b[41m",
-      `Could not find an image folder (${imageFolderPath}) in this directory. Make sure you run the command in the main directory of your project.`,
+      `Could not find a public folder in this directory. Make sure you run the command in the main directory of your project.`,
       "\x1b[0m"
     );
   }
