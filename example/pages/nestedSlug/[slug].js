@@ -1,12 +1,12 @@
 import React from "react";
-import ExportedImage from "../../localTestComponent/ExportedImage";
+import ExportedImageLegacy from "../../localTestComponent/ExportedImageLegacy";
 import testPictureStatic from "../../public/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.jpg";
 
 function Slug() {
   return (
     <div>
       <h1>Nested slug page test</h1>
-      <h2>Optimized example (static import)</h2>
+      <h2>Optimized example (static import) - Legacy</h2>
 
       <div
         style={{
@@ -15,7 +15,7 @@ function Slug() {
           width: "100%",
         }}
       >
-        <ExportedImage
+        <ExportedImageLegacy
           src={testPictureStatic}
           alt="test_image_static"
           id="test_image_static"

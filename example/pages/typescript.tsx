@@ -1,5 +1,9 @@
 import Head from "next/head";
-import ExportedImage from "../localTestComponent/ExportedImage";
+import ExportedImage_Local from "../localTestComponent/ExportedImage";
+import ExportedImageLegacy_Local from "../localTestComponent/ExportedImageLegacy";
+import ExportedImage from "next-image-export-optimizer";
+import ExportedImageLegacy from "next-image-export-optimizer/legacy/ExportedImage";
+
 import React from "react";
 import Image from "next/image";
 import testPictureStatic from "../public/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.jpg";
@@ -26,11 +30,45 @@ export default function Home() {
             marginBottom: "3rem",
           }}
         >
+          <ExportedImageLegacy
+            src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
+            id="test_image"
+            layout="fill"
+            objectFit="cover"
+            priority={true}
+            alt={"test_image"}
+            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
+          />
+        </div>
+        <div
+          style={{
+            position: "relative",
+            width: "50%",
+            height: "200px",
+            marginBottom: "3rem",
+          }}
+        >
           <ExportedImage
             src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
-            layout="fill"
-            id="test_image"
-            objectFit="cover"
+            id="test_image_future"
+            fill
+            priority={true}
+            alt={"test_image"}
+            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
+          />
+        </div>
+        <div
+          style={{
+            position: "relative",
+            width: "50%",
+            height: "200px",
+            marginBottom: "3rem",
+          }}
+        >
+          <ExportedImage_Local
+            src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
+            id="test_image_future_local"
+            fill
             priority={true}
             alt={"test_image"}
             useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
@@ -44,10 +82,25 @@ export default function Home() {
             width: "100%",
           }}
         >
-          <ExportedImage
+          <ExportedImageLegacy
             src={testPictureStatic}
             alt="test_image_static"
             id="test_image_static"
+            layout="responsive"
+            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
+          />
+        </div>
+        <div
+          style={{
+            position: "relative",
+            marginBottom: "3rem",
+            width: "100%",
+          }}
+        >
+          <ExportedImageLegacy_Local
+            src={testPictureStatic}
+            alt="test_image_static"
+            id="test_image_static_local"
             layout="responsive"
             useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
           />
@@ -62,7 +115,6 @@ export default function Home() {
             src="vercel.svg"
             width={400}
             height={400}
-            layout="fixed"
             alt="VercelLogo"
           />
           <Image
@@ -72,8 +124,7 @@ export default function Home() {
             }}
             width={400}
             height={400}
-            layout="fixed"
-            alt="random"
+            alt="SVG"
           />
         </div>
       </main>

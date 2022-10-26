@@ -6,14 +6,25 @@ on:
     branches: ["master"]
 
 jobs:
-  test_something:
+  test_current:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - uses: LouisBrunner/diff-action@v0.1.0
-      with:
-        old: src/ExportedImage.tsx
-        new: example/localTestComponent/ExportedImage.tsx
-        mode: addition
-        tolerance: same
-        output: out.txt
+      - uses: actions/checkout@v1
+      - uses: LouisBrunner/diff-action@v0.1.0
+        with:
+          old: src/ExportedImage.tsx
+          new: example/localTestComponent/ExportedImage.tsx
+          mode: addition
+          tolerance: same
+          output: out.txt
+  test_legacy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: LouisBrunner/diff-action@v0.1.0
+        with:
+          old: src/legacy/ExportedImage.tsx
+          new: example/localTestComponent/ExportedImageLegacy.tsx
+          mode: addition
+          tolerance: same
+          output: out.txt

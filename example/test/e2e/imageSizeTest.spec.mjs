@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import getImageById from "./getImageById.js";
 
 const widths = [640, 750, 828, 1080, 1200, 1920, 2048, 3840];
 const correctSrc = {
@@ -60,17 +61,11 @@ for (let index = 0; index < widths.length; index++) {
       const img = await page.locator("#test_image");
       await img.click();
 
-      const image = await page.evaluate(() => {
-        let img = document.getElementById("test_image");
-        return {
-          src: img.src,
-          currentSrc: img.currentSrc,
-          naturalWidth: img.naturalWidth,
-          width: img.width,
-        };
-      });
-
+      const image = await getImageById(page, "test_image");
       expect(image.currentSrc).toBe(correctSrc[width.toString()]);
+
+      const image_future = await getImageById(page, `test_image_future_fill`);
+      expect(image_future.currentSrc).toBe(correctSrc[width.toString()]);
     });
     test("should check the image size for the statically imported image", async ({
       page,
@@ -84,16 +79,13 @@ for (let index = 0; index < widths.length; index++) {
       const img = await page.locator("#test_image_static");
       await img.click();
 
-      const image = await page.evaluate(() => {
-        let img = document.getElementById("test_image_static");
-        return {
-          src: img.src,
-          currentSrc: img.currentSrc,
-          naturalWidth: img.naturalWidth,
-          width: img.width,
-        };
-      });
+      const image = await getImageById(page, "test_image_static");
       expect(image.currentSrc).toBe(correctSrcStaticImage[width.toString()]);
+
+      const image_future = await getImageById(page, `test_image_static_future`);
+      expect(image_future.currentSrc).toBe(
+        correctSrcStaticImage[width.toString()]
+      );
     });
     test("should check the image size for the statically imported image in the nested route", async ({
       page,
@@ -105,39 +97,34 @@ for (let index = 0; index < widths.length; index++) {
       const img = await page.locator("#test_image_static");
       await img.click();
 
-      const image = await page.evaluate(() => {
-        let img = document.getElementById("test_image_static");
-        return {
-          src: img.src,
-          currentSrc: img.currentSrc,
-          naturalWidth: img.naturalWidth,
-          width: img.width,
-        };
-      });
-
+      const image = await getImageById(page, "test_image_static");
       expect(image.currentSrc).toBe(correctSrcStaticImage[width.toString()]);
+
+      const image_future = await getImageById(page, "test_image_static_future");
+      expect(image_future.currentSrc).toBe(
+        correctSrcStaticImage[width.toString()]
+      );
     });
     test("should check the image size for the statically imported image with fixed size in the nested route", async ({
       page,
     }) => {
-      await page.goto("/nested/page", {
+      await page.goto("/nested/page_fixed", {
         waitUntil: "networkidle",
       });
 
       const img = await page.locator("#test_image_static_fixed");
       await img.click();
 
-      const image = await page.evaluate(() => {
-        let img = document.getElementById("test_image_static_fixed");
-        return {
-          src: img.src,
-          currentSrc: img.currentSrc,
-          naturalWidth: img.naturalWidth,
-          width: img.width,
-        };
-      });
-
+      const image = await getImageById(page, "test_image_static_fixed");
       expect(image.currentSrc).toBe(
+        "http://localhost:8080/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.WEBP"
+      );
+
+      const image_future = await getImageById(
+        page,
+        "test_image_static_fixed_future"
+      );
+      expect(image_future.currentSrc).toBe(
         "http://localhost:8080/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.WEBP"
       );
     });
@@ -152,17 +139,11 @@ for (let index = 0; index < widths.length; index++) {
       const img = await page.locator("#test_image");
       await img.click();
 
-      const image = await page.evaluate(() => {
-        let img = document.getElementById("test_image");
-        return {
-          src: img.src,
-          currentSrc: img.currentSrc,
-          naturalWidth: img.naturalWidth,
-          width: img.width,
-        };
-      });
-
+      const image = await getImageById(page, "test_image");
       expect(image.currentSrc).toBe(correctSrc[width.toString()]);
+
+      const image_future = await getImageById(page, "test_image_future");
+      expect(image_future.currentSrc).toBe(correctSrc[width.toString()]);
     });
 
     test("should check the image size for the statically imported image in the nested slug route", async ({
@@ -175,16 +156,7 @@ for (let index = 0; index < widths.length; index++) {
       const img = await page.locator("#test_image_static");
       await img.click();
 
-      const image = await page.evaluate(() => {
-        let img = document.getElementById("test_image_static");
-        return {
-          src: img.src,
-          currentSrc: img.currentSrc,
-          naturalWidth: img.naturalWidth,
-          width: img.width,
-        };
-      });
-
+      const image = await getImageById(page, "test_image_static");
       expect(image.currentSrc).toBe(correctSrcStaticImage[width.toString()]);
     });
 
@@ -200,16 +172,7 @@ for (let index = 0; index < widths.length; index++) {
       const img = await page.locator("#test_image_subfolder");
       await img.click();
 
-      const image = await page.evaluate(() => {
-        let img = document.getElementById("test_image_subfolder");
-        return {
-          src: img.src,
-          currentSrc: img.currentSrc,
-          naturalWidth: img.naturalWidth,
-          width: img.width,
-        };
-      });
-
+      const image = await getImageById(page, "test_image_subfolder");
       expect(image.currentSrc).toBe(correctSrcSubfolder[width.toString()]);
     });
     test("should check the image size for the typescript test page", async ({
@@ -224,16 +187,7 @@ for (let index = 0; index < widths.length; index++) {
       const img = await page.locator("#test_image");
       await img.click();
 
-      const image = await page.evaluate(() => {
-        let img = document.getElementById("test_image");
-        return {
-          src: img.src,
-          currentSrc: img.currentSrc,
-          naturalWidth: img.naturalWidth,
-          width: img.width,
-        };
-      });
-
+      const image = await getImageById(page, "test_image");
       expect(image.currentSrc).toBe(correctSrc[width.toString()]);
     });
     test("should check the image size for the small Image test page", async ({
@@ -248,16 +202,7 @@ for (let index = 0; index < widths.length; index++) {
       const img = await page.locator("#test_image");
       await img.click();
 
-      const image = await page.evaluate(() => {
-        let img = document.getElementById("test_image");
-        return {
-          src: img.src,
-          currentSrc: img.currentSrc,
-          naturalWidth: img.naturalWidth,
-          width: img.width,
-        };
-      });
-
+      const image = await getImageById(page, "test_image");
       expect(image.currentSrc).toBe(correctSrcSmallImage[width.toString()]);
     });
   });

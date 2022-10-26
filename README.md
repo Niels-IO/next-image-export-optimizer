@@ -3,6 +3,9 @@
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg)
 [![npm](https://img.shields.io/npm/v/next-image-export-optimizer)](https://www.npmjs.com/package/next-image-export-optimizer)
 
+> **Warning**
+> Version 1.0.0 is a breaking change. It follows the changes introduced in Next 13.0.0 which replaces the `next/image` component with `next/future/image`. If you are using Next 12 or below, please use version _0.17.1_.
+
 Use [Next.js advanced **\<Image/>** component](https://nextjs.org/docs/basic-features/image-optimization) with the static export functionality. Optimizes all static images in an additional step after the Next.js static export.
 
 - Reduces the image size and page load times drastically through responsive images
@@ -83,8 +86,8 @@ If your nextjs project is not at the root directory where you are running the co
    <Image
      src="images/VERY_LARGE_IMAGE.jpg"
      alt="Large Image"
-     layout="fill"
-     objectFit="cover"
+     width={500}
+     height={500}
    />;
 
    // New
@@ -93,8 +96,8 @@ If your nextjs project is not at the root directory where you are running the co
    <ExportedImage
      src="images/VERY_LARGE_IMAGE.jpg"
      alt="Large Image"
-     layout="fill"
-     objectFit="cover"
+     width={500}
+     height={500}
      useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
    />;
 
@@ -117,10 +120,8 @@ If your nextjs project is not at the root directory where you are running the co
 
    ```javascript
    <ExportedImage
-     src="images/image.jpg"
+     src={testPictureStatic}
      alt="Orginal, unoptimized image"
-     layout="fill"
-     objectFit="cover"
      unoptimized={true}
    />
    ```
@@ -132,6 +133,21 @@ If your nextjs project is not at the root directory where you are running the co
 
    **Usage of the WEBP format:**
    If you do not want to use the WEBP format, set the `nextImageExportOptimizer_storePicturesInWEBP` environment variable to `false` and set the `useWebp` prop from the **\<ExportedImage />** component to `false`.
+
+8. You can still use the legacy image component `next/legacy/image`:
+
+   ```javascript
+   import ExportedImage from "next-image-export-optimizer/legacy/ExportedImage";
+
+   import testPictureStatic from "PATH_TO_IMAGE/test_static.jpg";
+
+   <ExportedImage
+     src={testPictureStatic}
+     alt="Static Image"
+     layout="fixed"
+     useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
+   />;
+   ```
 
 ## Live example
 

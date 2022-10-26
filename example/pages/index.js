@@ -1,6 +1,6 @@
 import Head from "next/head";
+import ExportedImageLegacy from "../localTestComponent/ExportedImageLegacy";
 import ExportedImage from "../localTestComponent/ExportedImage";
-// import ExportedImage from "next-image-export-optimizer";
 
 import styles from "../styles/Home.module.css";
 import testPictureStatic from "../public/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.jpg";
@@ -19,7 +19,59 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Next-Image-Export-Optimizer</h1>
+        <h2>Optimized example - Legacy</h2>
+        <div
+          style={{
+            position: "relative",
+            width: "50%",
+            height: "200px",
+            marginBottom: "3rem",
+          }}
+        >
+          <ExportedImageLegacy
+            src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
+            layout="fill"
+            id="test_image"
+            objectFit="cover"
+            priority
+            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
+            alt={"test_image"}
+          />
+        </div>
+        <h2>Optimized example (static import) - Legacy</h2>
+
+        <div
+          style={{
+            position: "relative",
+            marginBottom: "3rem",
+            width: "100%",
+          }}
+        >
+          <ExportedImageLegacy
+            src={testPictureStatic}
+            alt="test_image_static"
+            id="test_image_static"
+            layout="responsive"
+            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
+            priority
+          />
+        </div>
         <h2>Optimized example</h2>
+        <div
+          style={{
+            marginBottom: "3rem",
+          }}
+        >
+          <ExportedImage
+            src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
+            id="test_image_future"
+            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
+            alt={"test_image"}
+            width={500}
+            height={300}
+          />
+        </div>
+        <h2>Optimized example (fill)</h2>
         <div
           style={{
             position: "relative",
@@ -30,12 +82,11 @@ export default function Home() {
         >
           <ExportedImage
             src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
-            layout="fill"
-            id="test_image"
-            objectFit="cover"
-            priority={true}
+            id="test_image_future_fill"
             useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
             alt={"test_image"}
+            fill
+            style={{ objectFit: "cover" }}
           />
         </div>
         <h2>Optimized example (static import)</h2>
@@ -50,14 +101,34 @@ export default function Home() {
           <ExportedImage
             src={testPictureStatic}
             alt="test_image_static"
-            id="test_image_static"
-            layout="responsive"
+            id="test_image_static_future"
+            sizes="100vw"
+            style={{ width: "100%", height: "auto" }}
             useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
-            priority
+            // priority
           />
         </div>
 
-        <h2>Unoptimized example</h2>
+        <h2>Unoptimized example - Legacy</h2>
+        <div
+          style={{
+            position: "relative",
+            width: "50%",
+            height: "200px",
+            marginBottom: "3rem",
+          }}
+        >
+          <ExportedImageLegacy
+            src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
+            layout="fill"
+            id="test_image_unoptimized_legacy"
+            objectFit="cover"
+            priority={true}
+            alt={"test_image_unoptimized_legacy"}
+            unoptimized={true}
+          />
+        </div>
+        <h2>Unoptimized example </h2>
         <div
           style={{
             position: "relative",
@@ -68,12 +139,12 @@ export default function Home() {
         >
           <ExportedImage
             src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
-            layout="fill"
             id="test_image_unoptimized"
-            objectFit="cover"
             priority={true}
             alt={"test_image_unoptimized"}
             unoptimized={true}
+            fill
+            style={{ objectFit: "cover" }}
           />
         </div>
         {/* <ExportedImage
