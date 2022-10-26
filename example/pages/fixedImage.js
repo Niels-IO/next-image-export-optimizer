@@ -1,6 +1,6 @@
 import Head from "next/head";
+import ExportedImageLegacy from "../localTestComponent/ExportedImageLegacy";
 import ExportedImage from "../localTestComponent/ExportedImage";
-import ExportedImageFuture from "../localTestComponent/ExportedImageFuture";
 // import ExportedImage from "next-image-export-optimizer";
 
 import styles from "../styles/Home.module.css";
@@ -30,7 +30,7 @@ export default function Home() {
         >
           {[16, 32, 48, 64, 96, 128, 256, 384].map((size) => (
             <div style={{ display: "flex", margin: "4px" }} key={size}>
-              <ExportedImage
+              <ExportedImageLegacy
                 src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
                 layout="fixed"
                 width={size}
@@ -43,7 +43,7 @@ export default function Home() {
                 priority={true}
                 alt={"test_image"}
               />
-              <ExportedImageFuture
+              <ExportedImage
                 src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
                 width={size}
                 height={size}
