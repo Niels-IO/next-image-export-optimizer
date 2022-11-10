@@ -117,6 +117,12 @@ export default function Home() {
             height={400}
             alt="VercelLogo"
           />
+          <ExportedImage_Local
+            src="vercel.svg"
+            width={400}
+            height={400}
+            alt="VercelLogo_local"
+          />
           <Image
             src={`vercel.svg`}
             loader={({ src }) => {
