@@ -89,6 +89,24 @@ export default function Home() {
             style={{ objectFit: "cover" }}
           />
         </div>
+        <h2>Optimized example (fill & static import)</h2>
+        <div
+          style={{
+            position: "relative",
+            width: "50%",
+            height: "200px",
+            marginBottom: "3rem",
+          }}
+        >
+          <ExportedImage
+            src={testPictureStatic}
+            id="test_image_future_static_fill"
+            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
+            alt={"test_image"}
+            fill
+            style={{ objectFit: "cover" }}
+          />
+        </div>
         <h2>Optimized example (static import)</h2>
 
         <div

@@ -115,12 +115,17 @@ function ExportedImage({
     return generateImageURL(_src, 10, useWebp);
   }, [blurDataURL, src, unoptimized]);
 
+  // check if the src is a SVG image -> then we should not use the blurDataURL and use unoptimized
+  const isSVG =
+    typeof src === "object" ? src.src.endsWith(".svg") : src.endsWith(".svg");
+
   const [blurComplete, setBlurComplete] = useState(false);
 
   // Currently, we have to handle the blurDataURL ourselves as the new Image component
   // is expecting a base64 encoded string, but the generated blurDataURL is a normal URL
   const blurStyle =
     placeholder === "blur" &&
+    !isSVG &&
     automaticallyCalculatedBlurDataURL &&
     automaticallyCalculatedBlurDataURL.startsWith("/") &&
     !blurComplete
@@ -136,8 +141,6 @@ function ExportedImage({
   const ImageElement = (
     <Image
       {...rest}
-      {...(typeof src === "object" && src.width && { width: src.width })}
-      {...(typeof src === "object" && src.height && { height: src.height })}
       {...(width && { width })}
       {...(height && { height })}
       {...(loading && { loading })}
@@ -147,6 +150,7 @@ function ExportedImage({
       {...(placeholder && { placeholder: blurStyle ? "empty" : placeholder })}
       {...(unoptimized && { unoptimized })}
       {...(priority && { priority })}
+      {...(isSVG && { unoptimized: true })}
       {...(imageError && { unoptimized: true })}
       style={{ ...style, ...blurStyle }}
       loader={
@@ -173,7 +177,7 @@ function ExportedImage({
         // execute the onLoadingComplete callback if present
         onLoadingComplete && onLoadingComplete(result);
       }}
-      src={typeof src === "object" ? src.src : src}
+      src={src}
     />
   );
 
@@ -185,8 +189,6 @@ function ExportedImage({
       <noscript>
         <Image
           {...rest}
-          {...(typeof src === "object" && src.width && { width: src.width })}
-          {...(typeof src === "object" && src.height && { height: src.height })}
           {...(width && { width })}
           {...(height && { height })}
           {...(loading && { loading })}
@@ -200,7 +202,7 @@ function ExportedImage({
               ? fallbackLoader
               : (e) => optimizedLoader({ src, width: e.width, useWebp })
           }
-          src={typeof src === "object" ? src.src : src}
+          src={src}
         />
       </noscript>
       {ImageElement}
