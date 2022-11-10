@@ -6,6 +6,10 @@ const { createHash } = require("crypto");
 const path = require("path");
 const cliProgress = require("cli-progress");
 
+const loadConfig = require("next/dist/server/config").default;
+
+process.env.NODE_ENV = "production";
+
 const scriptArgs = process.argv.slice(2);
 let nextConfigPath;
 if (scriptArgs[0]) {
@@ -79,15 +83,12 @@ const nextImageExportOptimizer = async function () {
   let quality = 75;
   let storePicturesInWEBP = true;
   let blurSize = [];
-
-  // Read in the configuration parameters
   try {
-    // Path to Next.js config in the current directory
-    const importedConfig = require(nextConfigPath);
-    const nextjsConfig =
-      typeof importedConfig === "function"
-        ? importedConfig([() => {}], {}) // Try to obtain config created with next-compose-plugins
-        : importedConfig;
+    // Read in the configuration parameters
+    const nextjsConfig = await loadConfig(
+      "phase-export",
+      nextConfigPath.replace("next.config.js", "")
+    );
 
     // Check if nextjsConfig is an object or is undefined
     if (typeof nextjsConfig !== "object" || nextjsConfig === null) {
