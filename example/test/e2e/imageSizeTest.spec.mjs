@@ -86,6 +86,13 @@ for (let index = 0; index < widths.length; index++) {
       expect(image_future.currentSrc).toBe(
         correctSrcStaticImage[width.toString()]
       );
+      const image_future_fill = await getImageById(
+        page,
+        `test_image_future_static_fill`
+      );
+      expect(image_future_fill.currentSrc).toBe(
+        correctSrcStaticImage[width.toString()]
+      );
     });
     test("should check the image size for the statically imported image in the nested route", async ({
       page,

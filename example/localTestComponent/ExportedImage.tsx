@@ -136,8 +136,6 @@ function ExportedImage({
   const ImageElement = (
     <Image
       {...rest}
-      {...(typeof src === "object" && src.width && { width: src.width })}
-      {...(typeof src === "object" && src.height && { height: src.height })}
       {...(width && { width })}
       {...(height && { height })}
       {...(loading && { loading })}
@@ -173,7 +171,7 @@ function ExportedImage({
         // execute the onLoadingComplete callback if present
         onLoadingComplete && onLoadingComplete(result);
       }}
-      src={typeof src === "object" ? src.src : src}
+      src={src}
     />
   );
 
@@ -185,8 +183,6 @@ function ExportedImage({
       <noscript>
         <Image
           {...rest}
-          {...(typeof src === "object" && src.width && { width: src.width })}
-          {...(typeof src === "object" && src.height && { height: src.height })}
           {...(width && { width })}
           {...(height && { height })}
           {...(loading && { loading })}
@@ -200,7 +196,7 @@ function ExportedImage({
               ? fallbackLoader
               : (e) => optimizedLoader({ src, width: e.width, useWebp })
           }
-          src={typeof src === "object" ? src.src : src}
+          src={src}
         />
       </noscript>
       {ImageElement}
