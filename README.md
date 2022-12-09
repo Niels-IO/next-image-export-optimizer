@@ -104,7 +104,6 @@ module.exports = {
      alt="Large Image"
      width={500}
      height={500}
-     useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
    />;
 
    // Or with static import
@@ -115,7 +114,6 @@ module.exports = {
      src={testPictureStatic}
      alt="Static Image"
      layout="responsive"
-     useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
    />;
    ```
 
@@ -132,13 +130,13 @@ module.exports = {
    />
    ```
 
-7. Overriding presets:
+7. Overriding presets in **next.config.js**:
 
    **Placeholder images:**
    If you do not want the automatic generation of tiny, blurry placeholder images, set the `nextImageExportOptimizer_generateAndUseBlurImages` environment variable to `false` and set the `placeholder` prop from the **\<ExportedImage />** component to `empty`.
 
    **Usage of the WEBP format:**
-   If you do not want to use the WEBP format, set the `nextImageExportOptimizer_storePicturesInWEBP` environment variable to `false` and set the `useWebp` prop from the **\<ExportedImage />** component to `false`.
+   If you do not want to use the WEBP format, set the `nextImageExportOptimizer_storePicturesInWEBP` environment variable to `false`.
 
 8. You can still use the legacy image component `next/legacy/image`:
 
@@ -147,12 +145,7 @@ module.exports = {
 
    import testPictureStatic from "PATH_TO_IMAGE/test_static.jpg";
 
-   <ExportedImage
-     src={testPictureStatic}
-     alt="Static Image"
-     layout="fixed"
-     useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
-   />;
+   <ExportedImage src={testPictureStatic} alt="Static Image" layout="fixed" />;
    ```
 
 ## Live example

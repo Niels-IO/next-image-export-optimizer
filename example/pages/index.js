@@ -1,6 +1,7 @@
 import Head from "next/head";
 import ExportedImageLegacy from "../localTestComponent/ExportedImageLegacy";
-import ExportedImage from "../localTestComponent/ExportedImage";
+import ExportedImage from "next-image-export-optimizer";
+// import ExportedImage from "../localTestComponent/ExportedImage";
 
 import styles from "../styles/Home.module.css";
 import testPictureStatic from "../public/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.jpg";
@@ -34,7 +35,6 @@ export default function Home() {
             id="test_image"
             objectFit="cover"
             priority
-            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
             alt={"test_image"}
           />
         </div>
@@ -52,7 +52,6 @@ export default function Home() {
             alt="test_image_static"
             id="test_image_static"
             layout="responsive"
-            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
             priority
           />
         </div>
@@ -65,7 +64,6 @@ export default function Home() {
           <ExportedImage
             src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
             id="test_image_future"
-            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
             alt={"test_image"}
             width={500}
             height={300}
@@ -83,7 +81,6 @@ export default function Home() {
           <ExportedImage
             src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
             id="test_image_future_fill"
-            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
             alt={"test_image"}
             fill
             style={{ objectFit: "cover" }}
@@ -101,7 +98,6 @@ export default function Home() {
           <ExportedImage
             src={testPictureStatic}
             id="test_image_future_static_fill"
-            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
             alt={"test_image"}
             fill
             style={{ objectFit: "cover" }}
@@ -122,7 +118,6 @@ export default function Home() {
             id="test_image_static_future"
             sizes="100vw"
             style={{ width: "100%", height: "auto" }}
-            useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
             // priority
           />
         </div>
