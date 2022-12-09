@@ -35,9 +35,6 @@ export default function Home() {
                 layout="fixed"
                 width={size}
                 height={size}
-                useWebp={
-                  process.env.nextImageExportOptimizer_storePicturesInWEBP
-                }
                 id={`test_image_${size}`}
                 objectFit="cover"
                 priority={true}
@@ -47,9 +44,6 @@ export default function Home() {
                 src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
                 width={size}
                 height={size}
-                useWebp={
-                  process.env.nextImageExportOptimizer_storePicturesInWEBP
-                }
                 id={`test_image_${size}_future`}
                 style={{ objectFit: "cover" }}
                 priority={true}

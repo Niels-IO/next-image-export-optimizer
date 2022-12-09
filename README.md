@@ -69,10 +69,16 @@ module.exports = {
    }
    ```
 
-   If your nextjs project is not at the root directory where you are running the commands, for example if you are using a monorepo, you can specify the location of the next.config.js as an argument to the script:
+   If your Next.js project is not at the root directory where you are running the commands, for example if you are using a monorepo, you can specify the location of the next.config.js as an argument to the script:
 
    ```json
-   "export": "next build && next export && next-image-export-optimizer path/to/my/next.config.js"
+   "export": "next build && next export && next-image-export-optimizer --nextConfigPath path/to/my/next.config.js"
+   ```
+
+   If you want to specify the path to the output folder, you can either do so by setting the `nextImageExportOptimizer_exportFolderPath` environment variable in your **next.config.js** file or by passing the `--exportFolderPath` argument to the script:
+
+   ```json
+    "export": "next build && next export && next-image-export-optimizer --exportFolderPath path/to/my/export/folder"
    ```
 
 4. Change the **\<Image />** component to the **\<ExportedImage />** component of this library.
@@ -98,7 +104,6 @@ module.exports = {
      alt="Large Image"
      width={500}
      height={500}
-     useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
    />;
 
    // Or with static import
@@ -109,7 +114,6 @@ module.exports = {
      src={testPictureStatic}
      alt="Static Image"
      layout="responsive"
-     useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
    />;
    ```
 
@@ -126,13 +130,13 @@ module.exports = {
    />
    ```
 
-7. Overriding presets:
+7. Overriding presets in **next.config.js**:
 
    **Placeholder images:**
    If you do not want the automatic generation of tiny, blurry placeholder images, set the `nextImageExportOptimizer_generateAndUseBlurImages` environment variable to `false` and set the `placeholder` prop from the **\<ExportedImage />** component to `empty`.
 
    **Usage of the WEBP format:**
-   If you do not want to use the WEBP format, set the `nextImageExportOptimizer_storePicturesInWEBP` environment variable to `false` and set the `useWebp` prop from the **\<ExportedImage />** component to `false`.
+   If you do not want to use the WEBP format, set the `nextImageExportOptimizer_storePicturesInWEBP` environment variable to `false`.
 
 8. You can still use the legacy image component `next/legacy/image`:
 
@@ -141,12 +145,7 @@ module.exports = {
 
    import testPictureStatic from "PATH_TO_IMAGE/test_static.jpg";
 
-   <ExportedImage
-     src={testPictureStatic}
-     alt="Static Image"
-     layout="fixed"
-     useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
-   />;
+   <ExportedImage src={testPictureStatic} alt="Static Image" layout="fixed" />;
    ```
 
 ## Live example

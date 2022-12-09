@@ -23,7 +23,6 @@ function Page() {
           id="test_image_static_fixed"
           width={300}
           height={100}
-          useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
           objectFit="cover"
         />
       </div>
@@ -42,7 +41,6 @@ function Page() {
           id="test_image_static_fixed_future"
           width={300}
           height={100}
-          useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
           style={{ objectFit: "cover" }}
         />
       </div>

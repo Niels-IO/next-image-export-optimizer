@@ -18,9 +18,12 @@ const splitFilePath = ({ filePath }: { filePath: string }) => {
   };
 };
 
-const generateImageURL = (src: string, width: number, useWebp: boolean) => {
+const generateImageURL = (src: string, width: number) => {
   const { filename, path, extension } = splitFilePath({ filePath: src });
-
+  const useWebp =
+    process.env.nextImageExportOptimizer_storePicturesInWEBP != undefined
+      ? process.env.nextImageExportOptimizer_storePicturesInWEBP
+      : true;
   if (
     !["JPG", "JPEG", "WEBP", "PNG", "AVIF"].includes(extension.toUpperCase())
   ) {
@@ -59,16 +62,14 @@ const generateImageURL = (src: string, width: number, useWebp: boolean) => {
 const optimizedLoader = ({
   src,
   width,
-  useWebp,
 }: {
   src: string | StaticImageData;
   width: number;
-  useWebp: boolean;
 }) => {
   const isStaticImage = typeof src === "object";
   const _src = isStaticImage ? src.src : src;
 
-  return generateImageURL(_src, width, useWebp);
+  return generateImageURL(_src, width);
 };
 
 const fallbackLoader = ({ src }: { src: string | StaticImageData }) => {
@@ -79,7 +80,6 @@ const fallbackLoader = ({ src }: { src: string | StaticImageData }) => {
 export interface ExportedImageProps
   extends Omit<ImageProps, "src" | "loader" | "quality"> {
   src: string | StaticImageData;
-  useWebp?: boolean;
 }
 
 function ExportedImage({
@@ -93,7 +93,6 @@ function ExportedImage({
   height,
   objectFit,
   objectPosition,
-  useWebp = true,
   onLoadingComplete,
   unoptimized,
   placeholder = "blur",
@@ -115,7 +114,7 @@ function ExportedImage({
       return _src;
     }
     // otherwise use the generated image of 10px width as a blurDataURL
-    return generateImageURL(_src, 10, useWebp);
+    return generateImageURL(_src, 10);
   }, [blurDataURL, src, unoptimized]);
 
   return (
@@ -139,7 +138,7 @@ function ExportedImage({
       loader={
         imageError || unoptimized === true
           ? fallbackLoader
-          : (e) => optimizedLoader({ src, width: e.width, useWebp })
+          : (e) => optimizedLoader({ src, width: e.width })
       }
       blurDataURL={automaticallyCalculatedBlurDataURL}
       onError={(error) => {

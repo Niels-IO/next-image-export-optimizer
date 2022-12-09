@@ -21,7 +21,6 @@ function Page() {
           alt="test_image_static"
           id="test_image_static"
           layout="responsive"
-          useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
         />
       </div>
       <h2>Optimized example with fixed size (static import) - Legacy</h2>
@@ -39,7 +38,6 @@ function Page() {
           id="test_image_static_fixed"
           width={300}
           height={100}
-          useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
           objectFit="cover"
         />
       </div>
@@ -57,7 +55,6 @@ function Page() {
           layout="fill"
           id="test_image"
           objectFit="cover"
-          useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
           alt={"test_image"}
         />
       </div>
@@ -74,7 +71,6 @@ function Page() {
           src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
           id="test_image_future"
           priority={true}
-          useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
           alt={"test_image"}
           fill
           style={{ objectFit: "cover" }}
@@ -95,7 +91,6 @@ function Page() {
           id="test_image_static_future"
           sizes="100vw"
           style={{ width: "100%", height: "auto" }}
-          useWebp={process.env.nextImageExportOptimizer_storePicturesInWEBP}
           priority
         />
       </div>
