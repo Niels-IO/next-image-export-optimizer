@@ -10,14 +10,32 @@ const loadConfig = require("next/dist/server/config").default;
 
 process.env.NODE_ENV = "production";
 
-const scriptArgs = process.argv.slice(2);
-let nextConfigPath;
-if (scriptArgs[0]) {
-  nextConfigPath = path.isAbsolute(scriptArgs[0])
-    ? scriptArgs[0]
-    : path.join(process.cwd(), scriptArgs[0]);
+// Check if the --name and --age arguments are present
+const nextConfigPathIndex = process.argv.indexOf("--nextConfigPath");
+const exportFolderPathIndex = process.argv.indexOf("--exportFolderPath");
+
+// Set the nextConfigPath and exportFolderPath variables to the corresponding arguments, or to undefined if the arguments are not present
+let nextConfigPath =
+  nextConfigPathIndex !== -1
+    ? process.argv[nextConfigPathIndex + 1]
+    : undefined;
+let exportFolderPathCommandLine =
+  exportFolderPathIndex !== -1
+    ? process.argv[exportFolderPathIndex + 1]
+    : undefined;
+
+if (nextConfigPath) {
+  nextConfigPath = path.isAbsolute(nextConfigPath)
+    ? nextConfigPath
+    : path.join(process.cwd(), nextConfigPath);
 } else {
   nextConfigPath = path.join(process.cwd(), "next.config.js");
+}
+
+if (exportFolderPathCommandLine) {
+  exportFolderPathCommandLine = path.isAbsolute(exportFolderPathCommandLine)
+    ? exportFolderPathCommandLine
+    : path.join(process.cwd(), exportFolderPathCommandLine);
 }
 
 function getHash(items) {
@@ -141,6 +159,9 @@ const nextImageExportOptimizer = async function () {
     // Configuration file not found
     console.log("Could not find a next.config.js file. Use of default values");
   }
+
+  // if the user has specified a path for the export folder via the command line, use this path
+  exportFolderPath = exportFolderPathCommandLine || exportFolderPath;
 
   // Give the user a warning, if the public directory of Next.js is not found as the user
   // may have run the command in a wrong directory
