@@ -14,6 +14,19 @@ process.env.NODE_ENV = "production";
 const nextConfigPathIndex = process.argv.indexOf("--nextConfigPath");
 const exportFolderPathIndex = process.argv.indexOf("--exportFolderPath");
 
+// Check if there is only one argument without a name present -> this is the case if the user does not provide the path to the next.config.js file
+if (process.argv.length === 3) {
+  // Colorize the output to red
+  // Colorize the output to red
+  console.error("\x1b[31m");
+  console.error(
+    "next-image-export-optimizer: Breaking change: Please provide the path to the next.config.js file as an argument with the name --nextConfigPath."
+  );
+  // Reset the color
+  console.error("\x1b[0m");
+  process.exit(1);
+}
+
 // Set the nextConfigPath and exportFolderPath variables to the corresponding arguments, or to undefined if the arguments are not present
 let nextConfigPath =
   nextConfigPathIndex !== -1
