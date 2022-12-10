@@ -45,6 +45,7 @@ module.exports = {
     nextImageExportOptimizer_exportFolderPath: "out",
     nextImageExportOptimizer_quality: 75,
     nextImageExportOptimizer_storePicturesInWEBP: true,
+    nextImageExportOptimizer_exportFolderPath: "nextImageExportOptimizer",
 
     // If you do not want to use blurry placeholder images, then you can set
     // nextImageExportOptimizer_generateAndUseBlurImages to false and pass
@@ -59,7 +60,7 @@ module.exports = {
 ```
 
 1. Add the above configuration to your **next.config.js**
-2. Specify the folder where all the images are stored. Defaults to **public/images**
+2. Change the default values in your **next.config.js** where appropriate. For example, specify the folder where all the images are stored. Defaults to **public/images**
 3. Change the export command in `package.json`
 
    ```diff
