@@ -265,14 +265,25 @@ async function testConfig(config) {
 
 jest.setTimeout(180000);
 test("legacyConfig", async () => {
+  console.log("Running legacyConfig test...");
   await testConfig(legacyConfig);
+  console.log("legacyConfig test finished.");
 });
+
 test("newConfigJpeg", async () => {
+  console.log("Running newConfigJpeg test...");
   await testConfig(newConfigJpeg);
+  console.log("newConfigJpeg test finished.");
 });
+
 test("newConfigExportFolderName", async () => {
+  console.log("Running newConfigExportFolderName test...");
   await testConfig(newConfigExportFolderName);
+  console.log("newConfigExportFolderName test finished.");
 });
+
 test("newConfig", async () => {
+  console.log("Running newConfig test...");
   await testConfig(newConfig);
+  console.log("newConfig test finished.");
 });
