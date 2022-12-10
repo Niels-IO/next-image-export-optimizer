@@ -63,7 +63,12 @@ function getHash(items) {
   return hash.digest("base64").replace(/\//g, "-");
 }
 
-const getAllFiles = function (basePath, dirPath, arrayOfFiles) {
+const getAllFiles = function (
+  basePath,
+  dirPath,
+  exportFolderName,
+  arrayOfFiles
+) {
   arrayOfFiles = arrayOfFiles || [];
   // check if the path is existing
   if (fs.existsSync(dirPath)) {
@@ -72,11 +77,13 @@ const getAllFiles = function (basePath, dirPath, arrayOfFiles) {
     files.forEach(function (file) {
       if (
         fs.statSync(dirPath + "/" + file).isDirectory() &&
-        file !== "nextImageExportOptimizer"
+        file !== exportFolderName &&
+        file !== "nextImageExportOptimizer" // default export folder name
       ) {
         arrayOfFiles = getAllFiles(
           basePath,
           dirPath + "/" + file,
+          exportFolderName,
           arrayOfFiles
         );
       } else {
@@ -114,6 +121,7 @@ const nextImageExportOptimizer = async function () {
   let quality = 75;
   let storePicturesInWEBP = true;
   let blurSize = [];
+  let exportFolderName = "nextImageExportOptimizer";
   try {
     // Read in the configuration parameters
     const nextjsConfig = await loadConfig(
@@ -148,6 +156,7 @@ const nextImageExportOptimizer = async function () {
     if (nextjsConfig.images?.imageSizes !== undefined) {
       imageSizes = nextjsConfig.images.imageSizes;
     }
+
     if (legacyPath?.quality !== undefined) {
       quality = legacyPath.quality;
     } else if (newPath?.nextImageExportOptimizer_quality !== undefined) {
@@ -167,6 +176,9 @@ const nextImageExportOptimizer = async function () {
       newPath?.nextImageExportOptimizer_generateAndUseBlurImages !== undefined
     ) {
       blurSize = [10];
+    }
+    if (newPath.nextImageExportOptimizer_exportFolderName !== undefined) {
+      exportFolderName = newPath.nextImageExportOptimizer_exportFolderName;
     }
   } catch (e) {
     // Configuration file not found
@@ -191,7 +203,7 @@ const nextImageExportOptimizer = async function () {
   }
 
   // Create the folder for the optimized images if it does not exists
-  const folderNameForOptImages = `${imageFolderPath}/nextImageExportOptimizer`;
+  const folderNameForOptImages = `${imageFolderPath}/${exportFolderName}`;
   try {
     if (!fs.existsSync(folderNameForOptImages)) {
       fs.mkdirSync(folderNameForOptImages);
@@ -213,11 +225,13 @@ const nextImageExportOptimizer = async function () {
 
   const allFilesInImageFolderAndSubdirectories = getAllFiles(
     imageFolderPath,
-    imageFolderPath
+    imageFolderPath,
+    exportFolderName
   );
   const allFilesInStaticImageFolder = getAllFiles(
     staticImageFolderPath,
-    staticImageFolderPath
+    staticImageFolderPath,
+    exportFolderName
   );
   // append the static image folder to the image folder
   allFilesInImageFolderAndSubdirectories.push(...allFilesInStaticImageFolder);
@@ -329,7 +343,7 @@ const nextImageExportOptimizer = async function () {
         extension = "WEBP";
       }
 
-      // for a static image, we copy the image to public/nextImageExportOptimizer
+      // for a static image, we copy the image to public/nextImageExportOptimizer or public/${exportFolderName}
       // and not the staticImageFolderPath
       // as the static image folder is deleted before each build
       const basePathToStoreOptimizedImages =
@@ -337,7 +351,7 @@ const nextImageExportOptimizer = async function () {
       const optimizedFileNameAndPath = path.join(
         basePathToStoreOptimizedImages,
         fileDirectory,
-        "nextImageExportOptimizer",
+        exportFolderName,
         `${filename}-opt-${width}.${extension.toUpperCase()}`
       );
 
