@@ -49,9 +49,13 @@ const generateImageURL = (src: string, width: number) => {
 
   const isStaticImage = src.includes("_next/static/media");
 
+  const exportFolderName =
+    process.env.nextImageExportOptimizer_exportFolderName ||
+    "nextImageExportOptimizer";
+
   let generatedImageURL = `${
     isStaticImage ? "" : correctedPath
-  }nextImageExportOptimizer/${filename}-opt-${width}.${processedExtension.toUpperCase()}`;
+  }${exportFolderName}/${filename}-opt-${width}.${processedExtension.toUpperCase()}`;
   // if the generatedImageURL is not starting with a slash, then we add one
   if (generatedImageURL.charAt(0) !== "/") {
     generatedImageURL = "/" + generatedImageURL;

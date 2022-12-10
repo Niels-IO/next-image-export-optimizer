@@ -138,6 +138,9 @@ module.exports = {
    **Usage of the WEBP format:**
    If you do not want to use the WEBP format, set the `nextImageExportOptimizer_storePicturesInWEBP` environment variable to `false`.
 
+   **Rename the export folder name:**
+   If you want to rename the export folder name, set the `nextImageExportOptimizer_exportFolderPath` environment variable to the desired folder name. The default is `nextImageExportOptimizer`.
+
 8. You can still use the legacy image component `next/legacy/image`:
 
    ```javascript

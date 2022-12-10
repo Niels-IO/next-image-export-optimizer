@@ -5,6 +5,7 @@ declare global {
       generateAndUseBlurImages: boolean;
       nextImageExportOptimizer_storePicturesInWEBP: boolean;
       nextImageExportOptimizer_generateAndUseBlurImages: boolean;
+      nextImageExportOptimizer_exportFolderName: string;
     }
   }
 }
