@@ -78,7 +78,12 @@ const optimizedLoader = ({
 };
 
 const fallbackLoader = ({ src }: { src: string | StaticImageData }) => {
-  const _src = typeof src === "object" ? src.src : src;
+  let _src = typeof src === "object" ? src.src : src;
+
+  // if the _src does not start with a slash, then we add one
+  if (_src.charAt(0) !== "/") {
+    _src = "/" + _src;
+  }
   return _src;
 };
 
@@ -155,7 +160,6 @@ function ExportedImage({
       {...(unoptimized && { unoptimized })}
       {...(priority && { priority })}
       {...(isSVG && { unoptimized: true })}
-      {...(imageError && { unoptimized: true })}
       style={{ ...style, ...blurStyle }}
       loader={
         imageError || unoptimized === true

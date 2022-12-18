@@ -165,6 +165,17 @@ for (let index = 0; index < widths.length; index++) {
 
       const image = await getImageById(page, "test_image_static");
       expect(image.currentSrc).toBe(correctSrcStaticImage[width.toString()]);
+
+      const image_future = await getImageById(page, `test_image_future_fill`);
+      expect(image_future.currentSrc).toBe(correctSrc[width.toString()]);
+
+      const image_future_fill = await getImageById(
+        page,
+        `test_image_future_static_fill`
+      );
+      expect(image_future_fill.currentSrc).toBe(
+        correctSrcStaticImage[width.toString()]
+      );
     });
 
     test("should check the image size for images in subfolder", async ({
