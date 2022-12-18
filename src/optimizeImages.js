@@ -156,6 +156,9 @@ const nextImageExportOptimizer = async function () {
     if (nextjsConfig.images?.imageSizes !== undefined) {
       imageSizes = nextjsConfig.images.imageSizes;
     }
+    if (nextjsConfig.distDir !== undefined) {
+      staticImageFolderPath = path.join(nextjsConfig.distDir, "static/media");
+    }
 
     if (legacyPath?.quality !== undefined) {
       quality = legacyPath.quality;
@@ -347,7 +350,7 @@ const nextImageExportOptimizer = async function () {
       // and not the staticImageFolderPath
       // as the static image folder is deleted before each build
       const basePathToStoreOptimizedImages =
-        basePath === ".next/static/media" ? "public" : basePath;
+        basePath === staticImageFolderPath ? "public" : basePath;
       const optimizedFileNameAndPath = path.join(
         basePathToStoreOptimizedImages,
         fileDirectory,
