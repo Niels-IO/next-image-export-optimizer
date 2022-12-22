@@ -156,7 +156,11 @@ function ExportedImage({
       {...(className && { className })}
       {...(onLoadingComplete && { onLoadingComplete })}
       // if the blurStyle is not "empty", then we take care of the blur behavior ourselves
-      {...(placeholder && { placeholder: blurStyle ? "empty" : placeholder })}
+      // if the blur is complete, we also set the placeholder to empty as it otherwise shows
+      // the background image on transparent images
+      {...(placeholder && {
+        placeholder: blurStyle || blurComplete ? "empty" : placeholder,
+      })}
       {...(unoptimized && { unoptimized })}
       {...(priority && { priority })}
       {...(isSVG && { unoptimized: true })}
