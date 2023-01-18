@@ -7,8 +7,9 @@ module.exports = {
       imageFolderPath: "public/images",
       exportFolderPath: "out",
       quality: 75,
-    }
+    },
   },
+  transpilePackages: ["next-image-export-optimizer"],
   env: {
     storePicturesInWEBP: true,
     generateAndUseBlurImages: true,
