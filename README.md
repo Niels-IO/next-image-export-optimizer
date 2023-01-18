@@ -40,6 +40,7 @@ module.exports = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
   },
+  transpilePackages: ["next-image-export-optimizer"],
   env: {
     nextImageExportOptimizer_imageFolderPath: "public/images",
     nextImageExportOptimizer_exportFolderPath: "out",
@@ -131,7 +132,24 @@ module.exports = {
    />
    ```
 
-7. Overriding presets in **next.config.js**:
+7. This package cannot optimize remote images. You can use the Next.js built-in image component for remote images.
+
+   ```javascript
+   import Image from "next/image";
+
+   <Image
+     src="https://example.com/remote-image.jpg"
+     alt="Remote Image"
+     unoptimized
+     loader={({ src }) => {
+       return src;
+     }}
+     width={500}
+     height={500}
+   />;
+   ```
+
+8. Overriding presets in **next.config.js**:
 
    **Placeholder images:**
    If you do not want the automatic generation of tiny, blurry placeholder images, set the `nextImageExportOptimizer_generateAndUseBlurImages` environment variable to `false` and set the `placeholder` prop from the **\<ExportedImage />** component to `empty`.
@@ -142,7 +160,7 @@ module.exports = {
    **Rename the export folder name:**
    If you want to rename the export folder name, set the `nextImageExportOptimizer_exportFolderPath` environment variable to the desired folder name. The default is `nextImageExportOptimizer`.
 
-8. You can still use the legacy image component `next/legacy/image`:
+9. You can still use the legacy image component `next/legacy/image`:
 
    ```javascript
    import ExportedImage from "next-image-export-optimizer/legacy/ExportedImage";
