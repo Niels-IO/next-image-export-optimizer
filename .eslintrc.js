@@ -12,6 +12,8 @@ module.exports = {
     ecmaVersion: 13,
     sourceType: "module",
   },
+  //ignore the dist folder
+  ignorePatterns: ["dist/"],
   plugins: ["react"],
   rules: { "react/react-in-jsx-scope": "off" },
 };
