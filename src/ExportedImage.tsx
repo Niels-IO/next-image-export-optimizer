@@ -26,7 +26,9 @@ const generateImageURL = (src: string, width: number) => {
       : true;
 
   if (
-    !["JPG", "JPEG", "WEBP", "PNG", "AVIF"].includes(extension.toUpperCase())
+    !["JPG", "JPEG", "WEBP", "PNG", "AVIF", "GIF"].includes(
+      extension.toUpperCase()
+    )
   ) {
     // The images has an unsupported extension
     // We will return the src
@@ -36,7 +38,10 @@ const generateImageURL = (src: string, width: number) => {
   // the extension to WEBP to load them correctly
   let processedExtension = extension;
 
-  if (useWebp && ["JPG", "JPEG", "PNG"].includes(extension.toUpperCase())) {
+  if (
+    useWebp &&
+    ["JPG", "JPEG", "PNG", "GIF"].includes(extension.toUpperCase())
+  ) {
     processedExtension = "WEBP";
   }
 

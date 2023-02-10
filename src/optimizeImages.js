@@ -255,7 +255,7 @@ const nextImageExportOptimizer = async function () {
     (fileObject) => {
       let extension = fileObject.file.split(".").pop().toUpperCase();
       // Only include file with image extensions
-      return ["JPG", "JPEG", "WEBP", "PNG", "AVIF"].includes(extension);
+      return ["JPG", "JPEG", "WEBP", "PNG", "AVIF", "GIF"].includes(extension);
     }
   );
   console.log(
@@ -414,7 +414,7 @@ const nextImageExportOptimizer = async function () {
         }
 
         // Begin sharp transformation logic
-        const transformer = sharp(imageBuffer);
+        const transformer = sharp(imageBuffer, { animated: true });
 
         transformer.rotate();
 
@@ -441,6 +441,8 @@ const nextImageExportOptimizer = async function () {
           transformer.png({ quality });
         } else if (extension === "JPEG" || extension === "JPG") {
           transformer.jpeg({ quality });
+        } else if (extension === "GIF") {
+          transformer.gif({ quality });
         }
 
         // Write the optimized image to the file system

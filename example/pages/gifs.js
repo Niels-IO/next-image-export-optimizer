@@ -28,10 +28,9 @@ export default function Home() {
           }}
         >
           <ExportedImage
-            src="/402107790_STATIC_NOISE.gif"
+            src="/images/402107790_STATIC_NOISE_GIF.gif"
             id="test_image_gif"
             alt={"test_image_gif"}
-            unoptimized
             fill
             style={{ objectFit: "cover" }}
           />
@@ -47,10 +46,9 @@ export default function Home() {
           }}
         >
           <ExportedImage
-            src="/402107790_STATIC_NOISE.webp"
+            src="/images/402107790_STATIC_NOISE_WEBP.webp"
             id="test_image_webp"
             alt={"test_image_webp"}
-            unoptimized
             fill
             style={{ objectFit: "cover" }}
           />
@@ -66,11 +64,10 @@ export default function Home() {
           }}
         >
           <ExportedImage
-            src="/animated.png"
+            src="/images/animated.png"
             id="test_image_png"
             alt={"test_image_png"}
             fill
-            unoptimized
           />
         </div>
       </main>
