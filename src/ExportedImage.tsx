@@ -18,7 +18,11 @@ const splitFilePath = ({ filePath }: { filePath: string }) => {
   };
 };
 
-const generateImageURL = (src: string, width: number) => {
+const generateImageURL = (
+  src: string,
+  width: number,
+  isRemoteImage: boolean = false
+) => {
   const { filename, path, extension } = splitFilePath({ filePath: src });
   const useWebp =
     process.env.nextImageExportOptimizer_storePicturesInWEBP != undefined
@@ -56,12 +60,36 @@ const generateImageURL = (src: string, width: number) => {
   let generatedImageURL = `${
     isStaticImage ? "" : correctedPath
   }${exportFolderName}/${filename}-opt-${width}.${processedExtension.toUpperCase()}`;
-  // if the generatedImageURL is not starting with a slash, then we add one
-  if (generatedImageURL.charAt(0) !== "/") {
+
+  // if the generatedImageURL is not starting with a slash, then we add one as long as it is not a remote image
+  if (!isRemoteImage && generatedImageURL.charAt(0) !== "/") {
     generatedImageURL = "/" + generatedImageURL;
   }
-
   return generatedImageURL;
+};
+
+const imageURLForRemoteImage = ({
+  src,
+  width,
+}: {
+  src: string;
+  width: number;
+}) => {
+  const extension = src.split(".").pop();
+  // If the extension is not supported, then we log an error and return the src
+  if (
+    !extension ||
+    !["JPG", "JPEG", "WEBP", "PNG", "AVIF"].includes(extension.toUpperCase())
+  ) {
+    console.error(
+      `The image ${src} has an unsupported extension. Please use JPG, JPEG, WEBP, PNG or AVIF.`
+    );
+    return src;
+  }
+  const imageURLHash = (s: string): number =>
+    s.split("").reduce((a, b) => ((a << 5) - a + b.charCodeAt(0)) | 0, 0);
+
+  return generateImageURL(`${imageURLHash(src)}.${extension}`, width, true);
 };
 
 const optimizedLoader = ({
@@ -74,14 +102,21 @@ const optimizedLoader = ({
   const isStaticImage = typeof src === "object";
   const _src = isStaticImage ? src.src : src;
 
+  // Check if the image is a remote image (starts with http or https)
+  if (_src.startsWith("http")) {
+    return imageURLForRemoteImage({ src: _src, width });
+  }
+
   return generateImageURL(_src, width);
 };
 
 const fallbackLoader = ({ src }: { src: string | StaticImageData }) => {
   let _src = typeof src === "object" ? src.src : src;
 
-  // if the _src does not start with a slash, then we add one
-  if (_src.charAt(0) !== "/") {
+  const isRemoteImage = _src.startsWith("http");
+
+  // if the _src does not start with a slash, then we add one as long as it is not a remote image
+  if (!isRemoteImage && _src.charAt(0) !== "/") {
     _src = "/" + _src;
   }
   return _src;
@@ -119,6 +154,10 @@ function ExportedImage({
     if (unoptimized === true) {
       // return the src image when unoptimized
       return _src;
+    }
+    // Check if the image is a remote image (starts with http or https)
+    if (_src.startsWith("http")) {
+      return imageURLForRemoteImage({ src: _src, width: 10 });
     }
     // otherwise use the generated image of 10px width as a blurDataURL
     return generateImageURL(_src, 10);
