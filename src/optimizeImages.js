@@ -7,6 +7,14 @@ const { createHash } = require("crypto");
 const path = require("path");
 const cliProgress = require("cli-progress");
 
+const crypto = require("crypto");
+
+function hashUrl(url) {
+  const hash = crypto.createHash("sha256");
+  hash.update(url);
+  return hash.digest("hex");
+}
+
 const loadConfig = require("next/dist/server/config").default;
 
 process.env.NODE_ENV = "production";
@@ -76,17 +84,15 @@ const remoteImageFilenames = remoteImageURLs.map((url) => {
     );
     return;
   }
-  const imageURLHash = (s) =>
-    s.split("").reduce((a, b) => ((a << 5) - a + b.charCodeAt(0)) | 0, 0);
 
   const filename = path.join(
     folderPathForRemoteImages,
-    `${imageURLHash(url)}.${extension}`
+    `${hashUrl(url)}.${extension}`
   );
 
   return {
     basePath: folderPathForRemoteImages,
-    file: `${imageURLHash(url)}.${extension}`,
+    file: `${hashUrl(url)}.${extension}`,
     dirPathWithoutBasePath: "",
     fullPath: filename,
   };

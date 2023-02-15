@@ -52,6 +52,16 @@ const correctSrcTransparentImage = {
   2048: "http://localhost:8080/images/nextImageExportOptimizer/transparentImage-opt-2048.WEBP",
   3840: "http://localhost:8080/images/nextImageExportOptimizer/transparentImage-opt-3840.WEBP",
 };
+const correctSrcRemoteImage = {
+  640: "http://localhost:8080/nextImageExportOptimizer/0998337b913c48d47498b513e5f51b5119940311ad25e51275a0d31cc5244a97-opt-640.WEBP",
+  750: "http://localhost:8080/nextImageExportOptimizer/0998337b913c48d47498b513e5f51b5119940311ad25e51275a0d31cc5244a97-opt-750.WEBP",
+  828: "http://localhost:8080/nextImageExportOptimizer/0998337b913c48d47498b513e5f51b5119940311ad25e51275a0d31cc5244a97-opt-828.WEBP",
+  1080: "http://localhost:8080/nextImageExportOptimizer/0998337b913c48d47498b513e5f51b5119940311ad25e51275a0d31cc5244a97-opt-1080.WEBP",
+  1200: "http://localhost:8080/nextImageExportOptimizer/0998337b913c48d47498b513e5f51b5119940311ad25e51275a0d31cc5244a97-opt-1200.WEBP",
+  1920: "http://localhost:8080/nextImageExportOptimizer/0998337b913c48d47498b513e5f51b5119940311ad25e51275a0d31cc5244a97-opt-1920.WEBP",
+  2048: "http://localhost:8080/nextImageExportOptimizer/0998337b913c48d47498b513e5f51b5119940311ad25e51275a0d31cc5244a97-opt-2048.WEBP",
+  3840: "http://localhost:8080/nextImageExportOptimizer/0998337b913c48d47498b513e5f51b5119940311ad25e51275a0d31cc5244a97-opt-3840.WEBP",
+};
 
 for (let index = 0; index < widths.length; index++) {
   const width = widths[index];
@@ -253,6 +263,25 @@ for (let index = 0; index < widths.length; index++) {
 
       const image = await getImageById(page, "test_image");
       expect(image.currentSrc).toBe(correctSrcSmallImage[width.toString()]);
+    });
+    test("should check the image size for the remote test page", async ({
+      page,
+    }) => {
+      await page.goto("/remote", {
+        waitUntil: "networkidle",
+      });
+
+      const img = await page.locator("#test_image");
+      await img.click();
+
+      const image = await getImageById(page, "test_image");
+      expect(image.currentSrc).toBe(correctSrcRemoteImage[width.toString()]);
+      await expect(img).toHaveCSS("position", "absolute");
+      await expect(img).not.toHaveCSS(
+        "background-image",
+        `url("/images/nextImageExportOptimizer/transparentImage-opt-10.WEBP")`
+      );
+      await expect(img).not.toHaveCSS("background-repeat", "no-repeat");
     });
   });
 }
