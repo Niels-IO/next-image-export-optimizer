@@ -1,5 +1,5 @@
 import Head from "next/head";
-import ExportedImage from "../localTestComponent/ExportedImage";
+import ExportedImage from "../../src/ExportedImage";
 
 import styles from "../styles/Home.module.css";
 

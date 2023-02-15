@@ -1,6 +1,6 @@
 import Head from "next/head";
-import ExportedImageLegacy from "../localTestComponent/ExportedImageLegacy";
-import ExportedImage from "../localTestComponent/ExportedImage";
+import ExportedImageLegacy from "../../src/legacy/ExportedImage";
+import ExportedImage from "../../src/ExportedImage";
 // import ExportedImage from "next-image-export-optimizer";
 
 import styles from "../styles/Home.module.css";

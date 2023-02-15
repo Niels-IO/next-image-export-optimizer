@@ -1,8 +1,8 @@
 import Head from "next/head";
-import ExportedImageLegacy from "../localTestComponent/ExportedImageLegacy";
+import ExportedImageLegacy from "../../src/legacy/ExportedImage";
 // import ExportedImageLegacy from "next-image-export-optimizer/legacy/ExportedImage";
 // import ExportedImage from "next-image-export-optimizer";
-import ExportedImage from "../localTestComponent/ExportedImage";
+import ExportedImage from "../../src/ExportedImage";
 
 import styles from "../styles/Home.module.css";
 import testPictureStatic from "../public/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.jpg";

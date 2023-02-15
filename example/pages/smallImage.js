@@ -1,6 +1,6 @@
 import Head from "next/head";
-import ExportedImageLegacy from "../localTestComponent/ExportedImageLegacy";
-import ExportedImage from "../localTestComponent/ExportedImage";
+import ExportedImageLegacy from "../../src/legacy/ExportedImage";
+import ExportedImage from "../../src/ExportedImage";
 
 import smallImage from "../public/images/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.jpg";
 

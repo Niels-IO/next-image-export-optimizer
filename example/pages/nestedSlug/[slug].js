@@ -1,6 +1,6 @@
 import React from "react";
-import ExportedImage from "../../localTestComponent/ExportedImage";
-import ExportedImageLegacy from "../../localTestComponent/ExportedImageLegacy";
+import ExportedImage from "../../../src/ExportedImage";
+import ExportedImageLegacy from "../../../src/legacy/ExportedImage";
 import testPictureStatic from "../../public/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.jpg";
 
 function Slug() {
