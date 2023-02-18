@@ -155,7 +155,7 @@ module.exports = {
    ];
    ```
 
-   At build time, the images will be downloaded each time (as they might have changes) and optimized if the images is not yet in the cache or the image has changes.
+   At build time, the images will be downloaded each time (as they might have changed) and optimized if an image is not yet in the cache or the image has changes.
 
 7. You can output the original, unoptimized images using the `unoptimized` prop.
    Example:
