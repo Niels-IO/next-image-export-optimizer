@@ -269,10 +269,15 @@ const nextImageExportOptimizer = async function () {
       storePicturesInWEBP =
         newPath.nextImageExportOptimizer_storePicturesInWEBP;
     }
-    if (nextjsConfig.env?.generateAndUseBlurImages !== undefined) {
+    if (
+      nextjsConfig.env?.generateAndUseBlurImages !== undefined &&
+      nextjsConfig.env.generateAndUseBlurImages === true
+    ) {
       blurSize = [10];
     } else if (
-      newPath?.nextImageExportOptimizer_generateAndUseBlurImages !== undefined
+      newPath?.nextImageExportOptimizer_generateAndUseBlurImages !==
+        undefined &&
+      newPath.nextImageExportOptimizer_generateAndUseBlurImages === true
     ) {
       blurSize = [10];
     }
@@ -510,11 +515,12 @@ const nextImageExportOptimizer = async function () {
           extension = "WEBP";
         }
 
+        const isStaticImage = basePath === staticImageFolderPath;
         // for a static image, we copy the image to public/nextImageExportOptimizer or public/${exportFolderName}
         // and not the staticImageFolderPath
         // as the static image folder is deleted before each build
         const basePathToStoreOptimizedImages =
-          basePath === staticImageFolderPath ||
+          isStaticImage ||
           basePath === path.join(nextConfigFolder, folderNameForRemoteImages)
             ? "public"
             : basePath;
@@ -544,6 +550,31 @@ const nextImageExportOptimizer = async function () {
           continue;
         }
 
+        const transformer = sharp(imageBuffer);
+
+        transformer.rotate();
+
+        const { width: metaWidth } = await transformer.metadata();
+
+        // For a static image, we can skip the image optimization and the copying
+        // of the image for images with a width greater than the original image width
+        // we will stop the loop at the first image with a width greater than the original image width
+        let nextLargestSize = null;
+        for (let i = 0; i < widths.length; i++) {
+          if (
+            Number(widths[i]) >= metaWidth &&
+            (nextLargestSize === null || Number(widths[i]) < nextLargestSize)
+          ) {
+            nextLargestSize = Number(widths[i]);
+          }
+        }
+        if (isStaticImage && nextLargestSize && width > nextLargestSize) {
+          progressBar.increment({
+            sizeOfGeneratedImages: sizeOfGeneratedImages.toFixed(1),
+          });
+          continue;
+        }
+
         // If the original image's width is X, the optimized images are
         // identical for all widths >= X. Once we have generated the first of
         // these identical images, we can simply copy that file instead of redoing
@@ -565,13 +596,6 @@ const nextImageExportOptimizer = async function () {
 
           continue;
         }
-
-        // Begin sharp transformation logic
-        const transformer = sharp(imageBuffer);
-
-        transformer.rotate();
-
-        const { width: metaWidth } = await transformer.metadata();
 
         const resize = metaWidth && metaWidth > width;
         if (resize) {

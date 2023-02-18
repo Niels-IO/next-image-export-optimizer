@@ -6,6 +6,7 @@ declare global {
       nextImageExportOptimizer_storePicturesInWEBP: boolean;
       nextImageExportOptimizer_generateAndUseBlurImages: boolean;
       nextImageExportOptimizer_exportFolderName: string;
+      __NEXT_IMAGE_OPTS: { deviceSizes: string[]; imageSizes: string[] };
     }
   }
 }

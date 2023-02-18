@@ -1,6 +1,7 @@
 import Head from "next/head";
 import ExportedImageLegacy from "../localTestComponent/ExportedImageLegacy";
-import ExportedImage from "../localTestComponent/ExportedImage";
+// import ExportedImage from "../localTestComponent/ExportedImage";
+import ExportedImage from "next-image-export-optimizer";
 
 import smallImage from "../public/images/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.jpg";
 
@@ -43,10 +44,15 @@ export default function Home() {
         <div
           style={{
             marginBottom: "3rem",
+            position: "relative",
+            width: "50%",
+            height: "200px",
           }}
         >
           <ExportedImage
             src={smallImage}
+            fill
+            style={{ objectFit: "cover" }}
             id="test_image_future"
             alt={"test_image"}
           />
