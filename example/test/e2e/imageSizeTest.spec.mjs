@@ -60,6 +60,7 @@ const correctSrcTransparentImage = {
 const correctSrcRemoteImage = {
   640: "http://localhost:8080/nextImageExportOptimizer/0998337b913c48d47498b513e5f51b5119940311ad25e51275a0d31cc5244a97-opt-640.WEBP",
   750: "http://localhost:8080/nextImageExportOptimizer/0998337b913c48d47498b513e5f51b5119940311ad25e51275a0d31cc5244a97-opt-750.WEBP",
+  777: "http://localhost:8080/nextImageExportOptimizer/0998337b913c48d47498b513e5f51b5119940311ad25e51275a0d31cc5244a97-opt-777.WEBP",
   828: "http://localhost:8080/nextImageExportOptimizer/0998337b913c48d47498b513e5f51b5119940311ad25e51275a0d31cc5244a97-opt-828.WEBP",
   1080: "http://localhost:8080/nextImageExportOptimizer/0998337b913c48d47498b513e5f51b5119940311ad25e51275a0d31cc5244a97-opt-1080.WEBP",
   1200: "http://localhost:8080/nextImageExportOptimizer/0998337b913c48d47498b513e5f51b5119940311ad25e51275a0d31cc5244a97-opt-1200.WEBP",
