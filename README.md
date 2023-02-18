@@ -16,6 +16,7 @@ Use [Next.js advanced **\<Image/>** component](https://nextjs.org/docs/basic-fea
 - Minimal configuration necessary
 - Supports TypeScript
 - Supports remote images which will be downloaded and optimized
+- Supports animated images (accepted formats: GIF and WEBP)
 
 This library makes a few assumptions:
 
