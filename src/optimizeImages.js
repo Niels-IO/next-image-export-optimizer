@@ -668,6 +668,74 @@ const nextImageExportOptimizer = async function () {
     ensureDirectoryExists(fileInBuildFolder);
     fs.copyFileSync(filePath, fileInBuildFolder);
   }
+
+  function findSubfolders(rootPath, folderName, results = []) {
+    const items = fs.readdirSync(rootPath);
+    for (const item of items) {
+      const itemPath = path.join(rootPath, item);
+      const stat = fs.statSync(itemPath);
+      if (stat.isDirectory()) {
+        if (item === folderName) {
+          results.push(itemPath);
+        }
+        findSubfolders(itemPath, folderName, results);
+      }
+    }
+    return results;
+  }
+
+  const optimizedImagesFolders = findSubfolders(
+    imageFolderPath,
+    exportFolderName
+  );
+  optimizedImagesFolders.push(`public/${exportFolderName}`);
+
+  function findImageFiles(folderPath, extensions, results = []) {
+    const items = fs.readdirSync(folderPath);
+    for (const item of items) {
+      const itemPath = path.join(folderPath, item);
+      const stat = fs.statSync(itemPath);
+      if (stat.isDirectory()) {
+        findImageFiles(itemPath, extensions, results);
+      } else {
+        const ext = path.extname(item).toUpperCase();
+        if (extensions.includes(ext)) {
+          results.push(itemPath);
+        }
+      }
+    }
+    return results;
+  }
+
+  const imageExtensions = [".PNG", ".GIF", ".JPG", ".JPEG", ".AVIF", ".WEBP"];
+
+  const imagePaths = [];
+  for (const subfolderPath of optimizedImagesFolders) {
+    const paths = findImageFiles(subfolderPath, imageExtensions);
+    imagePaths.push(...paths);
+  }
+
+  // find the optimized images that are no longer used in the project
+  const unusedImages = [];
+  for (const imagePath of imagePaths) {
+    const isUsed = allGeneratedImages.includes(imagePath);
+    if (!isUsed) {
+      unusedImages.push(imagePath);
+    }
+  }
+  // delete the unused images
+  for (const imagePath of unusedImages) {
+    if (fs.existsSync(imagePath)) {
+      fs.unlinkSync(imagePath);
+    }
+  }
+  if (unusedImages.length > 0)
+    console.log(
+      `Deleted ${unusedImages.length} unused image${
+        unusedImages.length > 1 ? "s" : ""
+      } from the optimized images folders.`
+    );
+
   console.log("---- next-image-export-optimizer: Done ---- ");
 };
 
