@@ -26,7 +26,7 @@ const legacyConfig = `module.exports = {
   images: {
     loader: "custom",
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    deviceSizes: [640, 750,777, 828, 1080, 1200, 1920, 2048, 3840],
+    deviceSizes: [640, 750, 777, 828, 1080, 1200, 1920, 2048, 3840],
     nextImageExportOptimizer: {
       imageFolderPath: "public/images",
       exportFolderPath: "out",
@@ -44,7 +44,7 @@ const newConfig = `module.exports = {
   images: {
     loader: "custom",
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    deviceSizes: [640, 750,777, 828, 1080, 1200, 1920, 2048, 3840],
+    deviceSizes: [640, 750, 777, 828, 1080, 1200, 1920, 2048, 3840],
   },
   transpilePackages: ["next-image-export-optimizer"],
   env: {
@@ -61,7 +61,7 @@ const newConfigJpeg = `module.exports = {
   images: {
     loader: "custom",
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    deviceSizes: [640, 750,777, 828, 1080, 1200, 1920, 2048, 3840],
+    deviceSizes: [640, 750, 777, 828, 1080, 1200, 1920, 2048, 3840],
   },
   transpilePackages: ["next-image-export-optimizer"],
   env: {
@@ -77,7 +77,7 @@ const newConfigExportFolderName = `module.exports = {
   images: {
     loader: "custom",
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    deviceSizes: [640, 750,777, 828, 1080, 1200, 1920, 2048, 3840],
+    deviceSizes: [640, 750, 777, 828, 1080, 1200, 1920, 2048, 3840],
   },
   transpilePackages: ["next-image-export-optimizer"],
   env: {
