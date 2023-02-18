@@ -34,3 +34,4 @@ yarn-error.log*
 .vercel
 
 public/images/nextImageExportOptimizer
+remoteImagesForOptimization
