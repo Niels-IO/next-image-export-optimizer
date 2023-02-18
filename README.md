@@ -191,6 +191,12 @@ module.exports = {
    <ExportedImage src={testPictureStatic} alt="Static Image" layout="fixed" />;
    ```
 
+10. Animated images
+    You can use .gif and animated .webp images. Next-image-export-optimizer will automatically optimize the animated images and generate the srcset for the different resolutions.
+
+    If you set the variable nextImageExportOptimizer_storePicturesInWEBP to true, the animated images will be converted to .webp format which can reduce the file size significantly.
+    Note that animated png images are not supported by this package.
+
 ## Live example
 
 You can see a live example of the use of this library at [reactapp.dev/next-image-export-optimizer](https://reactapp.dev/next-image-export-optimizer)

@@ -31,7 +31,9 @@ const generateImageURL = (
       : true;
 
   if (
-    !["JPG", "JPEG", "WEBP", "PNG", "AVIF"].includes(extension.toUpperCase())
+    !["JPG", "JPEG", "WEBP", "PNG", "AVIF", "GIF"].includes(
+      extension.toUpperCase()
+    )
   ) {
     // The images has an unsupported extension
     // We will return the src
@@ -41,7 +43,10 @@ const generateImageURL = (
   // the extension to WEBP to load them correctly
   let processedExtension = extension;
 
-  if (useWebp && ["JPG", "JPEG", "PNG"].includes(extension.toUpperCase())) {
+  if (
+    useWebp &&
+    ["JPG", "JPEG", "PNG", "GIF"].includes(extension.toUpperCase())
+  ) {
     processedExtension = "WEBP";
   }
 
@@ -80,10 +85,12 @@ const imageURLForRemoteImage = ({
   // If the extension is not supported, then we log an error and return the src
   if (
     !extension ||
-    !["JPG", "JPEG", "WEBP", "PNG", "AVIF"].includes(extension.toUpperCase())
+    !["JPG", "JPEG", "WEBP", "PNG", "GIF", "AVIF"].includes(
+      extension.toUpperCase()
+    )
   ) {
     console.error(
-      `The image ${src} has an unsupported extension. Please use JPG, JPEG, WEBP, PNG or AVIF.`
+      `The image ${src} has an unsupported extension. Please use JPG, JPEG, WEBP, PNG, GIF or AVIF.`
     );
     return src;
   }

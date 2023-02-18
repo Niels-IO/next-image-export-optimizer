@@ -77,10 +77,12 @@ const remoteImageFilenames = remoteImageURLs.map((url) => {
   // If the extension is not supported, then we log an error
   if (
     !extension ||
-    !["JPG", "JPEG", "WEBP", "PNG", "AVIF"].includes(extension.toUpperCase())
+    !["JPG", "JPEG", "WEBP", "PNG", "GIF", "AVIF"].includes(
+      extension.toUpperCase()
+    )
   ) {
     console.error(
-      `The image ${url} has an unsupported extension. Please use JPG, JPEG, WEBP, PNG or AVIF.`
+      `The image ${url} has an unsupported extension. Please use JPG, JPEG, WEBP, PNG, GIF or AVIF.`
     );
     return;
   }
@@ -406,7 +408,7 @@ const nextImageExportOptimizer = async function () {
     (fileObject) => {
       let extension = fileObject.file.split(".").pop().toUpperCase();
       // Only include file with image extensions
-      return ["JPG", "JPEG", "WEBP", "PNG", "AVIF"].includes(extension);
+      return ["JPG", "JPEG", "WEBP", "PNG", "AVIF", "GIF"].includes(extension);
     }
   );
   console.log(
@@ -550,7 +552,7 @@ const nextImageExportOptimizer = async function () {
           continue;
         }
 
-        const transformer = sharp(imageBuffer);
+        const transformer = sharp(imageBuffer, { animated: true });
 
         transformer.rotate();
 
@@ -618,6 +620,8 @@ const nextImageExportOptimizer = async function () {
           transformer.png({ quality });
         } else if (extension === "JPEG" || extension === "JPG") {
           transformer.jpeg({ quality });
+        } else if (extension === "GIF") {
+          transformer.gif({ quality });
         }
 
         // Write the optimized image to the file system
