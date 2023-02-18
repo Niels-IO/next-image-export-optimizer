@@ -15,11 +15,11 @@ Use [Next.js advanced **\<Image/>** component](https://nextjs.org/docs/basic-fea
 - Automatic generation of tiny, blurry placeholder images
 - Minimal configuration necessary
 - Supports TypeScript
+- Supports remote images which will be downloaded and optimized
 
 This library makes a few assumptions:
 
-- All images that should be optimized are stored inside the public folder like public/images (except for the statically imported images)
-- Currently only local images are supported for optimization
+- All images that should be optimized are stored inside the public folder like public/images (except for the statically imported images and remote images)
 
 ## Installation
 
@@ -98,17 +98,9 @@ module.exports = {
      height={500}
    />;
 
-   // New
-   import ExportedImage from "next-image-export-optimizer";
+   // Replace with either of the following:
 
-   <ExportedImage
-     src="images/VERY_LARGE_IMAGE.jpg"
-     alt="Large Image"
-     width={500}
-     height={500}
-   />;
-
-   // Or with static import
+   // With static import (Recommended)
    import ExportedImage from "next-image-export-optimizer";
    import testPictureStatic from "PATH_TO_IMAGE/test_static.jpg";
 
@@ -117,35 +109,64 @@ module.exports = {
      alt="Static Image"
      layout="responsive"
    />;
+
+   // With dynamic import
+   import ExportedImage from "next-image-export-optimizer";
+
+   <ExportedImage
+     src="images/VERY_LARGE_IMAGE.jpg"
+     alt="Large Image"
+     width={500}
+     height={500}
+   />;
    ```
+
+   The static import method is recommended as it informs the client about the original image size. For images sizes larger than the original with, the next largest image size in the deviceSizes array (specified in the next.config.js) will be used for the generation of the srcset attribute.
+
+   For the dynamic import method, this library will create duplicates of the original image for each image size in the deviceSizes array that is larger than the original image size.
 
 5. In the development mode, either the original image will be served as a fallback when the optimized images are not yet generated or the optimized image once the image transformation was executed for the specific image. The optimized images are created at build time only. In the exported, static React app, the responsive images are available as srcset and dynamically loaded by the browser.
 
-6. You can output the original, unoptimized images using the `unoptimized` prop.
+6. This library also supports remote images. You have to specify the src as a string starting with either http or https in the ExportedImage component.
+
+   ```javascript
+   import ExportedImage from "next-image-export-optimizer";
+
+   <ExportedImage
+     src="https://example.com/remote-image.jpg"
+     alt="Remote Image"
+     fill
+     style={{ objectFit: "cover" }}
+     priority
+   />;
+   ```
+
+   In order for the image optimization at build time to work correctly, you have to specify all remote image urls in a file called **remoteOptimizedImages.js** in the root directory of your project (where the next.config.js is stored as well). The file should export an array of strings containing the urls of the remote images.
+
    Example:
 
    ```javascript
+   // remoteOptimizedImages.js
+   module.exports = [
+     "https://example.com/image1.jpg",
+     "https://example.com/image2.jpg",
+     "https://example.com/image3.jpg",
+     // ...
+   ];
+   ```
+
+   At build time, the images will be downloaded each time (as they might have changed) and optimized if an image is not yet in the cache or the image has changes.
+
+7. You can output the original, unoptimized images using the `unoptimized` prop.
+   Example:
+
+   ```javascript
+   import ExportedImage from "next-image-export-optimizer";
+
    <ExportedImage
      src={testPictureStatic}
      alt="Orginal, unoptimized image"
      unoptimized={true}
-   />
-   ```
-
-7. This package cannot optimize remote images. You can use the Next.js built-in image component for remote images.
-
-   ```javascript
-   import Image from "next/image";
-
-   <Image
-     src="https://example.com/remote-image.jpg"
-     alt="Remote Image"
-     unoptimized
-     loader={({ src }) => {
-       return src;
-     }}
-     width={500}
-     height={500}
    />;
    ```
 
@@ -169,6 +190,12 @@ module.exports = {
 
    <ExportedImage src={testPictureStatic} alt="Static Image" layout="fixed" />;
    ```
+
+10. Animated images
+    You can use .gif and animated .webp images. Next-image-export-optimizer will automatically optimize the animated images and generate the srcset for the different resolutions.
+
+    If you set the variable nextImageExportOptimizer_storePicturesInWEBP to true, the animated images will be converted to .webp format which can reduce the file size significantly.
+    Note that animated png images are not supported by this package.
 
 ## Live example
 

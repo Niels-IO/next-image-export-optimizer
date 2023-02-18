@@ -43,10 +43,15 @@ export default function Home() {
         <div
           style={{
             marginBottom: "3rem",
+            position: "relative",
+            width: "50%",
+            height: "200px",
           }}
         >
           <ExportedImage
             src={smallImage}
+            fill
+            style={{ objectFit: "cover" }}
             id="test_image_future"
             alt={"test_image"}
           />
