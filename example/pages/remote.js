@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Image from "next/image";
+import ExportedImage from "../localTestComponent/ExportedImage";
 
 import styles from "../styles/Home.module.css";
 
@@ -26,13 +26,9 @@ export default function Home() {
             marginBottom: "3rem",
           }}
         >
-          <Image
+          <ExportedImage
             src="https://reactapp.dev/images/nextImageExportOptimizer/BG_HERO-opt-2048.WEBP"
             fill
-            unoptimized
-            loader={({ src }) => {
-              return src;
-            }}
             id="test_image"
             style={{ objectFit: "cover" }}
             priority

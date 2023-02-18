@@ -1,7 +1,7 @@
 import Head from "next/head";
 import ExportedImageLegacy from "../localTestComponent/ExportedImageLegacy";
-// import ExportedImage from "../localTestComponent/ExportedImage";
-import ExportedImage from "next-image-export-optimizer";
+import ExportedImage from "../localTestComponent/ExportedImage";
+// import ExportedImage from "next-image-export-optimizer";
 
 import smallImage from "../public/images/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.jpg";
 

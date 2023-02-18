@@ -1,10 +1,19 @@
 #!/usr/bin/env node
 
 const fs = require("fs");
+const request = require("request");
 const sharp = require("sharp");
 const { createHash } = require("crypto");
 const path = require("path");
 const cliProgress = require("cli-progress");
+
+const crypto = require("crypto");
+
+function hashUrl(url) {
+  const hash = crypto.createHash("sha256");
+  hash.update(url);
+  return hash.digest("hex");
+}
 
 const loadConfig = require("next/dist/server/config").default;
 
@@ -44,6 +53,50 @@ if (nextConfigPath) {
 } else {
   nextConfigPath = path.join(process.cwd(), "next.config.js");
 }
+const nextConfigFolder = path.dirname(nextConfigPath);
+
+let remoteImageURLs = [];
+const remoteImagesFilePath = path.join(
+  nextConfigFolder,
+  "remoteOptimizedImages.js"
+);
+if (fs.existsSync(remoteImagesFilePath)) {
+  remoteImageURLs = require(remoteImagesFilePath);
+}
+const folderNameForRemoteImages = `remoteImagesForOptimization`;
+const folderPathForRemoteImages = path.join(
+  nextConfigFolder,
+  folderNameForRemoteImages
+);
+
+//
+
+// Create the filenames for the remote images
+const remoteImageFilenames = remoteImageURLs.map((url) => {
+  const extension = url.split(".").pop();
+  // If the extension is not supported, then we log an error
+  if (
+    !extension ||
+    !["JPG", "JPEG", "WEBP", "PNG", "AVIF"].includes(extension.toUpperCase())
+  ) {
+    console.error(
+      `The image ${url} has an unsupported extension. Please use JPG, JPEG, WEBP, PNG or AVIF.`
+    );
+    return;
+  }
+
+  const filename = path.join(
+    folderPathForRemoteImages,
+    `${hashUrl(url)}.${extension}`
+  );
+
+  return {
+    basePath: folderPathForRemoteImages,
+    file: `${hashUrl(url)}.${extension}`,
+    dirPathWithoutBasePath: "",
+    fullPath: filename,
+  };
+});
 
 if (exportFolderPathCommandLine) {
   exportFolderPathCommandLine = path.isAbsolute(exportFolderPathCommandLine)
@@ -107,6 +160,52 @@ function ensureDirectoryExists(filePath) {
   fs.mkdirSync(dirName);
 }
 
+async function downloadImage(url, filename, folder) {
+  return new Promise((resolve, reject) => {
+    request.head(url, function (err, res) {
+      if (err || res.statusCode !== 200) {
+        console.error(
+          `Error: Unable to download ${url} (status code: ${res.statusCode}).`
+        );
+        reject(err || new Error(`Status code: ${res.statusCode}`));
+        return;
+      }
+
+      fs.access(folder, fs.constants.W_OK, function (err) {
+        if (err) {
+          console.error(
+            `Error: Unable to write to ${folder} (${err.message}).`
+          );
+          reject(err);
+          return;
+        }
+
+        request(url)
+          .pipe(fs.createWriteStream(filename))
+          .on("error", function (err) {
+            console.error(
+              `Error: Unable to save ${filename} (${err.message}).`
+            );
+            reject(err);
+          })
+          .on("close", resolve);
+      });
+    });
+  });
+}
+
+async function downloadImages(imagesURLs, imageFileNames, folder) {
+  for (let i = 0; i < imagesURLs.length; i++) {
+    try {
+      await downloadImage(imagesURLs[i], imageFileNames[i].fullPath, folder);
+    } catch (err) {
+      console.error(
+        `Error: Unable to download image ${imagesURLs[i]} (${err.message}).`
+      );
+    }
+  }
+}
+
 const nextImageExportOptimizer = async function () {
   console.log(
     "---- next-image-export-optimizer: Begin with optimization... ---- "
@@ -124,10 +223,7 @@ const nextImageExportOptimizer = async function () {
   let exportFolderName = "nextImageExportOptimizer";
   try {
     // Read in the configuration parameters
-    const nextjsConfig = await loadConfig(
-      "phase-export",
-      nextConfigPath.replace("next.config.js", "")
-    );
+    const nextjsConfig = await loadConfig("phase-export", nextConfigFolder);
 
     // Check if nextjsConfig is an object or is undefined
     if (typeof nextjsConfig !== "object" || nextjsConfig === null) {
@@ -210,11 +306,7 @@ const nextImageExportOptimizer = async function () {
 
   // Give the user a warning, if the public directory of Next.js is not found as the user
   // may have run the command in a wrong directory
-  if (
-    !fs.existsSync(
-      path.join(nextConfigPath.replace("next.config.js", ""), "public")
-    )
-  ) {
+  if (!fs.existsSync(path.join(nextConfigFolder, "public"))) {
     console.warn(
       "\x1b[41m",
       `Could not find a public folder in this directory. Make sure you run the command in the main directory of your project.`,
@@ -232,6 +324,57 @@ const nextImageExportOptimizer = async function () {
   } catch (err) {
     console.error(err);
   }
+
+  // Create the folder for the remote images if it does not exists
+  if (remoteImageURLs.length > 0) {
+    try {
+      if (!fs.existsSync(folderNameForRemoteImages)) {
+        fs.mkdirSync(folderNameForRemoteImages);
+        console.log(
+          `Create remote image output folder: ${folderNameForRemoteImages}`
+        );
+      } else {
+        const imageExtensions = [
+          ".jpg",
+          ".jpeg",
+          ".png",
+          ".gif",
+          ".svg",
+          ".webp",
+          ".avif",
+        ];
+        // Delete all remote images (ends in a supported extension) in the folder synchronously
+        // This is necessary, because the user may have changed the remote images
+        // and the old images would be used otherwise
+
+        fs.readdirSync(folderNameForRemoteImages).forEach((file) => {
+          // get the file extension
+          const extension = path.extname(file).toLowerCase();
+
+          // check if the file is an image
+          if (imageExtensions.includes(extension)) {
+            // delete the file synchronously
+            fs.unlinkSync(path.join(folderNameForRemoteImages, file));
+          }
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  // Download the remote images specified in the remoteOptimizedImages.js file
+  if (remoteImageURLs.length > 0)
+    console.log(
+      `Downloading ${remoteImageURLs.length} remote image${
+        remoteImageURLs.length > 1 ? "s" : ""
+      }...`
+    );
+  await downloadImages(
+    remoteImageURLs,
+    remoteImageFilenames,
+    folderPathForRemoteImages
+  );
 
   // Create or read the JSON containing the hashes of the images in the image directory
   let imageHashes = {};
@@ -253,8 +396,11 @@ const nextImageExportOptimizer = async function () {
     staticImageFolderPath,
     exportFolderName
   );
-  // append the static image folder to the image folder
+  // append the static image folder to the image array
   allFilesInImageFolderAndSubdirectories.push(...allFilesInStaticImageFolder);
+
+  // append the remote images to the image array
+  allFilesInImageFolderAndSubdirectories.push(...remoteImageFilenames);
 
   const allImagesInImageFolder = allFilesInImageFolderAndSubdirectories.filter(
     (fileObject) => {
@@ -264,7 +410,11 @@ const nextImageExportOptimizer = async function () {
     }
   );
   console.log(
-    `Found ${allImagesInImageFolder.length} supported images in ${imageFolderPath}, static folder and subdirectories.`
+    `Found ${
+      allImagesInImageFolder.length - remoteImageURLs.length
+    } supported images in ${imageFolderPath}, static folder and subdirectories and ${
+      remoteImageURLs.length
+    } remote image${remoteImageURLs.length > 1 ? "s" : ""}.`
   );
 
   const widths = [...blurSize, ...imageSizes, ...deviceSizes];
@@ -369,9 +519,11 @@ const nextImageExportOptimizer = async function () {
         // for a static image, we copy the image to public/nextImageExportOptimizer or public/${exportFolderName}
         // and not the staticImageFolderPath
         // as the static image folder is deleted before each build
-        const basePathToStoreOptimizedImages = isStaticImage
-          ? "public"
-          : basePath;
+        const basePathToStoreOptimizedImages =
+          isStaticImage ||
+          basePath === path.join(nextConfigFolder, folderNameForRemoteImages)
+            ? "public"
+            : basePath;
         const optimizedFileNameAndPath = path.join(
           basePathToStoreOptimizedImages,
           fileDirectory,
