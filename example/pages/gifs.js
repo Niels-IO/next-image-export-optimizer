@@ -2,6 +2,7 @@ import Head from "next/head";
 import ExportedImage from "../localTestComponent/ExportedImage";
 
 import styles from "../styles/Home.module.css";
+import animatedImage from "../public/animated.png";
 
 export default function Home() {
   return (
@@ -64,7 +65,7 @@ export default function Home() {
           }}
         >
           <ExportedImage
-            src="/images/animated.png"
+            src={animatedImage}
             id="test_image_png"
             alt={"test_image_png"}
             fill

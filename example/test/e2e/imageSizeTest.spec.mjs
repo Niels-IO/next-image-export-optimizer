@@ -69,6 +69,40 @@ const correctSrcRemoteImage = {
   3840: "http://localhost:8080/nextImageExportOptimizer/0998337b913c48d47498b513e5f51b5119940311ad25e51275a0d31cc5244a97-opt-3840.WEBP",
 };
 
+const correctSrcAnimatedPNGImage = {
+  640: "http://localhost:8080/nextImageExportOptimizer/animated.c00e0188-opt-128.WEBP",
+  750: "http://localhost:8080/nextImageExportOptimizer/animated.c00e0188-opt-128.WEBP",
+  777: "http://localhost:8080/nextImageExportOptimizer/animated.c00e0188-opt-128.WEBP",
+  828: "http://localhost:8080/nextImageExportOptimizer/animated.c00e0188-opt-128.WEBP",
+  1080: "http://localhost:8080/nextImageExportOptimizer/animated.c00e0188-opt-128.WEBP",
+  1200: "http://localhost:8080/nextImageExportOptimizer/animated.c00e0188-opt-128.WEBP",
+  1920: "http://localhost:8080/nextImageExportOptimizer/animated.c00e0188-opt-128.WEBP",
+  2048: "http://localhost:8080/nextImageExportOptimizer/animated.c00e0188-opt-128.WEBP",
+  3840: "http://localhost:8080/nextImageExportOptimizer/animated.c00e0188-opt-128.WEBP",
+};
+const correctSrcAnimatedWEBPImage = {
+  640: "http://localhost:8080/images/nextImageExportOptimizer/402107790_STATIC_NOISE_WEBP-opt-640.WEBP",
+  750: "http://localhost:8080/images/nextImageExportOptimizer/402107790_STATIC_NOISE_WEBP-opt-750.WEBP",
+  777: "http://localhost:8080/images/nextImageExportOptimizer/402107790_STATIC_NOISE_WEBP-opt-777.WEBP",
+  828: "http://localhost:8080/images/nextImageExportOptimizer/402107790_STATIC_NOISE_WEBP-opt-828.WEBP",
+  1080: "http://localhost:8080/images/nextImageExportOptimizer/402107790_STATIC_NOISE_WEBP-opt-1080.WEBP",
+  1200: "http://localhost:8080/images/nextImageExportOptimizer/402107790_STATIC_NOISE_WEBP-opt-1200.WEBP",
+  1920: "http://localhost:8080/images/nextImageExportOptimizer/402107790_STATIC_NOISE_WEBP-opt-1920.WEBP",
+  2048: "http://localhost:8080/images/nextImageExportOptimizer/402107790_STATIC_NOISE_WEBP-opt-2048.WEBP",
+  3840: "http://localhost:8080/images/nextImageExportOptimizer/402107790_STATIC_NOISE_WEBP-opt-3840.WEBP",
+};
+const correctSrcAnimatedGIFImage = {
+  640: "http://localhost:8080/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-640.WEBP",
+  750: "http://localhost:8080/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-750.WEBP",
+  777: "http://localhost:8080/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-777.WEBP",
+  828: "http://localhost:8080/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-828.WEBP",
+  1080: "http://localhost:8080/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-1080.WEBP",
+  1200: "http://localhost:8080/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-1200.WEBP",
+  1920: "http://localhost:8080/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-1920.WEBP",
+  2048: "http://localhost:8080/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-2048.WEBP",
+  3840: "http://localhost:8080/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-3840.WEBP",
+};
+
 for (let index = 0; index < widths.length; index++) {
   const width = widths[index];
 
@@ -288,6 +322,36 @@ for (let index = 0; index < widths.length; index++) {
         `url("/images/nextImageExportOptimizer/transparentImage-opt-10.WEBP")`
       );
       await expect(img).not.toHaveCSS("background-repeat", "no-repeat");
+    });
+    test("should check the image size for the animated test page", async ({
+      page,
+    }) => {
+      await page.goto("/gifs", {
+        waitUntil: "networkidle",
+      });
+
+      const img = await page.locator("#test_image_png");
+      await img.click();
+
+      const image = await getImageById(page, "test_image_png");
+      expect(image.currentSrc).toBe(
+        correctSrcAnimatedPNGImage[width.toString()]
+      );
+      const img_gif = await page.locator("#test_image_gif");
+      await img_gif.click();
+
+      const image_gif = await getImageById(page, "test_image_gif");
+      expect(image_gif.currentSrc).toBe(
+        correctSrcAnimatedGIFImage[width.toString()]
+      );
+
+      const img_webp = await page.locator("#test_image_webp");
+      await img_webp.click();
+
+      const image_webp = await getImageById(page, "test_image_webp");
+      expect(image_webp.currentSrc).toBe(
+        correctSrcAnimatedWEBPImage[width.toString()]
+      );
     });
   });
 }

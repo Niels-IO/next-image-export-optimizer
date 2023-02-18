@@ -17,7 +17,7 @@ const deleteFolder = (folderName) => {
 const filterForImages = (file) => {
   let extension = file.split(".").pop().toUpperCase();
   // Stop if the file is not an image
-  return ["JPG", "JPEG", "WEBP", "PNG", "AVIF"].includes(extension);
+  return ["JPG", "JPEG", "WEBP", "PNG", "GIF", "AVIF"].includes(extension);
 };
 const getFiles = (dirPath) =>
   fs.existsSync(dirPath) ? fs.readdirSync(dirPath) : [];

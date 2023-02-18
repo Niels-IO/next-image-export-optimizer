@@ -77,10 +77,12 @@ const remoteImageFilenames = remoteImageURLs.map((url) => {
   // If the extension is not supported, then we log an error
   if (
     !extension ||
-    !["JPG", "JPEG", "WEBP", "PNG", "AVIF"].includes(extension.toUpperCase())
+    !["JPG", "JPEG", "WEBP", "PNG", "GIF", "AVIF"].includes(
+      extension.toUpperCase()
+    )
   ) {
     console.error(
-      `The image ${url} has an unsupported extension. Please use JPG, JPEG, WEBP, PNG or AVIF.`
+      `The image ${url} has an unsupported extension. Please use JPG, JPEG, WEBP, PNG, GIF or AVIF.`
     );
     return;
   }

@@ -85,10 +85,12 @@ const imageURLForRemoteImage = ({
   // If the extension is not supported, then we log an error and return the src
   if (
     !extension ||
-    !["JPG", "JPEG", "WEBP", "PNG", "AVIF"].includes(extension.toUpperCase())
+    !["JPG", "JPEG", "WEBP", "PNG", "GIF", "AVIF"].includes(
+      extension.toUpperCase()
+    )
   ) {
     console.error(
-      `The image ${src} has an unsupported extension. Please use JPG, JPEG, WEBP, PNG or AVIF.`
+      `The image ${src} has an unsupported extension. Please use JPG, JPEG, WEBP, PNG, GIF or AVIF.`
     );
     return src;
   }
