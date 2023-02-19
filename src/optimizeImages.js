@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require("fs");
-const request = require("request");
+const https = require("https");
 const sharp = require("sharp");
 const { createHash } = require("crypto");
 const path = require("path");
@@ -164,12 +164,12 @@ function ensureDirectoryExists(filePath) {
 
 async function downloadImage(url, filename, folder) {
   return new Promise((resolve, reject) => {
-    request.head(url, function (err, res) {
-      if (err || res.statusCode !== 200) {
+    https.get(url, function (response) {
+      if (response.statusCode !== 200) {
         console.error(
-          `Error: Unable to download ${url} (status code: ${res.statusCode}).`
+          `Error: Unable to download ${url} (status code: ${response.statusCode}).`
         );
-        reject(err || new Error(`Status code: ${res.statusCode}`));
+        reject(new Error(`Status code: ${response.statusCode}`));
         return;
       }
 
@@ -182,7 +182,7 @@ async function downloadImage(url, filename, folder) {
           return;
         }
 
-        request(url)
+        response
           .pipe(fs.createWriteStream(filename))
           .on("error", function (err) {
             console.error(
