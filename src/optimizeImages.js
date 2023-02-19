@@ -240,6 +240,10 @@ const nextImageExportOptimizer = async function () {
       newPath?.nextImageExportOptimizer_imageFolderPath !== undefined
     ) {
       imageFolderPath = newPath.nextImageExportOptimizer_imageFolderPath;
+      // if the imageFolderPath starts with a slash, remove it
+      if (imageFolderPath.startsWith("/")) {
+        imageFolderPath = imageFolderPath.slice(1);
+      }
     }
     if (legacyPath?.exportFolderPath !== undefined) {
       exportFolderPath = legacyPath.exportFolderPath;
@@ -316,17 +320,6 @@ const nextImageExportOptimizer = async function () {
     );
   }
 
-  // Create the folder for the optimized images if it does not exists
-  const folderNameForOptImages = `${imageFolderPath}/${exportFolderName}`;
-  try {
-    if (!fs.existsSync(folderNameForOptImages)) {
-      fs.mkdirSync(folderNameForOptImages);
-      console.log(`Create image output folder: ${folderNameForOptImages}`);
-    }
-  } catch (err) {
-    console.error(err);
-  }
-
   // Create the folder for the remote images if it does not exists
   if (remoteImageURLs.length > 0) {
     try {
@@ -388,11 +381,17 @@ const nextImageExportOptimizer = async function () {
     // No image hashes yet
   }
 
-  const allFilesInImageFolderAndSubdirectories = getAllFiles(
-    imageFolderPath,
-    imageFolderPath,
-    exportFolderName
-  );
+  // check if the image folder is a subdirectory of the public folder
+  // if not, the images in the image folder can only be static images and are taken from the static image folder (staticImageFolderPath)
+  // so we do not add them to the images that need to be optimized
+
+  const isImageFolderSubdirectoryOfPublicFolder =
+    imageFolderPath.includes("public");
+
+  const allFilesInImageFolderAndSubdirectories =
+    isImageFolderSubdirectoryOfPublicFolder
+      ? getAllFiles(imageFolderPath, imageFolderPath, exportFolderName)
+      : [];
   const allFilesInStaticImageFolder = getAllFiles(
     staticImageFolderPath,
     staticImageFolderPath,
