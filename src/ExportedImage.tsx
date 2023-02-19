@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from "react";
 import Image, { ImageProps, StaticImageData } from "next/image";
-const shajs = require("sha.js");
 
 const splitFilePath = ({ filePath }: { filePath: string }) => {
   const filenameWithExtension =
@@ -94,9 +93,9 @@ const imageURLForRemoteImage = ({
     );
     return src;
   }
-  const hashUrl = shajs("sha256").update(src).digest("hex");
+  const encodedSrc = encodeURIComponent(src);
 
-  return generateImageURL(`${hashUrl}.${extension}`, width, true);
+  return generateImageURL(`${encodedSrc}.${extension}`, width, true);
 };
 
 const optimizedLoader = ({
