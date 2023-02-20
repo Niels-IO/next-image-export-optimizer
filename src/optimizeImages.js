@@ -7,14 +7,6 @@ const { createHash } = require("crypto");
 const path = require("path");
 const cliProgress = require("cli-progress");
 
-const crypto = require("crypto");
-
-function hashUrl(url) {
-  const hash = crypto.createHash("sha256");
-  hash.update(url);
-  return hash.digest("hex");
-}
-
 const loadConfig = require("next/dist/server/config").default;
 
 process.env.NODE_ENV = "production";
@@ -69,7 +61,22 @@ const folderPathForRemoteImages = path.join(
   folderNameForRemoteImages
 );
 
-//
+function urlToFilename(url) {
+  // Remove the protocol from the URL
+  let filename = url.replace(/^(https?|ftp):\/\//, "");
+
+  // Replace special characters with underscores
+  filename = filename.replace(/[/\\:*?"<>|#%]/g, "_");
+
+  // Remove control characters
+  // eslint-disable-next-line no-control-regex
+  filename = filename.replace(/[\x00-\x1F\x7F]/g, "");
+
+  // Trim any leading or trailing spaces
+  filename = filename.trim();
+
+  return filename;
+}
 
 // Create the filenames for the remote images
 const remoteImageFilenames = remoteImageURLs.map((url) => {
@@ -86,15 +93,16 @@ const remoteImageFilenames = remoteImageURLs.map((url) => {
     );
     return;
   }
+  const encodedURL = urlToFilename(url);
 
   const filename = path.join(
     folderPathForRemoteImages,
-    `${hashUrl(url)}.${extension}`
+    `${encodedURL}.${extension}`
   );
 
   return {
     basePath: folderPathForRemoteImages,
-    file: `${hashUrl(url)}.${extension}`,
+    file: `${encodedURL}.${extension}`,
     dirPathWithoutBasePath: "",
     fullPath: filename,
   };
