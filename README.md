@@ -154,13 +154,18 @@ module.exports = {
      "https://example.com/image3.jpg",
      // ...
    ];
-   // OR
-   module.exports = new Promise(resolve => resolve([
-     "https://example.com/image1.jpg",
-     "https://example.com/image2.jpg",
-     "https://example.com/image3.jpg",
-     // ...
-   ]));
+   ```
+
+   ```javascript
+   // Or with a promise
+   module.exports = new Promise((resolve) =>
+     resolve([
+       "https://example.com/image1.jpg",
+       "https://example.com/image2.jpg",
+       "https://example.com/image3.jpg",
+       // ...
+     ])
+   );
    ```
 
    At build time, the images will be downloaded each time (as they might have changed) and optimized if an image is not yet in the cache or the image has changes.
