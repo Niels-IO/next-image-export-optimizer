@@ -142,7 +142,7 @@ module.exports = {
    />;
    ```
 
-   In order for the image optimization at build time to work correctly, you have to specify all remote image urls in a file called **remoteOptimizedImages.js** in the root directory of your project (where the next.config.js is stored as well). The file should export an array of strings containing the urls of the remote images.
+   In order for the image optimization at build time to work correctly, you have to specify all remote image urls in a file called **remoteOptimizedImages.js** in the root directory of your project (where the next.config.js is stored as well). The file should export an array of strings containing the urls of the remote images. Returning a promise of such array is also supported.
 
    Example:
 
@@ -154,6 +154,13 @@ module.exports = {
      "https://example.com/image3.jpg",
      // ...
    ];
+   // OR
+   module.exports = new Promise(resolve => resolve([
+     "https://example.com/image1.jpg",
+     "https://example.com/image2.jpg",
+     "https://example.com/image3.jpg",
+     // ...
+   ]));
    ```
 
    At build time, the images will be downloaded each time (as they might have changed) and optimized if an image is not yet in the cache or the image has changes.
