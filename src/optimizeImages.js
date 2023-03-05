@@ -81,29 +81,13 @@ async function getRemoteImageURLs() {
   }
   // Create the filenames for the remote images
   const remoteImageFilenames = remoteImageURLs.map((url) => {
-    const extension = url.split(".").pop();
-    // If the extension is not supported, then we log an error
-    if (
-      !extension ||
-      !["JPG", "JPEG", "WEBP", "PNG", "GIF", "AVIF"].includes(
-        extension.toUpperCase()
-      )
-    ) {
-      console.error(
-        `The image ${url} has an unsupported extension. Please use JPG, JPEG, WEBP, PNG, GIF or AVIF.`
-      );
-      return;
-    }
     const encodedURL = urlToFilename(url);
 
-    const filename = path.join(
-      folderPathForRemoteImages,
-      `${encodedURL}.${extension}`
-    );
+    const filename = path.join(folderPathForRemoteImages, encodedURL);
 
     return {
       basePath: folderPathForRemoteImages,
-      file: `${encodedURL}.${extension}`,
+      file: encodedURL,
       dirPathWithoutBasePath: "",
       fullPath: filename,
     };
@@ -184,6 +168,19 @@ async function downloadImage(url, filename, folder) {
         return;
       }
 
+      // Extract image format from response headers
+      const contentType = response.headers["content-type"];
+      const imageFormat = contentType.split("/").pop();
+
+      // Check if filename already has an extension that matches the image format
+      const regex = new RegExp(`.${imageFormat}$`, "i");
+      const hasMatchingExtension = regex.test(filename);
+
+      // Add appropriate extension to filename based on image format
+      const formattedFilename = hasMatchingExtension
+        ? filename
+        : `${filename}.${imageFormat}`;
+
       fs.access(folder, fs.constants.W_OK, function (err) {
         if (err) {
           console.error(
@@ -194,10 +191,10 @@ async function downloadImage(url, filename, folder) {
         }
 
         response
-          .pipe(fs.createWriteStream(filename))
+          .pipe(fs.createWriteStream(formattedFilename))
           .on("error", function (err) {
             console.error(
-              `Error: Unable to save ${filename} (${err.message}).`
+              `Error: Unable to save ${formattedFilename} (${err.message}).`
             );
             reject(err);
           })
@@ -356,28 +353,13 @@ const nextImageExportOptimizer = async function () {
           `Create remote image output folder: ${folderNameForRemoteImages}`
         );
       } else {
-        const imageExtensions = [
-          ".jpg",
-          ".jpeg",
-          ".png",
-          ".gif",
-          ".svg",
-          ".webp",
-          ".avif",
-        ];
-        // Delete all remote images (ends in a supported extension) in the folder synchronously
+        // Delete all files in the folder for remote images synchronously
         // This is necessary, because the user may have changed the remote images
         // and the old images would be used otherwise
 
         fs.readdirSync(folderNameForRemoteImages).forEach((file) => {
-          // get the file extension
-          const extension = path.extname(file).toLowerCase();
-
-          // check if the file is an image
-          if (imageExtensions.includes(extension)) {
-            // delete the file synchronously
-            fs.unlinkSync(path.join(folderNameForRemoteImages, file));
-          }
+          // delete the file synchronously
+          fs.unlinkSync(path.join(folderNameForRemoteImages, file));
         });
       }
     } catch (err) {
@@ -428,8 +410,28 @@ const nextImageExportOptimizer = async function () {
   // append the static image folder to the image array
   allFilesInImageFolderAndSubdirectories.push(...allFilesInStaticImageFolder);
 
-  // append the remote images to the image array
-  allFilesInImageFolderAndSubdirectories.push(...remoteImageFilenames);
+  if (remoteImageURLs.length > 0) {
+    // get all files in the remote image folder again, as we added extensions to the filenames
+    // if they were not present in the URLs in remoteOptimizedImages.js
+
+    const allFilesInRemoteImageFolder = fs.readdirSync(
+      folderNameForRemoteImages
+    );
+
+    const remoteImageFiles = allFilesInRemoteImageFolder.map((filename) => {
+      const filenameFull = path.join(folderPathForRemoteImages, filename);
+
+      return {
+        basePath: folderPathForRemoteImages,
+        file: filename,
+        dirPathWithoutBasePath: "",
+        fullPath: filenameFull,
+      };
+    });
+
+    // append the remote images to the image array
+    allFilesInImageFolderAndSubdirectories.push(...remoteImageFiles);
+  }
 
   const allImagesInImageFolder = allFilesInImageFolderAndSubdirectories.filter(
     (fileObject) => {
