@@ -207,13 +207,28 @@ async function downloadImage(url, filename, folder) {
   });
 }
 
-async function downloadImages(imagesURLs, imageFileNames, folder) {
-  for (let i = 0; i < imagesURLs.length; i++) {
+async function downloadImagesInBatches(
+  imagesURLs,
+  imageFileNames,
+  folder,
+  batchSize
+) {
+  const batches = Math.ceil(imagesURLs.length / batchSize); // determine the number of batches
+  for (let i = 0; i < batches; i++) {
+    const start = i * batchSize; // calculate the start index of the batch
+    const end = Math.min(imagesURLs.length, start + batchSize); // calculate the end index of the batch
+    const batchURLs = imagesURLs.slice(start, end); // slice the URLs for the current batch
+    const batchFileNames = imageFileNames.slice(start, end); // slice the file names for the current batch
+
+    const promises = batchURLs.map((url, index) =>
+      downloadImage(url, batchFileNames[index].fullPath, folder)
+    ); // create an array of promises for downloading images in the batch
+
     try {
-      await downloadImage(imagesURLs[i], imageFileNames[i].fullPath, folder);
+      await Promise.all(promises); // download images in parallel for the current batch
     } catch (err) {
       console.error(
-        `Error: Unable to download image ${imagesURLs[i]} (${err.message}).`
+        `Error: Unable to download remote images (${err.message}).`
       );
     }
   }
@@ -377,10 +392,11 @@ const nextImageExportOptimizer = async function () {
         remoteImageURLs.length > 1 ? "s" : ""
       }...`
     );
-  await downloadImages(
+  await downloadImagesInBatches(
     remoteImageURLs,
     remoteImageFilenames,
-    folderPathForRemoteImages
+    folderPathForRemoteImages,
+    Math.min(remoteImageURLs.length, 20)
   );
 
   // Create or read the JSON containing the hashes of the images in the image directory
