@@ -718,6 +718,10 @@ const nextImageExportOptimizer = async function () {
   optimizedImagesFolders.push(`public/${exportFolderName}`);
 
   function findImageFiles(folderPath, extensions, results = []) {
+    // check if the folder exists
+    if (!fs.existsSync(folderPath)) {
+      return results;
+    }
     const items = fs.readdirSync(folderPath);
     for (const item of items) {
       const itemPath = path.join(folderPath, item);
