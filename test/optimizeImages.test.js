@@ -120,7 +120,7 @@ async function testConfig(config) {
     "example/out/images/subfolder/subfolder2/nextImageExportOptimizer2"
   );
 
-  execSync("cd example/ && npm run export && node ../src/optimizeImages.js");
+  execSync("cd example/ && npm run export && ts-node ../src/optimizeImages.ts");
 
   const allFilesInImageFolder = getFiles(
     "example/public/images/nextImageExportOptimizer"

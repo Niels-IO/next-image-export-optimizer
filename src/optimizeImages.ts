@@ -53,7 +53,7 @@ const folderPathForRemoteImages = path.join(
   folderNameForRemoteImages
 );
 
-function urlToFilename(url) {
+function urlToFilename(url: string) {
   // Remove the protocol from the URL
   let filename = url.replace(/^(https?|ftp):\/\//, "");
 
@@ -80,7 +80,7 @@ async function getRemoteImageURLs() {
     remoteImageURLs = await Promise.resolve(require(remoteImagesFilePath));
   }
   // Create the filenames for the remote images
-  const remoteImageFilenames = remoteImageURLs.map((url) => {
+  const remoteImageFilenames = remoteImageURLs.map((url: string) => {
     const extension = url.split(".").pop();
     // If the extension is not supported, then we log an error
     if (
@@ -117,7 +117,7 @@ if (exportFolderPathCommandLine) {
     : path.join(process.cwd(), exportFolderPathCommandLine);
 }
 
-function getHash(items) {
+function getHash(items: string[]) {
   const hash = createHash("sha256");
   for (let item of items) {
     if (typeof item === "number") hash.update(String(item));
@@ -128,19 +128,24 @@ function getHash(items) {
   // See https://en.wikipedia.org/wiki/Base64#Filenames
   return hash.digest("base64").replace(/\//g, "-");
 }
+type ImageObject = {
+  basePath: string;
+  dirPathWithoutBasePath: string;
+  file: string;
+  fullPath?: string;
+};
 
 const getAllFiles = function (
-  basePath,
-  dirPath,
-  exportFolderName,
-  arrayOfFiles
+  basePath: string,
+  dirPath: string,
+  exportFolderName: string,
+  arrayOfFiles: ImageObject[] = []
 ) {
-  arrayOfFiles = arrayOfFiles || [];
   // check if the path is existing
   if (fs.existsSync(dirPath)) {
     let files = fs.readdirSync(dirPath);
 
-    files.forEach(function (file) {
+    files.forEach(function (file: string) {
       if (
         fs.statSync(dirPath + "/" + file).isDirectory() &&
         file !== exportFolderName &&
@@ -164,7 +169,7 @@ const getAllFiles = function (
   return arrayOfFiles;
 };
 
-function ensureDirectoryExists(filePath) {
+function ensureDirectoryExists(filePath: string) {
   const dirName = path.dirname(filePath);
   if (fs.existsSync(dirName)) {
     return true;
@@ -173,9 +178,9 @@ function ensureDirectoryExists(filePath) {
   fs.mkdirSync(dirName);
 }
 
-async function downloadImage(url, filename, folder) {
-  return new Promise((resolve, reject) => {
-    https.get(url, function (response) {
+async function downloadImage(url: string, filename: string, folder: string) {
+  return new Promise<void>((resolve, reject) => {
+    https.get(url, function (response: any) {
       if (response.statusCode !== 200) {
         console.error(
           `Error: Unable to download ${url} (status code: ${response.statusCode}).`
@@ -184,7 +189,7 @@ async function downloadImage(url, filename, folder) {
         return;
       }
 
-      fs.access(folder, fs.constants.W_OK, function (err) {
+      fs.access(folder, fs.constants.W_OK, function (err: any) {
         if (err) {
           console.error(
             `Error: Unable to write to ${folder} (${err.message}).`
@@ -195,7 +200,7 @@ async function downloadImage(url, filename, folder) {
 
         response
           .pipe(fs.createWriteStream(filename))
-          .on("error", function (err) {
+          .on("error", function (err: any) {
             console.error(
               `Error: Unable to save ${filename} (${err.message}).`
             );
@@ -208,10 +213,10 @@ async function downloadImage(url, filename, folder) {
 }
 
 async function downloadImagesInBatches(
-  imagesURLs,
-  imageFileNames,
-  folder,
-  batchSize
+  imagesURLs: string[],
+  imageFileNames: ImageObject[],
+  folder: string,
+  batchSize: number
 ) {
   const batches = Math.ceil(imagesURLs.length / batchSize); // determine the number of batches
   for (let i = 0; i < batches; i++) {
@@ -219,14 +224,21 @@ async function downloadImagesInBatches(
     const end = Math.min(imagesURLs.length, start + batchSize); // calculate the end index of the batch
     const batchURLs = imagesURLs.slice(start, end); // slice the URLs for the current batch
     const batchFileNames = imageFileNames.slice(start, end); // slice the file names for the current batch
+    if (batchFileNames[i].fullPath === undefined) {
+      // log an error if the fullPath is not defined
+      console.error(
+        `Error: Unable to download ${batchURLs[i]} (fullPath is undefined).`
+      );
+      return;
+    }
 
     const promises = batchURLs.map((url, index) =>
-      downloadImage(url, batchFileNames[index].fullPath, folder)
+      downloadImage(url, batchFileNames[index].fullPath as string, folder)
     ); // create an array of promises for downloading images in the batch
 
     try {
       await Promise.all(promises); // download images in parallel for the current batch
-    } catch (err) {
+    } catch (err: any) {
       console.error(
         `Error: Unable to download remote images (${err.message}).`
       );
@@ -247,7 +259,7 @@ const nextImageExportOptimizer = async function () {
   let imageSizes = [16, 32, 48, 64, 96, 128, 256, 384];
   let quality = 75;
   let storePicturesInWEBP = true;
-  let blurSize = [];
+  let blurSize: number[] = [];
   let exportFolderName = "nextImageExportOptimizer";
   const { remoteImageFilenames, remoteImageURLs } = await getRemoteImageURLs();
   try {
@@ -369,7 +381,7 @@ const nextImageExportOptimizer = async function () {
         // This is necessary, because the user may have changed the remote images
         // and the old images would be used otherwise
 
-        fs.readdirSync(folderNameForRemoteImages).forEach((file) => {
+        fs.readdirSync(folderNameForRemoteImages).forEach((file: string) => {
           // get the file extension
           const extension = path.extname(file).toLowerCase();
 
@@ -400,7 +412,9 @@ const nextImageExportOptimizer = async function () {
   );
 
   // Create or read the JSON containing the hashes of the images in the image directory
-  let imageHashes = {};
+  let imageHashes: {
+    [key: string]: string;
+  } = {};
   const hashFilePath = `${imageFolderPath}/next-image-export-optimizer-hashes.json`;
   try {
     let rawData = fs.readFileSync(hashFilePath);
@@ -433,7 +447,12 @@ const nextImageExportOptimizer = async function () {
 
   const allImagesInImageFolder = allFilesInImageFolderAndSubdirectories.filter(
     (fileObject) => {
-      let extension = fileObject.file.split(".").pop().toUpperCase();
+      if (fileObject === undefined) return false;
+      if (fileObject.file === undefined) return false;
+      // check if the file has a supported extension
+      const filenameSplit = fileObject.file.split(".");
+      if (filenameSplit.length === 1) return false;
+      const extension = filenameSplit.pop()!.toUpperCase();
       // Only include file with image extensions
       return ["JPG", "JPEG", "WEBP", "PNG", "AVIF", "GIF"].includes(extension);
     }
@@ -451,7 +470,7 @@ const nextImageExportOptimizer = async function () {
   const progressBar = new cliProgress.SingleBar(
     {
       stopOnComplete: true,
-      format: (options, params, payload) => {
+      format: (options: any, params: any, payload: any) => {
         const bar = options.barCompleteString.substring(
           0,
           Math.round(params.progress * options.barsize)
@@ -463,14 +482,14 @@ const nextImageExportOptimizer = async function () {
 
         // calculate elapsed time
         const elapsedTime = Math.round(stopTime - params.startTime);
-        function msToTime(ms) {
+        function msToTime(ms: number): string {
           let seconds = (ms / 1000).toFixed(1);
           let minutes = (ms / (1000 * 60)).toFixed(1);
           let hours = (ms / (1000 * 60 * 60)).toFixed(1);
           let days = (ms / (1000 * 60 * 60 * 24)).toFixed(1);
-          if (seconds < 60) return seconds + " seconds";
-          else if (minutes < 60) return minutes + " minutes";
-          else if (hours < 24) return hours + " hours";
+          if (seconds < "60") return seconds + " seconds";
+          else if (minutes < "60") return minutes + " minutes";
+          else if (hours < "24") return hours + " hours";
           else return days + " days";
         }
 
@@ -502,7 +521,9 @@ const nextImageExportOptimizer = async function () {
   let sizeOfGeneratedImages = 0;
   const allGeneratedImages = [];
 
-  const updatedImageHashes = {};
+  const updatedImageHashes: {
+    [key: string]: string;
+  } = {};
 
   // Loop through all images
   for (let index = 0; index < allImagesInImageFolder.length; index++) {
@@ -512,7 +533,7 @@ const nextImageExportOptimizer = async function () {
       let fileDirectory = allImagesInImageFolder[index].dirPathWithoutBasePath;
       let basePath = allImagesInImageFolder[index].basePath;
 
-      let extension = file.split(".").pop().toUpperCase();
+      let extension = file.split(".").pop()!.toUpperCase();
       const imageBuffer = fs.readFileSync(
         path.join(basePath, fileDirectory, file)
       );
@@ -696,7 +717,11 @@ const nextImageExportOptimizer = async function () {
     fs.copyFileSync(filePath, fileInBuildFolder);
   }
 
-  function findSubfolders(rootPath, folderName, results = []) {
+  function findSubfolders(
+    rootPath: string,
+    folderName: string,
+    results: string[] = []
+  ) {
     const items = fs.readdirSync(rootPath);
     for (const item of items) {
       const itemPath = path.join(rootPath, item);
@@ -717,7 +742,11 @@ const nextImageExportOptimizer = async function () {
   );
   optimizedImagesFolders.push(`public/${exportFolderName}`);
 
-  function findImageFiles(folderPath, extensions, results = []) {
+  function findImageFiles(
+    folderPath: string,
+    extensions: string[],
+    results: string[] = []
+  ) {
     // check if the folder exists
     if (!fs.existsSync(folderPath)) {
       return results;

@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "export": "next build && next export && node ../src/optimizeImages.js",
+    "export": "next build && next export && ts-node ../src/optimizeImages.ts",
     "start": "next start",
     "lint": "next lint"
   },

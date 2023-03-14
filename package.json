@@ -4,7 +4,7 @@
   "description": "Optimizes all static images for Next.js static HTML export functionality",
   "main": "dist/ExportedImage.js",
   "types": "dist/ExportedImage.d.ts",
-  "bin": "src/optimizeImages.js",
+  "bin": "dist/optimizeImages.js",
   "engines": {
     "node": ">=16.0.0"
   },
@@ -30,7 +30,7 @@
     "dist/ExportedImage.d.ts",
     "dist/legacy/ExportedImage.js",
     "dist/legacy/ExportedImage.d.ts",
-    "src"
+    "dist/optimizeImages.js"
   ],
   "scripts": {
     "build": "rimraf dist && tsc",
@@ -72,6 +72,7 @@
     "eslint-plugin-react": "^7.29.4",
     "http-server": "^14.1.0",
     "jest": "^29.0.3",
-    "rimraf": "^4.1.0"
+    "rimraf": "^4.1.0",
+    "ts-node": "^10.9.1"
   }
 }
