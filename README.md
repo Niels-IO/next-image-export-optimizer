@@ -122,7 +122,7 @@ module.exports = {
    />;
    ```
 
-   The static import method is recommended as it informs the client about the original image size. For images sizes larger than the original with, the next largest image size in the deviceSizes array (specified in the next.config.js) will be used for the generation of the srcset attribute.
+   The static import method is recommended as it informs the client about the original image size. For image sizes larger than the original width, the next largest image size in the deviceSizes array (specified in the next.config.js) will be used for the generation of the srcset attribute.
 
    For the dynamic import method, this library will create duplicates of the original image for each image size in the deviceSizes array that is larger than the original image size.
 
