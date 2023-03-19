@@ -33,7 +33,7 @@
     "dist/optimizeImages.js"
   ],
   "scripts": {
-    "build": "rimraf dist && tsc",
+    "build": "rimraf dist && tsc && tsc --project tsconfig.optimizeImages.json",
     "test": "jest",
     "test:e2e": "npx playwright install && playwright test",
     "exportExample": "cd example && npm run export && cd ..",
