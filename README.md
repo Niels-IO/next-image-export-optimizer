@@ -57,6 +57,12 @@ module.exports = {
     // forget to set `placeholder="empty"`, you'll see 404 errors for the missing
     // placeholder images in the console.
     nextImageExportOptimizer_generateAndUseBlurImages: true,
+
+    // To set custom sharp options, you can use the nextImageExportOptimizer_sharpOptions
+    // environment variable. The value must be a JSON string.
+    // nextImageExportOptimizer_sharpOptions: JSON.stringify({
+    //   limitInputPixels: false
+    // }),
   },
 };
 ```

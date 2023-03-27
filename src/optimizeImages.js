@@ -249,6 +249,7 @@ const nextImageExportOptimizer = async function () {
   let storePicturesInWEBP = true;
   let blurSize = [];
   let exportFolderName = "nextImageExportOptimizer";
+  let sharpOptions = {};
   const { remoteImageFilenames, remoteImageURLs } = await getRemoteImageURLs();
   try {
     // Read in the configuration parameters
@@ -328,6 +329,9 @@ const nextImageExportOptimizer = async function () {
         `Changed in 1.2.0: You have not set transpilePackages: ["next-image-export-optimizer"] in your next.config.js. This may cause problems with next-image-export-optimizer. Please add this line to your next.config.js.`,
         "\x1b[0m"
       );
+    }
+    if (newPath?.nextImageExportOptimizer_sharpOptions !== undefined) {
+      sharpOptions = JSON.parse(newPath.nextImageExportOptimizer_sharpOptions);
     }
   } catch (e) {
     // Configuration file not found
@@ -579,7 +583,7 @@ const nextImageExportOptimizer = async function () {
           continue;
         }
 
-        const transformer = sharp(imageBuffer, { animated: true });
+        const transformer = sharp(imageBuffer, { animated: true, ...sharpOptions });
 
         transformer.rotate();
 
