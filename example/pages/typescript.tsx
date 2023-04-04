@@ -1,8 +1,8 @@
 import Head from "next/head";
 import ExportedImage_Local from "../../src/ExportedImage";
 import ExportedImageLegacy_Local from "../../src/legacy/ExportedImage";
-import ExportedImage from "next-image-export-optimizer";
-import ExportedImageLegacy from "next-image-export-optimizer/legacy/ExportedImage";
+// import ExportedImage from "next-image-export-optimizer";
+// import ExportedImageLegacy from "next-image-export-optimizer/legacy/ExportedImage";
 
 import React from "react";
 import Image from "next/image";
@@ -22,7 +22,7 @@ export default function Home() {
 
       <main>
         <h1>Next-Image-Export-Optimizer</h1>
-        <div
+        {/* <div
           style={{
             position: "relative",
             width: "50%",
@@ -38,8 +38,8 @@ export default function Home() {
             priority={true}
             alt={"test_image"}
           />
-        </div>
-        <div
+        </div> */}
+        {/* <div
           style={{
             position: "relative",
             width: "50%",
@@ -54,7 +54,7 @@ export default function Home() {
             priority={true}
             alt={"test_image"}
           />
-        </div>
+        </div> */}
         <div
           style={{
             position: "relative",
@@ -72,7 +72,7 @@ export default function Home() {
           />
         </div>
 
-        <div
+        {/* <div
           style={{
             position: "relative",
             marginBottom: "3rem",
@@ -85,7 +85,7 @@ export default function Home() {
             id="test_image_static"
             layout="responsive"
           />
-        </div>
+        </div> */}
         <div
           style={{
             position: "relative",
@@ -106,12 +106,12 @@ export default function Home() {
             flexDirection: "column",
           }}
         >
-          <ExportedImage
+          {/* <ExportedImage
             src="vercel.svg"
             width={400}
             height={400}
             alt="VercelLogo"
-          />
+          /> */}
           <ExportedImage_Local
             src="vercel.svg"
             width={400}
