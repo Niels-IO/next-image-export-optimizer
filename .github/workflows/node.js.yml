@@ -24,6 +24,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-      - run: npm ci
-      - run: cd example/ && npm ci && cd ..
+      - run: npm i
+      - run: cd example/ && npm i && cd ..
       - run: npm run prepublishOnly
