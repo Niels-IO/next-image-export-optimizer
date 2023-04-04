@@ -15,15 +15,15 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14, 16]
+        node: [14, 16]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ matrix.node }}
       - run: npm ci
       - run: cd example/ && npm ci && cd ..
       - run: npm run prepublishOnly
