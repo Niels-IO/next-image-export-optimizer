@@ -1,10 +1,6 @@
 # Next-Image-Export-Optimizer
 
-![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg)
 [![npm](https://img.shields.io/npm/v/next-image-export-optimizer)](https://www.npmjs.com/package/next-image-export-optimizer)
-
-> **Warning**
-> Version 1.0.0 is a breaking change. It follows the changes introduced in Next 13.0.0 which replaces the `next/image` component with `next/future/image`. If you are using Next 12 or below, please use version _0.17.1_.
 
 Use [Next.js advanced **\<Image/>** component](https://nextjs.org/docs/basic-features/image-optimization) with the static export functionality. Optimizes all static images in an additional step after the Next.js static export.
 
@@ -18,14 +14,15 @@ Use [Next.js advanced **\<Image/>** component](https://nextjs.org/docs/basic-fea
 - Supports remote images which will be downloaded and optimized
 - Supports animated images (accepted formats: GIF and WEBP)
 
-This library makes a few assumptions:
+Placement of the images:
 
-- All images that should be optimized are stored inside the public folder like public/images (except for the statically imported images and remote images)
+- All images that should be optimized are stored inside the public folder like public/images (except for the statically imported images and remote images). The images are then referenced in the **src** attribute of the **\<ExportedImage />** component.
 
 ## Installation
 
 ```
 npm install next-image-export-optimizer
+
 # Or
 yarn add next-image-export-optimizer
 pnpm install next-image-export-optimizer
@@ -52,17 +49,13 @@ module.exports = {
     // If you do not want to use blurry placeholder images, then you can set
     // nextImageExportOptimizer_generateAndUseBlurImages to false and pass
     // `placeholder="empty"` to all <ExportedImage> components.
-    //
-    // If nextImageExportOptimizer_generateAndUseBlurImages is false and you
-    // forget to set `placeholder="empty"`, you'll see 404 errors for the missing
-    // placeholder images in the console.
     nextImageExportOptimizer_generateAndUseBlurImages: true,
   },
 };
 ```
 
 1. Add the above configuration to your **next.config.js**
-2. Change the default values in your **next.config.js** where appropriate. For example, specify the folder where all the images are stored. Defaults to **public/images**
+2. Change the default values in your **next.config.js** where appropriate. For example, specify the folder where all the images are stored (Defaults to **public/images**)
 3. Change the export command in `package.json`
 
    ```diff
@@ -168,7 +161,7 @@ module.exports = {
    );
    ```
 
-   At build time, the images will be downloaded each time (as they might have changed) and optimized if an image is not yet in the cache or the image has changes.
+   At build time, the images will be downloaded each time (as they might have changed) and optimized if an image is not yet in the cache or the image changed.
 
 7. You can output the original, unoptimized images using the `unoptimized` prop.
    Example:
@@ -178,7 +171,7 @@ module.exports = {
 
    <ExportedImage
      src={testPictureStatic}
-     alt="Orginal, unoptimized image"
+     alt="Original, unoptimized image"
      unoptimized={true}
    />;
    ```
@@ -204,7 +197,7 @@ module.exports = {
    <ExportedImage src={testPictureStatic} alt="Static Image" layout="fixed" />;
    ```
 
-10. Animated images
+10. Animated images:
     You can use .gif and animated .webp images. Next-image-export-optimizer will automatically optimize the animated images and generate the srcset for the different resolutions.
 
     If you set the variable nextImageExportOptimizer_storePicturesInWEBP to true, the animated images will be converted to .webp format which can reduce the file size significantly.
@@ -218,8 +211,11 @@ You can see a live example of the use of this library at [reactapp.dev/next-imag
 
 The **\<ExportedImage />** component of this library wraps around the **\<Image />** component of Next.js. Using the custom loader feature, it generates a [srcset](https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images) for different resolutions of the original image. The browser can then load the correct size based on the current viewport size.
 
-In the development mode, the **\<ExportedImage />** component falls back to the original image.
+In the development mode, the **\<ExportedImage />** component falls back to the original image if the optimized images are not yet generated. In the exported, static React app, the responsive images are available as srcset and dynamically loaded by the browser.
 
 All images in the specified folder, as well as all statically imported images will be optimized and reduced versions will be created based on the requested widths.
 
 The image transformation operation is optimized as it uses hashes to determine whether an image has already been optimized or not.
+
+> **Warning**
+> Version 1.0.0 is a breaking change. It follows the changes introduced in Next 13.0.0 which replaces the `next/image` component with `next/future/image`. If you are using Next 12 or below, please use version _0.17.1_.
