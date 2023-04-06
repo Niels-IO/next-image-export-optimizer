@@ -383,7 +383,10 @@ const nextImageExportOptimizer = async function () {
           continue;
         }
 
-        const transformer = sharp(imageBuffer, { animated: true });
+        const transformer = sharp(imageBuffer, {
+          animated: true,
+          limitInputPixels: false, // disable pixel limit
+        });
 
         transformer.rotate();
 
