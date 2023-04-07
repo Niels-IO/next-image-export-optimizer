@@ -1,6 +1,6 @@
 {
   "name": "next-image-export-optimizer",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Optimizes all static images for Next.js static HTML export functionality",
   "main": "dist/ExportedImage.js",
   "types": "dist/ExportedImage.d.ts",
@@ -30,7 +30,8 @@
     "dist/ExportedImage.d.ts",
     "dist/legacy/ExportedImage.js",
     "dist/legacy/ExportedImage.d.ts",
-    "dist/optimizeImages.js"
+    "dist/optimizeImages.js",
+    "dist/utils"
   ],
   "scripts": {
     "build": "rimraf dist && tsc && tsc --project tsconfig.optimizeImages.json",
