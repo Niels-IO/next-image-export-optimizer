@@ -8,6 +8,9 @@
   "engines": {
     "node": ">=16.0.0"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "exports": {
     ".": {
       "types": "./dist/ExportedImage.d.ts",
@@ -43,7 +46,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Niels-IO/next-image-export-optimizer"
+    "url": "https://github.com/TheFuturePlace/next-image-export-optimizer"
   },
   "keywords": [
     "next.js",

@@ -2,7 +2,6 @@
 
 import React, { forwardRef, useMemo, useState } from "react";
 import Image, { ImageProps, StaticImageData } from "next/image";
-import { useRouter } from "next/router";
 
 const splitFilePath = ({ filePath }: { filePath: string }) => {
   const filenameWithExtension =
@@ -177,51 +176,45 @@ export interface ExportedImageProps
   basePath?: string;
 }
 
-const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
-  (
-    {
-      src,
-      priority = false,
-      loading,
-      className,
-      width,
-      height,
-      onLoadingComplete,
-      unoptimized,
-      placeholder = "blur",
-      blurDataURL,
-      style,
-      onError,
-      basePath,
-      ...rest
-    },
-    ref
-  ) => {
-    const [imageError, setImageError] = useState(false);
-    const { basePath: routerBasePath } = useRouter();
-    basePath = basePath || routerBasePath;
-    if (basePath && !basePath.startsWith("/")) {
-      basePath = basePath + "/";
+function ExportedImage({
+  src,
+  priority = false,
+  loading,
+  className,
+  width,
+  height,
+  onLoadingComplete,
+  unoptimized,
+  placeholder = "blur",
+  blurDataURL,
+  style,
+  onError,
+  basePath,
+  ...rest
+}: ExportedImageProps) {
+  const [imageError, setImageError] = useState(false);
+  if (basePath && !basePath.startsWith("/")) {
+    basePath = basePath + "/";
+  }
+  const automaticallyCalculatedBlurDataURL = useMemo(() => {
+    if (blurDataURL) {
+      // use the user provided blurDataURL if present
+      return blurDataURL;
     }
-    const automaticallyCalculatedBlurDataURL = useMemo(() => {
-      if (blurDataURL) {
-        // use the user provided blurDataURL if present
-        return blurDataURL;
-      }
-      // check if the src is specified as a local file -> then it is an object
-      const isStaticImage = typeof src === "object";
-      const _src = isStaticImage ? src.src : src;
-      if (unoptimized === true) {
-        // return the src image when unoptimized
-        return _src;
-      }
-      // Check if the image is a remote image (starts with http or https)
-      if (_src.startsWith("http")) {
-        return imageURLForRemoteImage({ src: _src, width: 10, basePath });
-      }
-      // otherwise use the generated image of 10px width as a blurDataURL
-      return generateImageURL(_src, 10, basePath);
-    }, [blurDataURL, src, unoptimized]);
+    // check if the src is specified as a local file -> then it is an object
+    const isStaticImage = typeof src === "object";
+    const _src = isStaticImage ? src.src : src;
+    if (unoptimized === true) {
+      // return the src image when unoptimized
+      return _src;
+    }
+    // Check if the image is a remote image (starts with http or https)
+    if (_src.startsWith("http")) {
+      return imageURLForRemoteImage({ src: _src, width: 10, basePath });
+    }
+    // otherwise use the generated image of 10px width as a blurDataURL
+    return generateImageURL(_src, 10, basePath);
+  }, [blurDataURL, src, unoptimized]);
 
     // check if the src is a SVG image -> then we should not use the blurDataURL and use unoptimized
     const isSVG =
