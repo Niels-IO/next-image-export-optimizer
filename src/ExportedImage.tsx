@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import Image, { ImageProps, StaticImageData } from "next/image";
+import { useRouter } from 'next/router'
 
 const splitFilePath = ({ filePath }: { filePath: string }) => {
   const filenameWithExtension =
@@ -21,7 +22,8 @@ const splitFilePath = ({ filePath }: { filePath: string }) => {
 const generateImageURL = (
   src: string,
   width: number,
-  isRemoteImage: boolean = false
+  basePath: string | undefined,
+  isRemoteImage: boolean = false,
 ) => {
   const { filename, path, extension } = splitFilePath({ filePath: src });
   const useWebp =
@@ -58,6 +60,10 @@ const generateImageURL = (
 
   const isStaticImage = src.includes("_next/static/media");
 
+  if (!isStaticImage && basePath) {
+    correctedPath = (basePath ?? '') + correctedPath;
+  }
+
   const exportFolderName =
     process.env.nextImageExportOptimizer_exportFolderName ||
     "nextImageExportOptimizer";
@@ -92,9 +98,11 @@ function urlToFilename(url: string) {
 const imageURLForRemoteImage = ({
   src,
   width,
+  basePath,
 }: {
   src: string;
   width: number;
+  basePath: string | undefined;
 }) => {
   const extension = src.split(".").pop();
   // If the extension is not supported, then we log an error and return the src
@@ -111,15 +119,17 @@ const imageURLForRemoteImage = ({
   }
   const encodedSrc = urlToFilename(src);
 
-  return generateImageURL(`${encodedSrc}.${extension}`, width, true);
+  return generateImageURL(`${encodedSrc}.${extension}`, width, basePath, true);
 };
 
 const optimizedLoader = ({
   src,
   width,
+  basePath,
 }: {
   src: string | StaticImageData;
   width: number;
+  basePath: string | undefined;
 }) => {
   const isStaticImage = typeof src === "object";
   const _src = isStaticImage ? src.src : src;
@@ -148,16 +158,16 @@ const optimizedLoader = ({
     }
 
     if (nextLargestSize !== null) {
-      return generateImageURL(_src, nextLargestSize);
+      return generateImageURL(_src, nextLargestSize, basePath);
     }
   }
 
   // Check if the image is a remote image (starts with http or https)
   if (_src.startsWith("http")) {
-    return imageURLForRemoteImage({ src: _src, width });
+    return imageURLForRemoteImage({ src: _src, width, basePath });
   }
 
-  return generateImageURL(_src, width);
+  return generateImageURL(_src, width, basePath);
 };
 
 const fallbackLoader = ({ src }: { src: string | StaticImageData }) => {
@@ -175,6 +185,7 @@ const fallbackLoader = ({ src }: { src: string | StaticImageData }) => {
 export interface ExportedImageProps
   extends Omit<ImageProps, "src" | "loader" | "quality"> {
   src: string | StaticImageData;
+  basePath?: string;
 }
 
 function ExportedImage({
@@ -190,9 +201,15 @@ function ExportedImage({
   blurDataURL,
   style,
   onError,
+  basePath,
   ...rest
 }: ExportedImageProps) {
   const [imageError, setImageError] = useState(false);
+  const { basePath: routerBasePath } = useRouter();
+  basePath = basePath || routerBasePath;
+  if (basePath && !basePath.startsWith("/")) {
+    basePath = basePath + "/";
+  }
   const automaticallyCalculatedBlurDataURL = useMemo(() => {
     if (blurDataURL) {
       // use the user provided blurDataURL if present
@@ -207,10 +224,10 @@ function ExportedImage({
     }
     // Check if the image is a remote image (starts with http or https)
     if (_src.startsWith("http")) {
-      return imageURLForRemoteImage({ src: _src, width: 10 });
+      return imageURLForRemoteImage({ src: _src, width: 10, basePath });
     }
     // otherwise use the generated image of 10px width as a blurDataURL
-    return generateImageURL(_src, 10);
+    return generateImageURL(_src, 10, basePath);
   }, [blurDataURL, src, unoptimized]);
 
   // check if the src is a SVG image -> then we should not use the blurDataURL and use unoptimized
@@ -257,7 +274,7 @@ function ExportedImage({
       loader={
         imageError || unoptimized === true
           ? fallbackLoader
-          : (e) => optimizedLoader({ src, width: e.width })
+          : (e) => optimizedLoader({ src, width: e.width, basePath })
       }
       blurDataURL={automaticallyCalculatedBlurDataURL}
       onError={(error) => {
@@ -301,7 +318,7 @@ function ExportedImage({
           loader={
             imageError || unoptimized === true
               ? fallbackLoader
-              : (e) => optimizedLoader({ src, width: e.width })
+              : (e) => optimizedLoader({ src, width: e.width, basePath })
           }
           src={src}
         />
