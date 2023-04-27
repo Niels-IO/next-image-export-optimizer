@@ -91,6 +91,25 @@ const newConfigExportFolderName = `module.exports = {
 };
 `;
 
+const newConfigBasePath = `module.exports = {
+  basePath: "/subsite",
+  images: {
+    loader: "custom",
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    deviceSizes: [640, 750, 777, 828, 1080, 1200, 1920, 2048, 3840],
+  },
+  transpilePackages: ["next-image-export-optimizer"],
+  env: {
+    nextImageExportOptimizer_imageFolderPath: "public/images",
+    nextImageExportOptimizer_exportFolderPath: "out",
+    nextImageExportOptimizer_exportFolderName: "nextImageExportOptimizer",
+    nextImageExportOptimizer_quality: 75,
+    nextImageExportOptimizer_storePicturesInWEBP: true,
+    nextImageExportOptimizer_generateAndUseBlurImages: true,
+  },
+};
+`;
+
 async function testConfig(config) {
   deleteFolder("example/public/images/nextImageExportOptimizer");
   deleteFolder("example/public/nextImageExportOptimizer");
@@ -184,7 +203,7 @@ async function testConfig(config) {
     "example/out/images/subfolder/nextImageExportOptimizer2"
   );
 
-  if (config === newConfig || config === legacyConfig) {
+  if (config === newConfig || config === legacyConfig || config === newConfigBasePath) {
     expect(allImagesInImageFolder).toMatchSnapshot();
     expect(allImagesInStaticImageFolder).toMatchSnapshot();
 
@@ -252,7 +271,7 @@ async function testConfig(config) {
       ];
       imageFileStats.push(statsToBeChecked);
     }
-    if (config === newConfig || config === legacyConfig) {
+    if (config === newConfig || config === legacyConfig || config === newConfigBasePath) {
       if (index == 0 || index == 2) {
         expect(imageFileStats).toMatchSnapshot();
       } else if (index === 1) {
@@ -287,6 +306,13 @@ test("newConfigExportFolderName", async () => {
   await testConfig(newConfigExportFolderName);
   console.log("newConfigExportFolderName test finished.");
 });
+
+test("newConfigBasePath", async () => {
+  console.log("Running newConfigBasePath test...");
+  await testConfig(newConfigBasePath);
+  console.log("newConfigBasePath test finished.");
+});
+
 
 test("newConfig", async () => {
   console.log("Running newConfig test...");

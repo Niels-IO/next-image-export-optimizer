@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from "react";
 import Image, { ImageProps, StaticImageData } from "next/image";
-import { useRouter } from 'next/router'
 
 const splitFilePath = ({ filePath }: { filePath: string }) => {
   const filenameWithExtension =
@@ -205,8 +204,6 @@ function ExportedImage({
   ...rest
 }: ExportedImageProps) {
   const [imageError, setImageError] = useState(false);
-  const { basePath: routerBasePath } = useRouter();
-  basePath = basePath || routerBasePath;
   if (basePath && !basePath.startsWith("/")) {
     basePath = basePath + "/";
   }
