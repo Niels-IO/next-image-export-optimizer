@@ -289,6 +289,29 @@ for (let index = 0; index < widths.length; index++) {
       );
       await expect(img).not.toHaveCSS("background-repeat", "no-repeat");
     });
+    test("should check the image size for the forwardRef test page", async ({
+      page,
+    }) => {
+      await page.goto("/forwardRef", {
+        waitUntil: "networkidle",
+      });
+
+      const img = await page.locator("#test_image_forwardRef");
+      await img.click();
+
+      const image = await getImageById(page, "test_image_forwardRef");
+      expect(image.currentSrc).toBe(
+        correctSrcTransparentImage[width.toString()]
+      );
+      await expect(img).toHaveCSS("position", "absolute");
+      await expect(img).not.toHaveCSS(
+        "background-image",
+        `url("/images/nextImageExportOptimizer/transparentImage-opt-10.WEBP")`
+      );
+      await expect(img).not.toHaveCSS("background-repeat", "no-repeat");
+
+      await page.getByText(width.toString()).click();
+    });
     test("should check the image size for the small Image test page", async ({
       page,
     }) => {
