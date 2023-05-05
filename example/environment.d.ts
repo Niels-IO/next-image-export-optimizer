@@ -1,11 +1,11 @@
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
-      storePicturesInWEBP: boolean;
-      generateAndUseBlurImages: boolean;
-      nextImageExportOptimizer_storePicturesInWEBP: boolean;
-      nextImageExportOptimizer_generateAndUseBlurImages: boolean;
-      nextImageExportOptimizer_exportFolderName: string;
+      storePicturesInWEBP: string | undefined;
+      generateAndUseBlurImages: string | undefined;
+      nextImageExportOptimizer_storePicturesInWEBP: string | undefined;
+      nextImageExportOptimizer_generateAndUseBlurImages: string | undefined;
+      nextImageExportOptimizer_exportFolderName: string | undefined;
       __NEXT_IMAGE_OPTS: { deviceSizes: string[]; imageSizes: string[] };
     }
   }
