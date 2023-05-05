@@ -27,7 +27,7 @@ export default function Home() {
           }}
         >
           <ExportedImage
-            src="https://reactapp.dev/images/nextImageExportOptimizer/BG_HERO-opt-2048.WEBP"
+            src="https://reactapp.dev/images/nextImageExportOptimizer/christopher-gower-m_HRfLhgABo-unsplash-opt-2048.WEBP"
             fill
             id="test_image"
             style={{ objectFit: "cover" }}

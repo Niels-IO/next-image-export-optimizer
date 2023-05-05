@@ -12,6 +12,19 @@ async function downloadImage(url: string, filename: string, folder: string) {
         reject(new Error(`Status code: ${response.statusCode}`));
         return;
       }
+      // check if the file is a valid image by checking the content type
+      if (
+        !response.headers["content-type"].startsWith("image/") &&
+        !response.headers["content-type"].startsWith("application/octet-stream")
+      ) {
+        console.error(
+          `Error: Unable to download ${url} (invalid content type: ${response.headers["content-type"]}).`
+        );
+        reject(
+          new Error(`Invalid content type: ${response.headers["content-type"]}`)
+        );
+        return;
+      }
 
       fs.access(folder, fs.constants.W_OK, function (err: any) {
         if (err) {
@@ -21,7 +34,7 @@ async function downloadImage(url: string, filename: string, folder: string) {
           reject(err);
           return;
         }
-
+        // on close, check the file size and reject if it's 0 otherwise resolve
         response
           .pipe(fs.createWriteStream(filename))
           .on("error", function (err: any) {
@@ -30,7 +43,27 @@ async function downloadImage(url: string, filename: string, folder: string) {
             );
             reject(err);
           })
-          .on("close", resolve);
+          .on("close", function () {
+            fs.stat(filename, function (err: any, stats: any) {
+              if (err) {
+                console.error(
+                  `Error: Unable to get the size of ${filename} (${err.message}).`
+                );
+                reject(err);
+                return;
+              }
+
+              if (stats.size === 0) {
+                console.error(
+                  `Error: Unable to save ${filename} (empty file).`
+                );
+                reject(new Error("Empty file"));
+                return;
+              }
+
+              resolve();
+            });
+          });
       });
     });
   });
@@ -66,6 +99,7 @@ module.exports = async function downloadImagesInBatches(
       console.error(
         `Error: Unable to download remote images (${err.message}).`
       );
+      throw err;
     }
   }
 };
