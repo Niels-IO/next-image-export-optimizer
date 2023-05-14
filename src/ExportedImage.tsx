@@ -1,3 +1,5 @@
+"use client";
+
 import React, { forwardRef, useMemo, useState } from "react";
 import Image, { ImageProps, StaticImageData } from "next/image";
 

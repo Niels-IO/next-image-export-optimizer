@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useMemo, useState } from "react";
 import Image, { ImageProps, StaticImageData } from "next/legacy/image";
 
