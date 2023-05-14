@@ -490,6 +490,7 @@ const nextImageExportOptimizer = async function () {
     }
   }
   let data = JSON.stringify(updatedImageHashes, null, 4);
+  ensureDirectoryExists(hashFilePath);
   fs.writeFileSync(hashFilePath, data);
 
   // Copy the optimized images to the build folder
