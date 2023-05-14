@@ -58,15 +58,15 @@ const correctSrcTransparentImage = {
   3840: "http://localhost:8080/images/nextImageExportOptimizer/transparentImage-opt-3840.WEBP",
 };
 const correctSrcRemoteImage = {
-  640: "http://localhost:8080/nextImageExportOptimizer/reactapp.dev_images_nextImageExportOptimizer_christopher-gower-m_HRfLhgABo-unsplash-opt-2048.WEBP-opt-640.WEBP",
-  750: "http://localhost:8080/nextImageExportOptimizer/reactapp.dev_images_nextImageExportOptimizer_christopher-gower-m_HRfLhgABo-unsplash-opt-2048.WEBP-opt-750.WEBP",
-  777: "http://localhost:8080/nextImageExportOptimizer/reactapp.dev_images_nextImageExportOptimizer_christopher-gower-m_HRfLhgABo-unsplash-opt-2048.WEBP-opt-777.WEBP",
-  828: "http://localhost:8080/nextImageExportOptimizer/reactapp.dev_images_nextImageExportOptimizer_christopher-gower-m_HRfLhgABo-unsplash-opt-2048.WEBP-opt-828.WEBP",
-  1080: "http://localhost:8080/nextImageExportOptimizer/reactapp.dev_images_nextImageExportOptimizer_christopher-gower-m_HRfLhgABo-unsplash-opt-2048.WEBP-opt-1080.WEBP",
-  1200: "http://localhost:8080/nextImageExportOptimizer/reactapp.dev_images_nextImageExportOptimizer_christopher-gower-m_HRfLhgABo-unsplash-opt-2048.WEBP-opt-1200.WEBP",
-  1920: "http://localhost:8080/nextImageExportOptimizer/reactapp.dev_images_nextImageExportOptimizer_christopher-gower-m_HRfLhgABo-unsplash-opt-2048.WEBP-opt-1920.WEBP",
-  2048: "http://localhost:8080/nextImageExportOptimizer/reactapp.dev_images_nextImageExportOptimizer_christopher-gower-m_HRfLhgABo-unsplash-opt-2048.WEBP-opt-2048.WEBP",
-  3840: "http://localhost:8080/nextImageExportOptimizer/reactapp.dev_images_nextImageExportOptimizer_christopher-gower-m_HRfLhgABo-unsplash-opt-2048.WEBP-opt-3840.WEBP",
+  640: "http://localhost:8080/nextImageExportOptimizer/reactapp.dev_images_nextImageExportOptimizer_christopher-gower-m_HRfLhgABo-unsplash-opt-2048-opt-640.WEBP",
+  750: "http://localhost:8080/nextImageExportOptimizer/reactapp.dev_images_nextImageExportOptimizer_christopher-gower-m_HRfLhgABo-unsplash-opt-2048-opt-750.WEBP",
+  777: "http://localhost:8080/nextImageExportOptimizer/reactapp.dev_images_nextImageExportOptimizer_christopher-gower-m_HRfLhgABo-unsplash-opt-2048-opt-777.WEBP",
+  828: "http://localhost:8080/nextImageExportOptimizer/reactapp.dev_images_nextImageExportOptimizer_christopher-gower-m_HRfLhgABo-unsplash-opt-2048-opt-828.WEBP",
+  1080: "http://localhost:8080/nextImageExportOptimizer/reactapp.dev_images_nextImageExportOptimizer_christopher-gower-m_HRfLhgABo-unsplash-opt-2048-opt-1080.WEBP",
+  1200: "http://localhost:8080/nextImageExportOptimizer/reactapp.dev_images_nextImageExportOptimizer_christopher-gower-m_HRfLhgABo-unsplash-opt-2048-opt-1200.WEBP",
+  1920: "http://localhost:8080/nextImageExportOptimizer/reactapp.dev_images_nextImageExportOptimizer_christopher-gower-m_HRfLhgABo-unsplash-opt-2048-opt-1920.WEBP",
+  2048: "http://localhost:8080/nextImageExportOptimizer/reactapp.dev_images_nextImageExportOptimizer_christopher-gower-m_HRfLhgABo-unsplash-opt-2048-opt-2048.WEBP",
+  3840: "http://localhost:8080/nextImageExportOptimizer/reactapp.dev_images_nextImageExportOptimizer_christopher-gower-m_HRfLhgABo-unsplash-opt-2048-opt-3840.WEBP",
 };
 
 const correctSrcAnimatedPNGImage = {
