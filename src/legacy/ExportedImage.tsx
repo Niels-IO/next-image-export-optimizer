@@ -98,22 +98,9 @@ const imageURLForRemoteImage = ({
   src: string;
   width: number;
 }) => {
-  const extension = src.split(".").pop();
-  // If the extension is not supported, then we log an error and return the src
-  if (
-    !extension ||
-    !["JPG", "JPEG", "WEBP", "PNG", "GIF", "AVIF"].includes(
-      extension.toUpperCase()
-    )
-  ) {
-    console.error(
-      `The image ${src} has an unsupported extension. Please use JPG, JPEG, WEBP, PNG, GIF or AVIF.`
-    );
-    return src;
-  }
   const encodedSrc = urlToFilename(src);
 
-  return generateImageURL(`${encodedSrc}.${extension}`, width, true);
+  return generateImageURL(encodedSrc, width, true);
 };
 
 const optimizedLoader = ({

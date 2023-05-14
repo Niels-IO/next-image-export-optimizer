@@ -19,29 +19,13 @@ module.exports = async function getRemoteImageURLs(
   }
   // Create the filenames for the remote images
   const remoteImageFilenames = remoteImageURLs.map((url: string) => {
-    const extension = url.split(".").pop();
-    // If the extension is not supported, then we log an error
-    if (
-      !extension ||
-      !["JPG", "JPEG", "WEBP", "PNG", "GIF", "AVIF"].includes(
-        extension.toUpperCase()
-      )
-    ) {
-      console.error(
-        `The image ${url} has an unsupported extension. Please use JPG, JPEG, WEBP, PNG, GIF or AVIF.`
-      );
-      return;
-    }
     const encodedURL = urlToFilename(url);
 
-    const filename = path.join(
-      folderPathForRemoteImages,
-      `${encodedURL}.${extension}`
-    );
+    const filename = path.join(folderPathForRemoteImages, encodedURL);
 
     return {
       basePath: folderPathForRemoteImages,
-      file: `${encodedURL}.${extension}`,
+      file: encodedURL,
       dirPathWithoutBasePath: "",
       fullPath: filename,
     };

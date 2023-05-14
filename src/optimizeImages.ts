@@ -197,19 +197,13 @@ const nextImageExportOptimizer = async function () {
           ".webp",
           ".avif",
         ];
-        // Delete all remote images (ends in a supported extension) in the folder synchronously
+        // Delete all remote images in the folder synchronously
         // This is necessary, because the user may have changed the remote images
         // and the old images would be used otherwise
 
         fs.readdirSync(folderNameForRemoteImages).forEach((file: string) => {
-          // get the file extension
-          const extension = path.extname(file).toLowerCase();
-
-          // check if the file is an image
-          if (imageExtensions.includes(extension)) {
-            // delete the file synchronously
-            fs.unlinkSync(path.join(folderNameForRemoteImages, file));
-          }
+          // delete the file synchronously
+          fs.unlinkSync(path.join(folderNameForRemoteImages, file));
         });
       }
     } catch (err) {
@@ -263,7 +257,30 @@ const nextImageExportOptimizer = async function () {
   allFilesInImageFolderAndSubdirectories.push(...allFilesInStaticImageFolder);
 
   // append the remote images to the image array
-  allFilesInImageFolderAndSubdirectories.push(...remoteImageFilenames);
+  if (remoteImageURLs.length > 0) {
+    // get all files in the remote image folder again, as we added extensions to the filenames
+    // if they were not present in the URLs in remoteOptimizedImages.js
+
+    const allFilesInRemoteImageFolder = fs.readdirSync(
+      folderNameForRemoteImages
+    );
+
+    const remoteImageFiles = allFilesInRemoteImageFolder.map(
+      (filename: string) => {
+        const filenameFull = path.join(folderPathForRemoteImages, filename);
+
+        return {
+          basePath: folderPathForRemoteImages,
+          file: filename,
+          dirPathWithoutBasePath: "",
+          fullPath: filenameFull,
+        };
+      }
+    );
+
+    // append the remote images to the image array
+    allFilesInImageFolderAndSubdirectories.push(...remoteImageFiles);
+  }
 
   const allImagesInImageFolder = allFilesInImageFolderAndSubdirectories.filter(
     (fileObject: ImageObject) => {

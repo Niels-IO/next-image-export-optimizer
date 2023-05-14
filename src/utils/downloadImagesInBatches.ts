@@ -26,6 +26,19 @@ async function downloadImage(url: string, filename: string, folder: string) {
         return;
       }
 
+      // Extract image format from response headers
+      const contentType = response.headers["content-type"];
+      const imageFormat = contentType.split("/").pop();
+
+      // Check if filename already has an extension that matches the image format
+      const regex = new RegExp(`.${imageFormat}$`, "i");
+      const hasMatchingExtension = regex.test(filename);
+
+      // Add appropriate extension to filename based on image format
+      const formattedFilename = hasMatchingExtension
+        ? filename
+        : `${filename}.${imageFormat}`;
+
       fs.access(folder, fs.constants.W_OK, function (err: any) {
         if (err) {
           console.error(
@@ -36,18 +49,18 @@ async function downloadImage(url: string, filename: string, folder: string) {
         }
         // on close, check the file size and reject if it's 0 otherwise resolve
         response
-          .pipe(fs.createWriteStream(filename))
+          .pipe(fs.createWriteStream(formattedFilename))
           .on("error", function (err: any) {
             console.error(
-              `Error: Unable to save ${filename} (${err.message}).`
+              `Error: Unable to save ${formattedFilename} (${err.message}).`
             );
             reject(err);
           })
           .on("close", function () {
-            fs.stat(filename, function (err: any, stats: any) {
+            fs.stat(formattedFilename, function (err: any, stats: any) {
               if (err) {
                 console.error(
-                  `Error: Unable to get the size of ${filename} (${err.message}).`
+                  `Error: Unable to get the size of ${formattedFilename} (${err.message}).`
                 );
                 reject(err);
                 return;
@@ -55,7 +68,7 @@ async function downloadImage(url: string, filename: string, folder: string) {
 
               if (stats.size === 0) {
                 console.error(
-                  `Error: Unable to save ${filename} (empty file).`
+                  `Error: Unable to save ${formattedFilename} (empty file).`
                 );
                 reject(new Error("Empty file"));
                 return;
