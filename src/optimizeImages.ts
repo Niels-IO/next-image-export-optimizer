@@ -122,9 +122,9 @@ const nextImageExportOptimizer = async function () {
     }
 
     if (legacyPath?.quality !== undefined) {
-      quality = legacyPath.quality;
+      quality = Number(legacyPath.quality);
     } else if (newPath?.nextImageExportOptimizer_quality !== undefined) {
-      quality = newPath.nextImageExportOptimizer_quality;
+      quality = Number(newPath.nextImageExportOptimizer_quality);
     }
     if (nextjsConfig.env?.storePicturesInWEBP !== undefined) {
       storePicturesInWEBP = nextjsConfig.env.storePicturesInWEBP;
