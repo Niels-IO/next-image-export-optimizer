@@ -164,6 +164,7 @@ const fallbackLoader = ({ src }: { src: string | StaticImageData }) => {
 export interface ExportedImageProps
   extends Omit<ImageProps, "src" | "loader" | "quality"> {
   src: string | StaticImageData;
+  children?: React.ReactNode;
 }
 
 const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
