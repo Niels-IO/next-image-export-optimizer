@@ -33,7 +33,7 @@ const legacyConfig = `module.exports = {
       quality: 75,
     }
   },
-  output: 'export',
+  output: "export",
   transpilePackages: ["next-image-export-optimizer"],
   env: {
     storePicturesInWEBP: true,
@@ -47,7 +47,7 @@ const newConfig = `module.exports = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     deviceSizes: [640, 750, 777, 828, 1080, 1200, 1920, 2048, 3840],
   },
-  output: 'export',
+  output: "export",
   transpilePackages: ["next-image-export-optimizer"],
   env: {
     nextImageExportOptimizer_imageFolderPath: "public/images",
@@ -65,7 +65,7 @@ const newConfigJpeg = `module.exports = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     deviceSizes: [640, 750, 777, 828, 1080, 1200, 1920, 2048, 3840],
   },
-  output: 'export',
+  output: "export",
   transpilePackages: ["next-image-export-optimizer"],
   env: {
     nextImageExportOptimizer_imageFolderPath: "public/images",
@@ -82,7 +82,7 @@ const newConfigExportFolderName = `module.exports = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     deviceSizes: [640, 750, 777, 828, 1080, 1200, 1920, 2048, 3840],
   },
-  output: 'export',
+  output: "export",
   transpilePackages: ["next-image-export-optimizer"],
   env: {
     nextImageExportOptimizer_imageFolderPath: "public/images",
