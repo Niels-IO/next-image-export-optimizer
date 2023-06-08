@@ -15,7 +15,10 @@ module.exports = async function getRemoteImageURLs(
     "remoteOptimizedImages.js"
   );
   if (fs.existsSync(remoteImagesFilePath)) {
-    remoteImageURLs = await Promise.resolve(require(remoteImagesFilePath));
+    const { default: remoteOptimizedImages } = await import(
+      remoteImagesFilePath
+    );
+    remoteImageURLs = remoteOptimizedImages;
   }
   // Create the filenames for the remote images
   const remoteImageFilenames = remoteImageURLs.map((url: string) => {
