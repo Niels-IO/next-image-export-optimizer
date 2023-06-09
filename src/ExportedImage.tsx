@@ -2,6 +2,7 @@
 
 import React, { forwardRef, useMemo, useState } from "react";
 import Image, { ImageProps, StaticImageData } from "next/image";
+import { useRouter } from "next/router";
 
 const splitFilePath = ({ filePath }: { filePath: string }) => {
   const filenameWithExtension =
@@ -61,16 +62,17 @@ const generateImageURL = (
 
   const isStaticImage = src.includes("_next/static/media");
 
-  if (!isStaticImage && basePath) {
-    correctedPath = (basePath ?? "") + correctedPath;
+  if (basePath) {
+    correctedPath = basePath + "/" + correctedPath;
   }
 
   const exportFolderName =
     process.env.nextImageExportOptimizer_exportFolderName ||
     "nextImageExportOptimizer";
+  const basePathPrefixForStaticImages = basePath ? basePath + "/" : "";
 
   let generatedImageURL = `${
-    isStaticImage ? "" : correctedPath
+    isStaticImage ? basePathPrefixForStaticImages : correctedPath
   }${exportFolderName}/${filename}-opt-${width}.${processedExtension.toUpperCase()}`;
 
   // if the generatedImageURL is not starting with a slash, then we add one as long as it is not a remote image
@@ -173,48 +175,52 @@ const fallbackLoader = ({ src }: { src: string | StaticImageData }) => {
 export interface ExportedImageProps
   extends Omit<ImageProps, "src" | "loader" | "quality"> {
   src: string | StaticImageData;
-  basePath?: string;
 }
 
-function ExportedImage({
-  src,
-  priority = false,
-  loading,
-  className,
-  width,
-  height,
-  onLoadingComplete,
-  unoptimized,
-  placeholder = "blur",
-  blurDataURL,
-  style,
-  onError,
-  basePath,
-  ...rest
-}: ExportedImageProps) {
-  const [imageError, setImageError] = useState(false);
-  if (basePath && !basePath.startsWith("/")) {
-    basePath = basePath + "/";
-  }
-  const automaticallyCalculatedBlurDataURL = useMemo(() => {
-    if (blurDataURL) {
-      // use the user provided blurDataURL if present
-      return blurDataURL;
-    }
-    // check if the src is specified as a local file -> then it is an object
-    const isStaticImage = typeof src === "object";
-    const _src = isStaticImage ? src.src : src;
-    if (unoptimized === true) {
-      // return the src image when unoptimized
-      return _src;
-    }
-    // Check if the image is a remote image (starts with http or https)
-    if (_src.startsWith("http")) {
-      return imageURLForRemoteImage({ src: _src, width: 10, basePath });
-    }
-    // otherwise use the generated image of 10px width as a blurDataURL
-    return generateImageURL(_src, 10, basePath);
-  }, [blurDataURL, src, unoptimized]);
+const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
+  (
+    {
+      src,
+      priority = false,
+      loading,
+      className,
+      width,
+      height,
+      onLoadingComplete,
+      unoptimized,
+      placeholder = "blur",
+      blurDataURL,
+      style,
+      onError,
+      ...rest
+    },
+    ref
+  ) => {
+    const router = useRouter();
+    const basePath = router.basePath;
+
+    const [imageError, setImageError] = useState(false);
+    const automaticallyCalculatedBlurDataURL = useMemo(() => {
+      if (blurDataURL) {
+        // use the user provided blurDataURL if present
+        return blurDataURL;
+      }
+      // check if the src is specified as a local file -> then it is an object
+      const isStaticImage = typeof src === "object";
+      let _src = isStaticImage ? src.src : src;
+
+      if (unoptimized === true) {
+        // return the src image when unoptimized
+        return _src;
+      }
+      // Check if the image is a remote image (starts with http or https)
+      if (_src.startsWith("http")) {
+        return imageURLForRemoteImage({ src: _src, width: 10, basePath });
+      }
+
+      // otherwise use the generated image of 10px width as a blurDataURL
+      return generateImageURL(_src, 10, basePath);
+    }, [blurDataURL, src, unoptimized]);
 
     // check if the src is a SVG image -> then we should not use the blurDataURL and use unoptimized
     const isSVG =
@@ -238,7 +244,15 @@ function ExportedImage({
             filter: "url(#sharpBlur)",
           }
         : undefined;
+    const isStaticImage = typeof src === "object";
 
+    let _src = isStaticImage ? src.src : src;
+    if (basePath && !isStaticImage && _src.startsWith("/")) {
+      _src = basePath + _src;
+    }
+    if (basePath && !isStaticImage && !_src.startsWith("/")) {
+      _src = basePath + "/" + _src;
+    }
     const ImageElement = (
       <Image
         ref={ref}
@@ -246,7 +260,7 @@ function ExportedImage({
         {...(width && { width })}
         {...(height && { height })}
         {...(loading && { loading })}
-        {...(className && { className })}
+        className={`${className} next-exported-image-blur-svg`}
         {...(onLoadingComplete && { onLoadingComplete })}
         // if the blurStyle is not "empty", then we take care of the blur behavior ourselves
         // if the blur is complete, we also set the placeholder to empty as it otherwise shows
@@ -282,33 +296,22 @@ function ExportedImage({
           // execute the onLoadingComplete callback if present
           onLoadingComplete && onLoadingComplete(result);
         }}
-        src={src}
+        src={isStaticImage ? src : _src}
       />
     );
+    const cssToHideSVGFilter = `
+    .next-exported-image-blur-svg {
+       filter: none !important;
+    }
+`;
 
     // When we present a placeholder, we add a svg filter to the image and remove it after either
     // the image is loaded or an error occurred
     return blurStyle ? (
       <>
-        {/* In case javascript is disabled, we show a fallback without blurry placeholder */}
+        {/* In case javascript is disabled, we disable the svg blur filter on the image */}
         <noscript>
-          <Image
-            {...rest}
-            {...(width && { width })}
-            {...(height && { height })}
-            {...(loading && { loading })}
-            {...(className && { className })}
-            placeholder="empty"
-            {...(unoptimized && { unoptimized })}
-            {...(priority && { priority })}
-            style={style}
-            loader={
-              imageError || unoptimized === true
-                ? fallbackLoader
-                : (e) => optimizedLoader({ src, width: e.width, basePath })
-            }
-            src={src}
-          />
+          <style>{cssToHideSVGFilter}</style>
         </noscript>
         {ImageElement}
         <svg

@@ -1,6 +1,10 @@
 import { test, expect } from "@playwright/test";
 import getImageById from "./getImageById.js";
 
+// get the environment variable flag for the test
+const testBasePath = process.env.BASEPATH === "true";
+const basePath = testBasePath ? "/subsite" : "";
+
 test.describe(`Test unoptimized image prop`, () => {
   test.use({
     viewport: { width: 1200, height: 1200 * 3 },
@@ -19,7 +23,7 @@ test.describe(`Test unoptimized image prop`, () => {
     const image = await getImageById(page, "test_image_unoptimized");
 
     expect(image.currentSrc).toBe(
-      "http://localhost:8080/images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
+      `http://localhost:8080${basePath}/images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg`
     );
     const img_legacy = await page.locator("#test_image_unoptimized_legacy");
     await img_legacy.click();
@@ -30,7 +34,7 @@ test.describe(`Test unoptimized image prop`, () => {
     );
 
     expect(image_legacy.currentSrc).toBe(
-      "http://localhost:8080/images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
+      `http://localhost:8080${basePath}/images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg`
     );
   });
 });

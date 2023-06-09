@@ -39,6 +39,7 @@
   "scripts": {
     "build": "rimraf dist && tsc && tsc --project tsconfig.optimizeImages.json",
     "test": "jest",
+    "test:e2e:basePath": "npx playwright install && BASEPATH=true playwright test --config playwright-basePath.config.js",
     "test:e2e": "npx playwright install && playwright test",
     "exportExample": "cd example && npm run export && cd ..",
     "prepublishOnly": "npm run build && npm test && npm run test:e2e",
@@ -71,7 +72,7 @@
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^13.4.0",
-    "@playwright/test": "^1.19.1",
+    "@playwright/test": "^1.35.0",
     "@types/react": "^18.0.0",
     "eslint": "^8.11.0",
     "eslint-plugin-react": "^7.29.4",
