@@ -102,11 +102,9 @@ const imageURLForRemoteImage = ({
   src,
   width,
   basePath,
-  basePath,
 }: {
   src: string;
   width: number;
-  basePath: string | undefined;
   basePath: string | undefined;
 }) => {
   const encodedSrc = urlToFilename(src);
@@ -118,11 +116,9 @@ const optimizedLoader = ({
   src,
   width,
   basePath,
-  basePath,
 }: {
   src: string | StaticImageData;
   width: number;
-  basePath: string | undefined;
   basePath: string | undefined;
 }) => {
   const isStaticImage = typeof src === "object";
@@ -153,17 +149,14 @@ const optimizedLoader = ({
 
     if (nextLargestSize !== null) {
       return generateImageURL(_src, nextLargestSize, basePath);
-      return generateImageURL(_src, nextLargestSize, basePath);
     }
   }
 
   // Check if the image is a remote image (starts with http or https)
   if (_src.startsWith("http")) {
     return imageURLForRemoteImage({ src: _src, width, basePath });
-    return imageURLForRemoteImage({ src: _src, width, basePath });
   }
 
-  return generateImageURL(_src, width, basePath);
   return generateImageURL(_src, width, basePath);
 };
 
@@ -311,7 +304,7 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
     .next-exported-image-blur-svg {
        filter: none !important;
     }
-`;
+    `;
 
     // When we present a placeholder, we add a svg filter to the image and remove it after either
     // the image is loaded or an error occurred
