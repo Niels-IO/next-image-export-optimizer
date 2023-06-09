@@ -102,9 +102,11 @@ const imageURLForRemoteImage = ({
   src,
   width,
   basePath,
+  basePath,
 }: {
   src: string;
   width: number;
+  basePath: string | undefined;
   basePath: string | undefined;
 }) => {
   const encodedSrc = urlToFilename(src);
@@ -116,9 +118,11 @@ const optimizedLoader = ({
   src,
   width,
   basePath,
+  basePath,
 }: {
   src: string | StaticImageData;
   width: number;
+  basePath: string | undefined;
   basePath: string | undefined;
 }) => {
   const isStaticImage = typeof src === "object";
@@ -149,14 +153,17 @@ const optimizedLoader = ({
 
     if (nextLargestSize !== null) {
       return generateImageURL(_src, nextLargestSize, basePath);
+      return generateImageURL(_src, nextLargestSize, basePath);
     }
   }
 
   // Check if the image is a remote image (starts with http or https)
   if (_src.startsWith("http")) {
     return imageURLForRemoteImage({ src: _src, width, basePath });
+    return imageURLForRemoteImage({ src: _src, width, basePath });
   }
 
+  return generateImageURL(_src, width, basePath);
   return generateImageURL(_src, width, basePath);
 };
 
@@ -175,6 +182,7 @@ const fallbackLoader = ({ src }: { src: string | StaticImageData }) => {
 export interface ExportedImageProps
   extends Omit<ImageProps, "src" | "loader" | "quality"> {
   src: string | StaticImageData;
+  basePath?: string;
 }
 
 const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
