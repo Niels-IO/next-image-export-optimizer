@@ -170,6 +170,20 @@ for (let index = 0; index < widths.length; index++) {
       const img = await page.locator("#test_image_static");
       await img.click();
 
+      await img.evaluate(
+        (node) =>
+          new Promise((resolve) => {
+            const imgElement = node;
+            if (imgElement.complete) {
+              resolve();
+            } else {
+              imgElement.addEventListener("load", () => {
+                resolve();
+              });
+            }
+          })
+      );
+
       const image = await getImageById(page, "test_image_static");
       expect(image.currentSrc).toBe(correctSrcStaticImage[width.toString()]);
       expect(image.naturalWidth).toBe(width);
