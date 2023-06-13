@@ -11,7 +11,6 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
-
   "exports": {
     ".": {
       "types": "./dist/ExportedImage.d.ts",
@@ -43,7 +42,7 @@
     "test:e2e:basePath": "npx playwright install && BASEPATH=true playwright test --config playwright-basePath.config.js",
     "test:e2e": "npx playwright install && playwright test",
     "exportExample": "cd example && npm run export && cd ..",
-    "prepublishOnly": "npm run build && npm test && npm run test:e2e",
+    "prepublishOnly": "npm run build && npm test && npm run test:e2e:basePath && npm run test:e2e",
     "fetchTags": "git fetch --tags -f"
   },
   "repository": {
@@ -77,7 +76,6 @@
     "@types/react": "^18.0.0",
     "eslint": "^8.11.0",
     "eslint-plugin-react": "^7.29.4",
-    "http-server": "^14.1.0",
     "jest": "^29.0.3",
     "rimraf": "^5.0.0",
     "ts-node": "^10.9.1"

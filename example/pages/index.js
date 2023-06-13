@@ -119,7 +119,7 @@ export default function Home() {
             style={{ width: "100%", height: "auto" }}
             // priority
           />
-        </div>{" "}
+        </div>
         <h2>Unoptimized example - Legacy</h2>
         <div
           style={{

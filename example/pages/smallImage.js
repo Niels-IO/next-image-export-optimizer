@@ -34,26 +34,26 @@ export default function Home() {
             layout="fill"
             id="test_image"
             objectFit="cover"
-            priority={true}
-            alt={"test_image"}
+            priority
+            alt="test_image"
           />
         </div>
         <h2>Optimized example</h2>
 
         <div
           style={{
-            marginBottom: "3rem",
             position: "relative",
-            width: "50%",
-            height: "200px",
+            marginBottom: "3rem",
+            width: "100%",
           }}
         >
           <ExportedImage
             src={smallImage}
-            fill
-            style={{ objectFit: "cover" }}
+            alt="test_image"
             id="test_image_future"
-            alt={"test_image"}
+            sizes="100vw"
+            style={{ width: "100%", height: "auto" }}
+            // priority
           />
         </div>
       </main>

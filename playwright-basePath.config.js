@@ -38,10 +38,11 @@ const config = {
     },
   ],
   webServer: {
-    command: "cd example && npm run export && cd out/ && npx serve -p 8080",
+    command: "cd example && npm run export && BASEPATH=true node testServer.js",
     port: 8080,
     timeout: 120 * 1000,
     reuseExistingServer: false,
+    stdout: "pipe",
   },
 };
 module.exports = config;

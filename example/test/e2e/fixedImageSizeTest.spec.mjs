@@ -82,7 +82,7 @@ for (let index = 0; index < widths.length; index++) {
       deviceScaleFactor: 1,
     });
     test("should check the image size", async ({ page }) => {
-      await page.goto("/fixedImage", {
+      await page.goto(`${basePath}/fixedImage`, {
         waitUntil: "networkidle",
       });
 
@@ -105,6 +105,10 @@ for (let index = 0; index < widths.length; index++) {
       expect(
         correctSrc[width.toString()].includes(image_future.currentSrc)
       ).toBeTruthy();
+
+      // check the number of images on the page
+      const images = await page.$$("img");
+      expect(images.length).toBe(16);
     });
   });
 }

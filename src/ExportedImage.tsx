@@ -63,7 +63,21 @@ const generateImageURL = (
   const isStaticImage = src.includes("_next/static/media");
 
   if (basePath) {
-    correctedPath = basePath + "/" + correctedPath;
+    if (
+      basePath.endsWith("/") &&
+      correctedPath &&
+      correctedPath.startsWith("/")
+    ) {
+      correctedPath = basePath + correctedPath.slice(1);
+    } else if (
+      !basePath.endsWith("/") &&
+      correctedPath &&
+      !correctedPath.startsWith("/")
+    ) {
+      correctedPath = basePath + "/" + correctedPath;
+    } else {
+      correctedPath = basePath + correctedPath;
+    }
   }
 
   const exportFolderName =

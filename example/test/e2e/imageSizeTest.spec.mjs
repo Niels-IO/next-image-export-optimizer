@@ -123,7 +123,7 @@ for (let index = 0; index < widths.length; index++) {
       deviceScaleFactor: 1,
     });
     test("should check the image size", async ({ page }) => {
-      await page.goto("/", {
+      await page.goto(`${basePath}/`, {
         waitUntil: "networkidle",
       });
 
@@ -134,23 +134,20 @@ for (let index = 0; index < widths.length; index++) {
 
       const image = await getImageById(page, "test_image");
       expect(image.currentSrc).toBe(correctSrc[width.toString()]);
+      expect(image.naturalWidth).toBe(width);
 
       const image_future = await getImageById(page, "test_image_future_fill");
       expect(image_future.currentSrc).toBe(correctSrc[width.toString()]);
+      expect(image_future.naturalWidth).toBe(width);
 
-      const imageRect = await img.boundingBox();
-      const imageWidth = imageRect.width;
-      expect(imageWidth).toBeGreaterThan(5);
-
-      const img_future = await page.locator("#test_image_future");
-      const imageFutureRect = await img_future.boundingBox();
-      const imageFutureWidth = imageFutureRect.width;
-      expect(imageFutureWidth).toBeGreaterThan(5);
+      // check the number of images on the page
+      const images = await page.$$("img");
+      expect(images.length).toBe(10);
     });
     test("should check the image size for the statically imported image", async ({
       page,
     }) => {
-      await page.goto("/", {
+      await page.goto(`${basePath}/`, {
         waitUntil: "networkidle",
       });
 
@@ -161,11 +158,13 @@ for (let index = 0; index < widths.length; index++) {
 
       const image = await getImageById(page, "test_image_static");
       expect(image.currentSrc).toBe(correctSrcStaticImage[width.toString()]);
+      expect(image.naturalWidth).toBe(width);
 
       const image_future = await getImageById(page, "test_image_static_future");
       expect(image_future.currentSrc).toBe(
         correctSrcStaticImage[width.toString()]
       );
+      expect(image_future.naturalWidth).toBe(width);
       const image_future_fill = await getImageById(
         page,
         "test_image_future_static_fill"
@@ -173,11 +172,12 @@ for (let index = 0; index < widths.length; index++) {
       expect(image_future_fill.currentSrc).toBe(
         correctSrcStaticImage[width.toString()]
       );
+      expect(image_future_fill.naturalWidth).toBe(width);
     });
     test("should check the image size for the statically imported image in the nested route", async ({
       page,
     }) => {
-      await page.goto("/nested/page", {
+      await page.goto(`${basePath}/nested/page`, {
         waitUntil: "networkidle",
       });
 
@@ -186,16 +186,22 @@ for (let index = 0; index < widths.length; index++) {
 
       const image = await getImageById(page, "test_image_static");
       expect(image.currentSrc).toBe(correctSrcStaticImage[width.toString()]);
+      expect(image.naturalWidth).toBe(width);
 
       const image_future = await getImageById(page, "test_image_static_future");
       expect(image_future.currentSrc).toBe(
         correctSrcStaticImage[width.toString()]
       );
+      expect(image_future.naturalWidth).toBe(width);
+
+      // check the number of images on the page
+      const images = await page.$$("img");
+      expect(images.length).toBe(6);
     });
     test("should check the image size for the statically imported image with fixed size in the nested route", async ({
       page,
     }) => {
-      await page.goto("/nested/page_fixed", {
+      await page.goto(`${basePath}/nested/page_fixed`, {
         waitUntil: "networkidle",
       });
 
@@ -206,6 +212,7 @@ for (let index = 0; index < widths.length; index++) {
       expect(image.currentSrc).toBe(
         `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.WEBP`
       );
+      expect(image.naturalWidth).toBe(384);
 
       const image_future = await getImageById(
         page,
@@ -214,12 +221,13 @@ for (let index = 0; index < widths.length; index++) {
       expect(image_future.currentSrc).toBe(
         `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.WEBP`
       );
+      expect(image_future.naturalWidth).toBe(384);
     });
 
     test("should check the image size for the normally imported image in the nested route", async ({
       page,
     }) => {
-      await page.goto("/nested/page", {
+      await page.goto(`${basePath}/nested/page`, {
         waitUntil: "networkidle",
       });
 
@@ -228,15 +236,17 @@ for (let index = 0; index < widths.length; index++) {
 
       const image = await getImageById(page, "test_image");
       expect(image.currentSrc).toBe(correctSrc[width.toString()]);
+      expect(image.naturalWidth).toBe(width);
 
       const image_future = await getImageById(page, "test_image_future");
       expect(image_future.currentSrc).toBe(correctSrc[width.toString()]);
+      expect(image_future.naturalWidth).toBe(width);
     });
 
     test("should check the image size for the statically imported image in the nested slug route", async ({
       page,
     }) => {
-      await page.goto("/nestedSlug/page", {
+      await page.goto(`${basePath}/nestedSlug/page`, {
         waitUntil: "networkidle",
       });
 
@@ -245,9 +255,11 @@ for (let index = 0; index < widths.length; index++) {
 
       const image = await getImageById(page, "test_image_static");
       expect(image.currentSrc).toBe(correctSrcStaticImage[width.toString()]);
+      expect(image.naturalWidth).toBe(width);
 
       const image_future = await getImageById(page, "test_image_future_fill");
       expect(image_future.currentSrc).toBe(correctSrc[width.toString()]);
+      expect(image_future.naturalWidth).toBe(width);
 
       const image_future_fill = await getImageById(
         page,
@@ -256,12 +268,17 @@ for (let index = 0; index < widths.length; index++) {
       expect(image_future_fill.currentSrc).toBe(
         correctSrcStaticImage[width.toString()]
       );
+      expect(image_future_fill.naturalWidth).toBe(width);
+
+      // check the number of images on the page
+      const images = await page.$$("img");
+      expect(images.length).toBe(3);
     });
 
     test("should check the image size for images in subfolder", async ({
       page,
     }) => {
-      await page.goto("/subfolder", {
+      await page.goto(`${basePath}/subfolder`, {
         waitUntil: "networkidle",
       });
 
@@ -272,6 +289,11 @@ for (let index = 0; index < widths.length; index++) {
 
       const image = await getImageById(page, "test_image_subfolder");
       expect(image.currentSrc).toBe(correctSrcSubfolder[width.toString()]);
+      expect(image.naturalWidth).toBe(width);
+
+      // check the number of images on the page
+      const images = await page.$$("img");
+      expect(images.length).toBe(2);
     });
     // test("should check the image size for the typescript test page", async ({
     //   page,
@@ -291,7 +313,7 @@ for (let index = 0; index < widths.length; index++) {
     test("should check the image size for the transparent test page", async ({
       page,
     }) => {
-      await page.goto("/transparent", {
+      await page.goto(`${basePath}/transparent`, {
         waitUntil: "networkidle",
       });
 
@@ -302,17 +324,22 @@ for (let index = 0; index < widths.length; index++) {
       expect(image.currentSrc).toBe(
         correctSrcTransparentImage[width.toString()]
       );
+      expect(image.naturalWidth).toBe(width > 2048 ? 2190 : width);
       await expect(img).toHaveCSS("position", "absolute");
       await expect(img).not.toHaveCSS(
         "background-image",
         `url("/images/nextImageExportOptimizer/transparentImage-opt-10.WEBP")`
       );
       await expect(img).not.toHaveCSS("background-repeat", "no-repeat");
+
+      // check the number of images on the page
+      const images = await page.$$("img");
+      expect(images.length).toBe(1);
     });
     test("should check the image size for the forwardRef test page", async ({
       page,
     }) => {
-      await page.goto("/forwardRef", {
+      await page.goto(`${basePath}/forwardRef`, {
         waitUntil: "networkidle",
       });
 
@@ -323,6 +350,7 @@ for (let index = 0; index < widths.length; index++) {
       expect(image.currentSrc).toBe(
         correctSrcTransparentImage[width.toString()]
       );
+      expect(image.naturalWidth).toBe(width > 2048 ? 2190 : width);
       await expect(img).toHaveCSS("position", "absolute");
       await expect(img).not.toHaveCSS(
         "background-image",
@@ -331,11 +359,14 @@ for (let index = 0; index < widths.length; index++) {
       await expect(img).not.toHaveCSS("background-repeat", "no-repeat");
 
       await page.getByText(width.toString()).click();
+      // check the number of images on the page
+      const images = await page.$$("img");
+      expect(images.length).toBe(1);
     });
     test("should check the image size for the small Image test page", async ({
       page,
     }) => {
-      await page.goto("/smallImage", {
+      await page.goto(`${basePath}/smallImage`, {
         waitUntil: "networkidle",
       });
 
@@ -350,7 +381,7 @@ for (let index = 0; index < widths.length; index++) {
     test("should check the image size for the remote test page", async ({
       page,
     }) => {
-      await page.goto("/remote", {
+      await page.goto(`${basePath}/remote`, {
         waitUntil: "networkidle",
       });
 
@@ -359,17 +390,22 @@ for (let index = 0; index < widths.length; index++) {
 
       const image = await getImageById(page, "test_image");
       expect(image.currentSrc).toBe(correctSrcRemoteImage[width.toString()]);
+      expect(image.naturalWidth).toBe(width >= 2048 ? 2048 : width);
       await expect(img).toHaveCSS("position", "absolute");
       await expect(img).not.toHaveCSS(
         "background-image",
         `url("/images/nextImageExportOptimizer/transparentImage-opt-10.WEBP")`
       );
       await expect(img).not.toHaveCSS("background-repeat", "no-repeat");
+
+      // check the number of images on the page
+      const images = await page.$$("img");
+      expect(images.length).toBe(1);
     });
     test("should check the image size for the animated test page", async ({
       page,
     }) => {
-      await page.goto("/gifs", {
+      await page.goto(`${basePath}/gifs`, {
         waitUntil: "networkidle",
       });
 
@@ -387,6 +423,8 @@ for (let index = 0; index < widths.length; index++) {
       expect(image_gif.currentSrc).toBe(
         correctSrcAnimatedGIFImage[width.toString()]
       );
+      // cap the width at 400px
+      expect(image_gif.naturalWidth).toBe(width > 400 ? 400 : width);
 
       const img_webp = await page.locator("#test_image_webp");
       await img_webp.click();
@@ -395,6 +433,7 @@ for (let index = 0; index < widths.length; index++) {
       expect(image_webp.currentSrc).toBe(
         correctSrcAnimatedWEBPImage[width.toString()]
       );
+      expect(image_webp.naturalWidth).toBe(width > 400 ? 400 : width);
     });
   });
 }
