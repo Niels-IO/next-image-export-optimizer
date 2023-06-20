@@ -6,6 +6,7 @@ module.exports = async function getImageById(page, imageId) {
       currentSrc: img.currentSrc,
       naturalWidth: img.naturalWidth,
       width: img.width,
+      srcset: img.srcset,
     };
   }, imageId);
 };
