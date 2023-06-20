@@ -7,6 +7,7 @@ const newConfigBasePath = `module.exports = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     deviceSizes: [640, 750, 777, 828, 1080, 1200, 1920, 2048, 3840],
   },
+  basePath: "/subsite",
   output: "export",
   transpilePackages: ["next-image-export-optimizer"],
   env: {
@@ -37,10 +38,11 @@ const config = {
     },
   ],
   webServer: {
-    command: "cd example && npm run export && cd out/ && npx serve -p 8080",
+    command: "cd example && npm run export && BASEPATH=true node testServer.js",
     port: 8080,
     timeout: 120 * 1000,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
+    stdout: "pipe",
   },
 };
 module.exports = config;

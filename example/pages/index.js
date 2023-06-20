@@ -40,7 +40,6 @@ export default function Home() {
           />
         </div>
         <h2>Optimized example (static import) - Legacy</h2>
-
         <div
           style={{
             position: "relative",
@@ -105,7 +104,6 @@ export default function Home() {
           />
         </div>
         <h2>Optimized example (static import)</h2>
-
         <div
           style={{
             position: "relative",
@@ -122,7 +120,6 @@ export default function Home() {
             // priority
           />
         </div>
-
         <h2>Unoptimized example - Legacy</h2>
         <div
           style={{
@@ -142,6 +139,25 @@ export default function Home() {
             unoptimized={true}
           />
         </div>
+        <h2>Unoptimized example - Legacy static import</h2>
+        <div
+          style={{
+            position: "relative",
+            width: "50%",
+            height: "200px",
+            marginBottom: "3rem",
+          }}
+        >
+          <ExportedImageLegacy
+            src={testPictureStatic}
+            layout="fill"
+            id="test_image_unoptimized_legacy_static"
+            objectFit="cover"
+            priority={true}
+            alt={"test_image_unoptimized_legacy_static"}
+            unoptimized={true}
+          />
+        </div>
         <h2>Unoptimized example </h2>
         <div
           style={{
@@ -156,6 +172,25 @@ export default function Home() {
             id="test_image_unoptimized"
             priority={true}
             alt={"test_image_unoptimized"}
+            unoptimized={true}
+            fill
+            style={{ objectFit: "cover" }}
+          />
+        </div>
+        <h2>Unoptimized example static import</h2>
+        <div
+          style={{
+            position: "relative",
+            width: "50%",
+            height: "200px",
+            marginBottom: "3rem",
+          }}
+        >
+          <ExportedImage
+            src={testPictureStatic}
+            id="test_image_unoptimized_static"
+            priority={true}
+            alt={"test_image_unoptimized_static"}
             unoptimized={true}
             fill
             style={{ objectFit: "cover" }}
