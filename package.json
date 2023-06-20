@@ -1,6 +1,6 @@
 {
   "name": "next-image-export-optimizer",
-  "version": "1.7.0",
+  "version": "1.8.0-beta.0",
   "description": "Optimizes all static images for Next.js static HTML export functionality",
   "main": "dist/ExportedImage.js",
   "types": "dist/ExportedImage.d.ts",
@@ -47,7 +47,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/TheFuturePlace/next-image-export-optimizer"
+    "url": "https://github.com/Niels-IO/next-image-export-optimizer"
   },
   "keywords": [
     "next.js",
