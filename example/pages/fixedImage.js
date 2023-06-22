@@ -6,6 +6,8 @@ import ExportedImage from "../../src/ExportedImage";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
+  // get the basePath set in next.config.js
+  const basePath = process.env.__NEXT_ROUTER_BASEPATH || "";
   return (
     <div className={styles.container}>
       <Head>
@@ -39,6 +41,7 @@ export default function Home() {
                 objectFit="cover"
                 priority={true}
                 alt={"test_image"}
+                basePath={basePath}
               />
               <ExportedImage
                 src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
@@ -48,6 +51,7 @@ export default function Home() {
                 style={{ objectFit: "cover" }}
                 priority={true}
                 alt={"test_image"}
+                basePath={basePath}
               />
             </div>
           ))}

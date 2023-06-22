@@ -5,6 +5,8 @@ import styles from "../styles/Home.module.css";
 import animatedImage from "../public/animated.png";
 
 export default function Home() {
+  // get the basePath set in next.config.js
+  const basePath = process.env.__NEXT_ROUTER_BASEPATH || "";
   return (
     <div className={styles.container}>
       <Head>
@@ -34,6 +36,7 @@ export default function Home() {
             alt={"test_image_gif"}
             fill
             style={{ objectFit: "cover" }}
+            basePath={basePath}
           />
         </div>
         <h2>Format: .webp</h2>
@@ -52,6 +55,7 @@ export default function Home() {
             alt={"test_image_webp"}
             fill
             style={{ objectFit: "cover" }}
+            basePath={basePath}
           />
         </div>
         <h2>Format: .png</h2>
@@ -69,6 +73,7 @@ export default function Home() {
             id="test_image_png"
             alt={"test_image_png"}
             fill
+            basePath={basePath}
           />
         </div>
       </main>

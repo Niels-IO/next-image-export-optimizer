@@ -2,7 +2,6 @@
 
 import React, { useMemo, useState } from "react";
 import Image, { ImageProps, StaticImageData } from "next/legacy/image";
-import { useRouter } from "next/router";
 
 const splitFilePath = ({ filePath }: { filePath: string }) => {
   const filenameWithExtension =
@@ -184,6 +183,7 @@ const fallbackLoader = ({
 export interface ExportedImageProps
   extends Omit<ImageProps, "src" | "loader" | "quality"> {
   src: string | StaticImageData;
+  basePath?: string;
 }
 
 function ExportedImage({
@@ -200,13 +200,11 @@ function ExportedImage({
   onLoadingComplete,
   unoptimized,
   placeholder = "blur",
+  basePath = "",
   blurDataURL,
   onError,
   ...rest
 }: ExportedImageProps) {
-  const router = useRouter();
-  const basePath = router.basePath;
-
   const [imageError, setImageError] = useState(false);
 
   const automaticallyCalculatedBlurDataURL = useMemo(() => {

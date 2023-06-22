@@ -2,7 +2,6 @@
 
 import React, { forwardRef, useMemo, useState } from "react";
 import Image, { ImageProps, StaticImageData } from "next/image";
-import { useRouter } from "next/router";
 
 const splitFilePath = ({ filePath }: { filePath: string }) => {
   const filenameWithExtension =
@@ -204,6 +203,7 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
       onLoadingComplete,
       unoptimized,
       placeholder = "blur",
+      basePath = "",
       blurDataURL,
       style,
       onError,
@@ -211,9 +211,6 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
     },
     ref
   ) => {
-    const router = useRouter();
-    const basePath = router.basePath;
-
     const [imageError, setImageError] = useState(false);
     const automaticallyCalculatedBlurDataURL = useMemo(() => {
       if (blurDataURL) {

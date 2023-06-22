@@ -4,6 +4,8 @@ import ExportedImageLegacy from "../../../src/legacy/ExportedImage";
 import testPictureStatic from "../../public/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.jpg";
 
 function Slug() {
+  // get the basePath set in next.config.js
+  const basePath = process.env.__NEXT_ROUTER_BASEPATH || "";
   return (
     <div>
       <h1>Nested slug page test</h1>
@@ -21,6 +23,7 @@ function Slug() {
           alt="test_image_static"
           id="test_image_static"
           layout="responsive"
+          basePath={basePath}
         />
       </div>
       <h2>Optimized example (fill)</h2>
@@ -38,6 +41,7 @@ function Slug() {
           alt={"test_image"}
           fill
           style={{ objectFit: "cover" }}
+          basePath={basePath}
         />
       </div>
       <h2>Optimized example (fill & static import)</h2>
@@ -55,6 +59,7 @@ function Slug() {
           alt={"test_image"}
           fill
           style={{ objectFit: "cover" }}
+          basePath={basePath}
         />
       </div>
     </div>

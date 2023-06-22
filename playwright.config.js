@@ -17,6 +17,9 @@ const newConfigBasePath = `module.exports = {
     nextImageExportOptimizer_storePicturesInWEBP: true,
     nextImageExportOptimizer_generateAndUseBlurImages: true,
   },
+  experimental: {
+    appDir: true,
+  },
 };
 `;
 // write config file for the to be tested configuration variables to the folder
@@ -40,7 +43,7 @@ const config = {
     command: "cd example && npm run export && cd out/ && npx serve -p 8080",
     port: 8080,
     timeout: 120 * 1000,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
   },
 };
 module.exports = config;

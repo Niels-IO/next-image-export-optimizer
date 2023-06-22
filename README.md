@@ -197,7 +197,30 @@ module.exports = {
    <ExportedImage src={testPictureStatic} alt="Static Image" layout="fixed" />;
    ```
 
-10. Animated images:
+10. BasePath:
+    You can set the basePath in the next.config.js file. This is useful if you want to deploy your app to a subfolder of your domain.
+
+    ```javascript
+    module.exports = {
+      basePath: "/subfolder",
+    };
+    ```
+
+    The ExportedImage component has a basePath prop which you can use to pass the basePath to the component.
+
+    ```javascript
+    import ExportedImage from "next-image-export-optimizer";
+    import testPictureStatic from "PATH_TO_IMAGE/test_static.jpg";
+
+    <ExportedImage
+      src={testPictureStatic}
+      alt="Static Image"
+      layout="responsive"
+      basePath="/subfolder"
+    />;
+    ```
+
+11. Animated images:
     You can use .gif and animated .webp images. Next-image-export-optimizer will automatically optimize the animated images and generate the srcset for the different resolutions.
 
     If you set the variable nextImageExportOptimizer_storePicturesInWEBP to true, the animated images will be converted to .webp format which can reduce the file size significantly.
