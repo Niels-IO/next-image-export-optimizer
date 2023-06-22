@@ -28,6 +28,7 @@ const config = {
   use: {
     baseURL: "http://localhost:8080/",
   },
+  timeout: 60000,
   testDir: "example/test/e2e",
   projects: [
     {
@@ -43,7 +44,7 @@ const config = {
     command: "cd example && npm run export && cd out/ && npx serve -p 8080",
     port: 8080,
     timeout: 120 * 1000,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
   },
 };
 module.exports = config;
