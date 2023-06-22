@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "next": "^13.0.0",
-    "next-image-export-optimizer": "^1.8.0-beta.0",
+    "next-image-export-optimizer": "^1.8.1-beta.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "sha.js": "^2.4.11"
