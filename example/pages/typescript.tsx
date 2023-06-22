@@ -1,14 +1,18 @@
 import Head from "next/head";
 import ExportedImage_Local from "../../src/ExportedImage";
 import ExportedImageLegacy_Local from "../../src/legacy/ExportedImage";
-import ExportedImage from "next-image-export-optimizer";
-import ExportedImageLegacy from "next-image-export-optimizer/legacy/ExportedImage";
+// import ExportedImage from "next-image-export-optimizer";
+// import ExportedImageLegacy from "next-image-export-optimizer/legacy/ExportedImage";
+import ExportedImage from "../../src/ExportedImage";
+import ExportedImageLegacy from "../../src/legacy/ExportedImage";
 
 import React from "react";
 import Image from "next/image";
 import testPictureStatic from "../public/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.jpg";
 
 export default function Home() {
+  // get the basePath set in next.config.js
+  const basePath = process.env.__NEXT_ROUTER_BASEPATH || "";
   return (
     <div>
       <Head>
@@ -37,6 +41,7 @@ export default function Home() {
             objectFit="cover"
             priority={true}
             alt={"test_image"}
+            basePath={basePath}
           />
         </div>
         <div
@@ -53,6 +58,7 @@ export default function Home() {
             fill
             priority={true}
             alt={"test_image"}
+            basePath={basePath}
           />
         </div>
         <div
@@ -69,6 +75,7 @@ export default function Home() {
             fill
             priority={true}
             alt={"test_image"}
+            basePath={basePath}
           />
         </div>
 
@@ -84,6 +91,7 @@ export default function Home() {
             alt="test_image_static"
             id="test_image_static"
             layout="responsive"
+            basePath={basePath}
           />
         </div>
         <div
@@ -98,6 +106,7 @@ export default function Home() {
             alt="test_image_static"
             id="test_image_static_local"
             layout="responsive"
+            basePath={basePath}
           />
         </div>
         <div
@@ -111,12 +120,14 @@ export default function Home() {
             width={400}
             height={400}
             alt="VercelLogo"
+            basePath={basePath}
           />
           <ExportedImage_Local
             src="vercel.svg"
             width={400}
             height={400}
             alt="VercelLogo_local"
+            basePath={basePath}
           />
           <Image
             src={`vercel.svg`}

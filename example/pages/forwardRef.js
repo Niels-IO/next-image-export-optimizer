@@ -19,6 +19,8 @@ export default function Home() {
       });
     }
   }, [imageRef]);
+  // get the basePath set in next.config.js
+  const basePath = process.env.__NEXT_ROUTER_BASEPATH || "";
 
   return (
     <div className={styles.container}>
@@ -48,6 +50,7 @@ export default function Home() {
             fill
             ref={imageRef}
             style={{ objectFit: "cover" }}
+            basePath={basePath}
           />
         </div>
         <div

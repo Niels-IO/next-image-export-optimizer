@@ -4,6 +4,8 @@ import React from "react";
 import styles from "../styles/Home.module.css";
 
 function Subfolder() {
+  // get the basePath set in next.config.js
+  const basePath = process.env.__NEXT_ROUTER_BASEPATH || "";
   return (
     <div className={styles.container}>
       <Head>
@@ -32,6 +34,7 @@ function Subfolder() {
             objectFit="cover"
             priority={true}
             alt={"test_image_subfolder"}
+            basePath={basePath}
           />
         </div>
         <div
@@ -49,6 +52,7 @@ function Subfolder() {
             objectFit="cover"
             priority={true}
             alt={"test_image_subfolder2"}
+            basePath={basePath}
           />
         </div>
       </main>

@@ -8,6 +8,8 @@ import styles from "../styles/Home.module.css";
 import testPictureStatic from "../public/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.jpg";
 
 export default function Home() {
+  // get the basePath set in next.config.js
+  const basePath = process.env.__NEXT_ROUTER_BASEPATH || "";
   return (
     <div className={styles.container}>
       <Head>
@@ -37,6 +39,7 @@ export default function Home() {
             objectFit="cover"
             priority
             alt={"test_image"}
+            basePath={basePath}
           />
         </div>
         <h2>Optimized example (static import) - Legacy</h2>
@@ -53,6 +56,7 @@ export default function Home() {
             id="test_image_static"
             layout="responsive"
             priority
+            basePath={basePath}
           />
         </div>
         <h2>Optimized example</h2>
@@ -67,6 +71,7 @@ export default function Home() {
             alt={"test_image"}
             width={500}
             height={300}
+            basePath={basePath}
           />
         </div>
         <h2>Optimized example (fill)</h2>
@@ -83,6 +88,7 @@ export default function Home() {
             id="test_image_future_fill"
             alt={"test_image"}
             fill
+            basePath={basePath}
             style={{ objectFit: "cover" }}
           />
         </div>
@@ -100,6 +106,7 @@ export default function Home() {
             id="test_image_future_static_fill"
             alt={"test_image"}
             fill
+            basePath={basePath}
             style={{ objectFit: "cover" }}
           />
         </div>
@@ -117,6 +124,8 @@ export default function Home() {
             id="test_image_static_future"
             sizes="100vw"
             style={{ width: "100%", height: "auto" }}
+            basePath={basePath}
+
             // priority
           />
         </div>
@@ -137,6 +146,7 @@ export default function Home() {
             priority={true}
             alt={"test_image_unoptimized_legacy"}
             unoptimized={true}
+            basePath={basePath}
           />
         </div>
         <h2>Unoptimized example - Legacy static import</h2>
@@ -156,6 +166,7 @@ export default function Home() {
             priority={true}
             alt={"test_image_unoptimized_legacy_static"}
             unoptimized={true}
+            basePath={basePath}
           />
         </div>
         <h2>Unoptimized example </h2>
@@ -175,6 +186,7 @@ export default function Home() {
             unoptimized={true}
             fill
             style={{ objectFit: "cover" }}
+            basePath={basePath}
           />
         </div>
         <h2>Unoptimized example static import</h2>
@@ -194,6 +206,7 @@ export default function Home() {
             unoptimized={true}
             fill
             style={{ objectFit: "cover" }}
+            basePath={basePath}
           />
         </div>
         {/* <ExportedImage
