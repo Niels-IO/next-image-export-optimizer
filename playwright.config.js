@@ -28,7 +28,6 @@ const config = {
   use: {
     baseURL: "http://localhost:8080/",
   },
-  timeout: 60000,
   testDir: "example/test/e2e",
   projects: [
     {

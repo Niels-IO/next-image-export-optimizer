@@ -30,7 +30,6 @@ const config = {
     baseURL: "http://localhost:8080/",
   },
   testDir: "example/test/e2e",
-  timeout: 60000,
   projects: [
     {
       name: "chromium",

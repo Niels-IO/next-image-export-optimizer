@@ -261,7 +261,7 @@ for (let index = 0; index < widths.length; index++) {
     test("should check the image size for the statically imported image for the appDir", async ({
       page,
     }) => {
-      await page.goto(`${basePath}/appDir`, {
+      await page.goto(`${basePath}/appdir`, {
         waitUntil: "networkidle",
       });
 
