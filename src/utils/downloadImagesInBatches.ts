@@ -94,12 +94,13 @@ module.exports = async function downloadImagesInBatches(
     const end = Math.min(imagesURLs.length, start + batchSize); // calculate the end index of the batch
     const batchURLs = imagesURLs.slice(start, end); // slice the URLs for the current batch
     const batchFileNames = imageFileNames.slice(start, end); // slice the file names for the current batch
-    if (batchFileNames[i].fullPath === undefined) {
-      // log an error if the fullPath is not defined
-      console.error(
-        `Error: Unable to download ${batchURLs[i]} (fullPath is undefined).`
-      );
-      return;
+    for (let j = 0; j < batchFileNames.length; j++) {
+      if (batchFileNames[j].fullPath === undefined) {
+        console.error(
+          `Error: Unable to download ${batchURLs[i]} (fullPath is undefined).`
+        );
+        return;
+      }
     }
 
     const promises = batchURLs.map((url, index) =>
