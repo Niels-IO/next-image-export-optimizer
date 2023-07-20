@@ -28,7 +28,12 @@ async function downloadImage(url: string, filename: string, folder: string) {
 
       // Extract image format from response headers
       const contentType = response.headers["content-type"];
-      const imageFormat = contentType.split("/").pop();
+      let imageFormat = contentType.split("/").pop();
+
+      // Check for jpeg and change it to jpg if necessary
+      if (imageFormat === "jpeg") {
+        imageFormat = "jpg";
+      }
 
       // Check if filename already has an extension that matches the image format
       const regex = new RegExp(`.${imageFormat}$`, "i");
