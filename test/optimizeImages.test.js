@@ -39,6 +39,9 @@ const legacyConfig = `module.exports = {
     storePicturesInWEBP: true,
     generateAndUseBlurImages: true,
   },
+  experimental: {
+    appDir: true,
+  },
 };
 `;
 const newConfig = `module.exports = {
@@ -57,6 +60,9 @@ const newConfig = `module.exports = {
     nextImageExportOptimizer_storePicturesInWEBP: true,
     nextImageExportOptimizer_generateAndUseBlurImages: true,
   },
+  experimental: {
+    appDir: true,
+  },
 };
 `;
 const newConfigJpeg = `module.exports = {
@@ -73,6 +79,9 @@ const newConfigJpeg = `module.exports = {
     nextImageExportOptimizer_quality: 75,
     nextImageExportOptimizer_storePicturesInWEBP: false,
     nextImageExportOptimizer_generateAndUseBlurImages: true,
+  },
+  experimental: {
+    appDir: true,
   },
 };
 `;
@@ -92,6 +101,9 @@ const newConfigExportFolderName = `module.exports = {
     nextImageExportOptimizer_generateAndUseBlurImages: true,
     nextImageExportOptimizer_exportFolderName: "nextImageExportOptimizer2",
   },
+  experimental: {
+    appDir: true,
+  },
 };
 `;
 
@@ -110,6 +122,9 @@ const newConfigBasePath = `module.exports = {
     nextImageExportOptimizer_quality: 75,
     nextImageExportOptimizer_storePicturesInWEBP: true,
     nextImageExportOptimizer_generateAndUseBlurImages: true,
+  },
+  experimental: {
+    appDir: true,
   },
 };
 `;
@@ -207,7 +222,11 @@ async function testConfig(config) {
     "example/out/images/subfolder/nextImageExportOptimizer2"
   );
 
-  if (config === newConfig || config === legacyConfig || config === newConfigBasePath) {
+  if (
+    config === newConfig ||
+    config === legacyConfig ||
+    config === newConfigBasePath
+  ) {
     expect(allImagesInImageFolder).toMatchSnapshot();
     expect(allImagesInStaticImageFolder).toMatchSnapshot();
 
@@ -275,7 +294,11 @@ async function testConfig(config) {
       ];
       imageFileStats.push(statsToBeChecked);
     }
-    if (config === newConfig || config === legacyConfig || config === newConfigBasePath) {
+    if (
+      config === newConfig ||
+      config === legacyConfig ||
+      config === newConfigBasePath
+    ) {
       if (index == 0 || index == 2) {
         expect(imageFileStats).toMatchSnapshot();
       } else if (index === 1) {
@@ -316,7 +339,6 @@ test("newConfigBasePath", async () => {
   await testConfig(newConfigBasePath);
   console.log("newConfigBasePath test finished.");
 });
-
 
 test("newConfig", async () => {
   console.log("Running newConfig test...");
