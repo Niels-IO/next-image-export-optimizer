@@ -159,6 +159,12 @@ module.exports = {
        // ...
      ])
    );
+
+   // Or with an async API call
+   module.exports = fetch("https://example.com/api/images").catch((error) => {
+     console.error(error);
+     return []; // return an empty array in case of error
+   });
    ```
 
    At build time, the images will be downloaded each time (as they might have changed) and optimized if an image is not yet in the cache or the image changed.
