@@ -40,38 +40,6 @@ const correctSrc = {
     `http://localhost:8080${basePath}/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-768.WEBP`,
   ],
 };
-// const correctSrc = {
-//   16: [
-//     "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-16.WEBP",
-//     "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-32.WEBP",
-//   ],
-//   32: [
-//     "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-32.WEBP",
-//     "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-64.WEBP",
-//   ],
-//   48: [
-//     "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-48.WEBP",
-//     "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-96.WEBP",
-//   ],
-//   64: [
-//     "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-64.WEBP",
-//     "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-128.WEBP",
-//   ],
-//   96: [
-//     "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-96.WEBP",
-//     "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-256.WEBP",
-//   ],
-//   128: [
-//     "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-128.WEBP",
-//     "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-256.WEBP",
-//   ],
-//   256: [
-//     "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-256.WEBP",
-//   ],
-//   384: [
-//     "http://localhost:8080/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-384.WEBP",
-//   ],
-// };
 
 for (let index = 0; index < widths.length; index++) {
   const width = widths[index];
@@ -108,7 +76,7 @@ for (let index = 0; index < widths.length; index++) {
 
       // check the number of images on the page
       const images = await page.$$("img");
-      expect(images.length).toBe(16);
+      expect(images.length).toBe(24);
     });
   });
 }

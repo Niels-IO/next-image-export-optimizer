@@ -117,9 +117,6 @@ const nextImageExportOptimizer = async function () {
     if (nextjsConfig.images?.imageSizes !== undefined) {
       imageSizes = nextjsConfig.images.imageSizes;
     }
-    if (nextjsConfig.distDir !== undefined) {
-      staticImageFolderPath = path.join(nextjsConfig.distDir, "static/media");
-    }
 
     if (legacyPath?.quality !== undefined) {
       quality = Number(legacyPath.quality);
@@ -188,15 +185,6 @@ const nextImageExportOptimizer = async function () {
           `Create remote image output folder: ${folderNameForRemoteImages}`
         );
       } else {
-        const imageExtensions = [
-          ".jpg",
-          ".jpeg",
-          ".png",
-          ".gif",
-          ".svg",
-          ".webp",
-          ".avif",
-        ];
         // Delete all remote images in the folder synchronously
         // This is necessary, because the user may have changed the remote images
         // and the old images would be used otherwise

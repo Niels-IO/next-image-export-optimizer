@@ -4,6 +4,7 @@ import ExportedImage from "../../src/ExportedImage";
 // import ExportedImage from "next-image-export-optimizer";
 
 import styles from "../styles/Home.module.css";
+import testPictureStatic from "../assets/chris-zhang-Jq8-3Bmh1pQ-unsplash_static_asset.jpg";
 
 export default function Home() {
   // get the basePath set in next.config.js
@@ -48,6 +49,16 @@ export default function Home() {
                 width={size}
                 height={size}
                 id={`test_image_${size}_future`}
+                style={{ objectFit: "cover" }}
+                priority={true}
+                alt={"test_image"}
+                basePath={basePath}
+              />
+              <ExportedImage
+                src={testPictureStatic}
+                width={size}
+                height={size}
+                id={`test_image_${size}_static`}
                 style={{ objectFit: "cover" }}
                 priority={true}
                 alt={"test_image"}
