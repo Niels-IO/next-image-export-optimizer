@@ -30,6 +30,11 @@ async function downloadImage(url: string, filename: string, folder: string) {
       const contentType = response.headers["content-type"];
       let imageFormat = contentType.split("/").pop();
 
+      // Further split on semicolon (;) if exists
+      if (imageFormat.includes(";")) {
+        imageFormat = imageFormat.split(";")[0];
+      }
+
       // Check for jpeg and change it to jpg if necessary
       if (imageFormat === "jpeg") {
         imageFormat = "jpg";
