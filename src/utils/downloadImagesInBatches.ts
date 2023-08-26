@@ -35,6 +35,11 @@ async function downloadImage(url: string, filename: string, folder: string) {
         imageFormat = imageFormat.split(";")[0];
       }
 
+      // Further split on plus (+) if exists, e.g. image/svg+xml
+      if (imageFormat.includes("+")) {
+        imageFormat = imageFormat.split("+")[0];
+      }
+
       // Check for jpeg and change it to jpg if necessary
       if (imageFormat === "jpeg") {
         imageFormat = "jpg";
