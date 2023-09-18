@@ -13,6 +13,7 @@ Use [Next.js advanced **\<Image/>** component](https://nextjs.org/docs/basic-fea
 - Supports TypeScript
 - Supports remote images which will be downloaded and optimized
 - Supports animated images (accepted formats: GIF and WEBP)
+- Note that only one global value can be used for the image quality setting. The default value is 75.
 
 Placement of the images:
 
@@ -98,11 +99,7 @@ module.exports = {
    import ExportedImage from "next-image-export-optimizer";
    import testPictureStatic from "PATH_TO_IMAGE/test_static.jpg";
 
-   <ExportedImage
-     src={testPictureStatic}
-     alt="Static Image"
-     layout="responsive"
-   />;
+   <ExportedImage src={testPictureStatic} alt="Static Image" />;
 
    // With dynamic import
    import ExportedImage from "next-image-export-optimizer";
@@ -221,7 +218,6 @@ module.exports = {
     <ExportedImage
       src={testPictureStatic}
       alt="Static Image"
-      layout="responsive"
       basePath="/subfolder"
     />;
     ```
