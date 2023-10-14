@@ -104,5 +104,10 @@
     "dist",
     "src/optimizeImages.ts",
     "src/utils"
+  ],
+  "files": [
+    "example/src/ExportedImage.tsx",
+    "example/src/legacy/ExportedImage.tsx",
+    "example/environment.d.ts"
   ]
 }

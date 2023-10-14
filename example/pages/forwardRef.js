@@ -1,5 +1,5 @@
 import Head from "next/head";
-import ExportedImage from "../../src/ExportedImage";
+import ExportedImage from "../src/ExportedImage";
 
 import styles from "../styles/Home.module.css";
 import { useEffect, useRef, useState } from "react";
