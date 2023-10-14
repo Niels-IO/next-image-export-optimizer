@@ -1,6 +1,6 @@
 import styles from "../../styles/Home.module.css";
-import ExportedImage from "../../../src/ExportedImage";
-import ExportedImageLegacy from "../../../src/legacy/ExportedImage";
+import ExportedImage from "../../src/ExportedImage";
+import ExportedImageLegacy from "../../src/legacy/ExportedImage";
 import testPictureStatic from "../../public/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.jpg";
 
 export default function Home() {

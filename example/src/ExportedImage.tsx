@@ -103,6 +103,7 @@ function urlToFilename(url: string) {
   filename = filename.replace(/[/\\:*?"<>|#%]/g, "_");
 
   // Remove control characters
+  // eslint-disable-next-line no-control-regex
   filename = filename.replace(/[\x00-\x1F\x7F]/g, "");
 
   // Trim any leading or trailing spaces
@@ -204,6 +205,7 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
       unoptimized,
       placeholder = "blur",
       basePath = "",
+      alt = "",
       blurDataURL,
       style,
       onError,
@@ -232,7 +234,7 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
 
       // otherwise use the generated image of 10px width as a blurDataURL
       return generateImageURL(_src, 10, basePath);
-    }, [blurDataURL, src, unoptimized]);
+    }, [blurDataURL, src, unoptimized, basePath]);
 
     // check if the src is a SVG image -> then we should not use the blurDataURL and use unoptimized
     const isSVG =
@@ -268,6 +270,7 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
     const ImageElement = (
       <Image
         ref={ref}
+        alt={alt}
         {...rest}
         {...(width && { width })}
         {...(height && { height })}
@@ -358,5 +361,5 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
     );
   }
 );
-
+ExportedImage.displayName = "ExportedImage";
 export default ExportedImage;

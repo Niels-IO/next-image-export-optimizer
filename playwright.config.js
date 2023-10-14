@@ -17,9 +17,6 @@ const newConfigBasePath = `module.exports = {
     nextImageExportOptimizer_storePicturesInWEBP: true,
     nextImageExportOptimizer_generateAndUseBlurImages: true,
   },
-  experimental: {
-    appDir: true,
-  },
 };
 `;
 // write config file for the to be tested configuration variables to the folder

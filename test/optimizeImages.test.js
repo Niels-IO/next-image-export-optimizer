@@ -39,9 +39,6 @@ const legacyConfig = `module.exports = {
     storePicturesInWEBP: true,
     generateAndUseBlurImages: true,
   },
-  experimental: {
-    appDir: true,
-  },
 };
 `;
 const newConfig = `module.exports = {
@@ -60,9 +57,6 @@ const newConfig = `module.exports = {
     nextImageExportOptimizer_storePicturesInWEBP: true,
     nextImageExportOptimizer_generateAndUseBlurImages: true,
   },
-  experimental: {
-    appDir: true,
-  },
 };
 `;
 const newConfigJpeg = `module.exports = {
@@ -79,9 +73,6 @@ const newConfigJpeg = `module.exports = {
     nextImageExportOptimizer_quality: 75,
     nextImageExportOptimizer_storePicturesInWEBP: false,
     nextImageExportOptimizer_generateAndUseBlurImages: true,
-  },
-  experimental: {
-    appDir: true,
   },
 };
 `;
@@ -101,9 +92,6 @@ const newConfigExportFolderName = `module.exports = {
     nextImageExportOptimizer_generateAndUseBlurImages: true,
     nextImageExportOptimizer_exportFolderName: "nextImageExportOptimizer2",
   },
-  experimental: {
-    appDir: true,
-  },
 };
 `;
 
@@ -122,9 +110,6 @@ const newConfigBasePath = `module.exports = {
     nextImageExportOptimizer_quality: 75,
     nextImageExportOptimizer_storePicturesInWEBP: true,
     nextImageExportOptimizer_generateAndUseBlurImages: true,
-  },
-  experimental: {
-    appDir: true,
   },
 };
 `;

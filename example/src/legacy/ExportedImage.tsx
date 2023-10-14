@@ -89,6 +89,7 @@ function urlToFilename(url: string) {
   filename = filename.replace(/[/\\:*?"<>|#%]/g, "_");
 
   // Remove control characters
+  // eslint-disable-next-line no-control-regex
   filename = filename.replace(/[\x00-\x1F\x7F]/g, "");
 
   // Trim any leading or trailing spaces
@@ -199,6 +200,7 @@ function ExportedImage({
   objectPosition,
   onLoadingComplete,
   unoptimized,
+  alt = "",
   placeholder = "blur",
   basePath = "",
   blurDataURL,
@@ -235,7 +237,7 @@ function ExportedImage({
 
     // otherwise use the generated image of 10px width as a blurDataURL
     return generateImageURL(_src, 10, basePath);
-  }, [blurDataURL, src, unoptimized]);
+  }, [blurDataURL, src, unoptimized, basePath]);
   const isStaticImage = typeof src === "object";
   let _src = isStaticImage ? src.src : src;
   if (!isStaticImage) {
@@ -250,6 +252,7 @@ function ExportedImage({
   return (
     <Image
       {...rest}
+      alt={alt}
       {...(typeof src === "object" && src.width && { width: src.width })}
       {...(typeof src === "object" && src.height && { height: src.height })}
       {...(width && { width })}
