@@ -124,22 +124,19 @@ const nextImageExportOptimizer = async function () {
       quality = Number(newPath.nextImageExportOptimizer_quality);
     }
     if (nextjsConfig.env?.storePicturesInWEBP !== undefined) {
-      storePicturesInWEBP = nextjsConfig.env.storePicturesInWEBP;
+      storePicturesInWEBP =
+        nextjsConfig.env.storePicturesInWEBP.toLowerCase() === "true";
     } else if (
       newPath?.nextImageExportOptimizer_storePicturesInWEBP !== undefined
     ) {
       storePicturesInWEBP =
-        newPath.nextImageExportOptimizer_storePicturesInWEBP;
+        newPath.nextImageExportOptimizer_storePicturesInWEBP.toLowerCase() ===
+        "true";
     }
-    if (
-      nextjsConfig.env?.generateAndUseBlurImages !== undefined &&
-      nextjsConfig.env.generateAndUseBlurImages === true
-    ) {
+    if (nextjsConfig.env?.generateAndUseBlurImages?.toLowerCase() === "true") {
       blurSize = [10];
     } else if (
-      newPath?.nextImageExportOptimizer_generateAndUseBlurImages !==
-        undefined &&
-      newPath.nextImageExportOptimizer_generateAndUseBlurImages === true
+      newPath?.nextImageExportOptimizer_generateAndUseBlurImages === "true"
     ) {
       blurSize = [10];
     }
