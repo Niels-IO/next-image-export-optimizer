@@ -30,14 +30,14 @@ const legacyConfig = `module.exports = {
     nextImageExportOptimizer: {
       imageFolderPath: "public/images",
       exportFolderPath: "out",
-      quality: 75,
+      quality: "75",
     }
   },
   output: "export",
   transpilePackages: ["next-image-export-optimizer"],
   env: {
-    storePicturesInWEBP: true,
-    generateAndUseBlurImages: true,
+    storePicturesInWEBP: "true",
+    generateAndUseBlurImages: "true",
   },
 };
 `;
@@ -53,9 +53,9 @@ const newConfig = `module.exports = {
     nextImageExportOptimizer_imageFolderPath: "public/images",
     nextImageExportOptimizer_exportFolderPath: "out",
     nextImageExportOptimizer_exportFolderName: "nextImageExportOptimizer",
-    nextImageExportOptimizer_quality: 75,
-    nextImageExportOptimizer_storePicturesInWEBP: true,
-    nextImageExportOptimizer_generateAndUseBlurImages: true,
+    nextImageExportOptimizer_quality: "75",
+    nextImageExportOptimizer_storePicturesInWEBP: "true",
+    nextImageExportOptimizer_generateAndUseBlurImages: "true",
   },
 };
 `;
@@ -70,9 +70,9 @@ const newConfigJpeg = `module.exports = {
   env: {
     nextImageExportOptimizer_imageFolderPath: "public/images",
     nextImageExportOptimizer_exportFolderPath: "out",
-    nextImageExportOptimizer_quality: 75,
-    nextImageExportOptimizer_storePicturesInWEBP: false,
-    nextImageExportOptimizer_generateAndUseBlurImages: true,
+    nextImageExportOptimizer_quality: "75",
+    nextImageExportOptimizer_storePicturesInWEBP: "false",
+    nextImageExportOptimizer_generateAndUseBlurImages: "true",
   },
 };
 `;
@@ -87,9 +87,9 @@ const newConfigExportFolderName = `module.exports = {
   env: {
     nextImageExportOptimizer_imageFolderPath: "public/images",
     nextImageExportOptimizer_exportFolderPath: "out",
-    nextImageExportOptimizer_quality: 75,
-    nextImageExportOptimizer_storePicturesInWEBP: false,
-    nextImageExportOptimizer_generateAndUseBlurImages: true,
+    nextImageExportOptimizer_quality: "75",
+    nextImageExportOptimizer_storePicturesInWEBP: "false",
+    nextImageExportOptimizer_generateAndUseBlurImages: "true",
     nextImageExportOptimizer_exportFolderName: "nextImageExportOptimizer2",
   },
 };
@@ -107,8 +107,8 @@ const newConfigBasePath = `module.exports = {
     nextImageExportOptimizer_imageFolderPath: "public/images",
     nextImageExportOptimizer_exportFolderPath: "out",
     nextImageExportOptimizer_exportFolderName: "nextImageExportOptimizer",
-    nextImageExportOptimizer_quality: 75,
-    nextImageExportOptimizer_storePicturesInWEBP: true,
+    nextImageExportOptimizer_quality: "75",
+    nextImageExportOptimizer_storePicturesInWEBP: "true",
     nextImageExportOptimizer_generateAndUseBlurImages: true,
   },
 };
