@@ -68,7 +68,7 @@
     "react": "^18.0.0-0"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "^13.4.0",
+    "@next/eslint-plugin-next": "^14.0.2",
     "@playwright/test": "^1.39.0",
     "@types/react": "^18.0.0",
     "eslint": "^8.51.0",
