@@ -64,7 +64,7 @@
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
-    "next": "^13.1.0",
+    "next": ">=13.1.0",
     "react": "^18.0.0-0"
   },
   "devDependencies": {
