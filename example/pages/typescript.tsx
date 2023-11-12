@@ -1,8 +1,8 @@
+import ExportedImage from "next-image-export-optimizer";
+import ExportedImageLegacy from "next-image-export-optimizer/legacy/ExportedImage";
 import Head from "next/head";
 import ExportedImage_Local from "../src/ExportedImage";
 import ExportedImageLegacy_Local from "../src/legacy/ExportedImage";
-// import ExportedImage from "next-image-export-optimizer";
-// import ExportedImageLegacy from "next-image-export-optimizer/legacy/ExportedImage";
 
 import Image from "next/image";
 import testPictureStatic from "../public/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.jpg";
@@ -23,7 +23,7 @@ export default function Home() {
 
       <main>
         <h1>Next-Image-Export-Optimizer</h1>
-        {/* <div
+        <div
           style={{
             position: "relative",
             width: "50%",
@@ -33,7 +33,7 @@ export default function Home() {
         >
           <ExportedImageLegacy
             src="images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg"
-            id="test_image"
+            id="test_image_legacy"
             layout="fill"
             objectFit="cover"
             priority={true}
@@ -56,8 +56,11 @@ export default function Home() {
             priority={true}
             alt={"test_image"}
             basePath={basePath}
+            style={{
+              objectFit: "cover",
+            }}
           />
-        </div> */}
+        </div>
         <div
           style={{
             position: "relative",
@@ -73,10 +76,13 @@ export default function Home() {
             priority={true}
             alt={"test_image"}
             basePath={basePath}
+            style={{
+              objectFit: "cover",
+            }}
           />
         </div>
 
-        {/* <div
+        <div
           style={{
             position: "relative",
             marginBottom: "3rem",
@@ -90,7 +96,7 @@ export default function Home() {
             layout="responsive"
             basePath={basePath}
           />
-        </div> */}
+        </div>
         <div
           style={{
             position: "relative",
@@ -112,13 +118,13 @@ export default function Home() {
             flexDirection: "column",
           }}
         >
-          {/* <ExportedImage
+          <ExportedImage
             src="vercel.svg"
             width={400}
             height={400}
             alt="VercelLogo"
             basePath={basePath}
-          /> */}
+          />
           <ExportedImage_Local
             src="vercel.svg"
             width={400}
