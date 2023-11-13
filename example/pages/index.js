@@ -72,7 +72,6 @@ export default function Home() {
             width={500}
             height={300}
             basePath={basePath}
-            className="additionalClassName"
           />
         </div>
         <h2>Optimized example (fill)</h2>
@@ -91,6 +90,7 @@ export default function Home() {
             fill
             basePath={basePath}
             style={{ objectFit: "cover" }}
+            className="additionalClassName"
           />
         </div>
         <h2>Optimized example (fill & static import)</h2>
