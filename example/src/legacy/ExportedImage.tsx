@@ -198,6 +198,7 @@ function ExportedImage({
   height,
   objectFit,
   objectPosition,
+  layout,
   onLoadingComplete,
   unoptimized,
   alt = "",
@@ -253,10 +254,15 @@ function ExportedImage({
     <Image
       {...rest}
       alt={alt}
-      {...(typeof src === "object" && src.width && { width: src.width })}
-      {...(typeof src === "object" && src.height && { height: src.height })}
+      {...(typeof src === "object" &&
+        src.width &&
+        !(layout === "fill") && { width: src.width })}
+      {...(typeof src === "object" &&
+        src.height &&
+        !(layout === "fill") && { height: src.height })}
       {...(width && { width })}
       {...(height && { height })}
+      {...(layout && { layout })}
       {...(loading && { loading })}
       {...(lazyRoot && { lazyRoot })}
       {...(lazyBoundary && { lazyBoundary })}

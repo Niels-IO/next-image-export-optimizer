@@ -1,7 +1,7 @@
 "use client";
 
-import React, { forwardRef, useMemo, useState } from "react";
 import Image, { ImageProps, StaticImageData } from "next/image";
+import React, { forwardRef, useMemo, useState } from "react";
 
 const splitFilePath = ({ filePath }: { filePath: string }) => {
   const filenameWithExtension =
@@ -201,7 +201,7 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
       className,
       width,
       height,
-      onLoadingComplete,
+      onLoad,
       unoptimized,
       placeholder = "blur",
       basePath = "",
@@ -254,8 +254,7 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
             backgroundSize: style?.objectFit || "cover",
             backgroundPosition: style?.objectPosition || "50% 50%",
             backgroundRepeat: "no-repeat",
-            backgroundImage: `url(${automaticallyCalculatedBlurDataURL})`,
-            filter: "url(#sharpBlur)",
+            backgroundImage: `url("${automaticallyCalculatedBlurDataURL}")`,
           }
         : undefined;
     const isStaticImage = typeof src === "object";
@@ -267,7 +266,8 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
     if (basePath && !isStaticImage && !_src.startsWith("/")) {
       _src = basePath + "/" + _src;
     }
-    const ImageElement = (
+
+    return (
       <Image
         ref={ref}
         alt={alt}
@@ -275,8 +275,8 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
         {...(width && { width })}
         {...(height && { height })}
         {...(loading && { loading })}
-        className={`${className} next-exported-image-blur-svg`}
-        {...(onLoadingComplete && { onLoadingComplete })}
+        {...(className && { className })}
+        {...(onLoad && { onLoad })}
         // if the blurStyle is not "empty", then we take care of the blur behavior ourselves
         // if the blur is complete, we also set the placeholder to empty as it otherwise shows
         // the background image on transparent images
@@ -299,65 +299,21 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
           // execute the onError function if provided
           onError && onError(error);
         }}
-        onLoadingComplete={(result) => {
+        onLoad={(e) => {
           // for some configurations, the onError handler is not called on an error occurrence
           // so we need to check if the image is loaded correctly
-          if (result.naturalWidth === 0) {
+          const target = e.target as HTMLImageElement;
+          if (target.naturalWidth === 0) {
             // Broken image, fall back to unoptimized (meaning the original image src)
             setImageError(true);
           }
           setBlurComplete(true);
 
-          // execute the onLoadingComplete callback if present
-          onLoadingComplete && onLoadingComplete(result);
+          // execute the onLoad callback if present
+          onLoad && onLoad(e);
         }}
         src={isStaticImage ? src : _src}
       />
-    );
-    const cssToHideSVGFilter = `
-    .next-exported-image-blur-svg {
-       filter: none !important;
-    }
-    `;
-
-    // When we present a placeholder, we add a svg filter to the image and remove it after either
-    // the image is loaded or an error occurred
-    return blurStyle ? (
-      <>
-        {/* In case javascript is disabled, we disable the svg blur filter on the image */}
-        <noscript>
-          <style>{cssToHideSVGFilter}</style>
-        </noscript>
-        {ImageElement}
-        <svg
-          style={{
-            border: 0,
-            clip: "rect(0 0 0 0)",
-            height: 0,
-            margin: "-1px",
-            overflow: "hidden",
-            padding: 0,
-            position: "absolute",
-            width: "1px",
-          }}
-        >
-          <filter id="sharpBlur">
-            <feGaussianBlur
-              stdDeviation="20"
-              colorInterpolationFilters="sRGB"
-            ></feGaussianBlur>
-            <feColorMatrix
-              type="matrix"
-              colorInterpolationFilters="sRGB"
-              values="1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 9 0"
-            ></feColorMatrix>
-
-            <feComposite in2="SourceGraphic" operator="in"></feComposite>
-          </filter>
-        </svg>
-      </>
-    ) : (
-      ImageElement
     );
   }
 );

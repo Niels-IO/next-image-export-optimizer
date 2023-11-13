@@ -90,6 +90,7 @@ export default function Home() {
             fill
             basePath={basePath}
             style={{ objectFit: "cover" }}
+            className="additionalClassName"
           />
         </div>
         <h2>Optimized example (fill & static import)</h2>
