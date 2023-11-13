@@ -9,7 +9,7 @@ async function downloadImage(url: string, filename: string, folder: string) {
     // Choose the right http library:
     const httpLib = urlModule.parse(url).protocol === "http:" ? http : https;
 
-    httpLib.get(url, function (response: any) {
+    const request = httpLib.get(url, function (response: any) {
       if (response.statusCode !== 200) {
         console.error(
           `Error: Unable to download ${url} (status code: ${response.statusCode}).`
@@ -98,6 +98,10 @@ async function downloadImage(url: string, filename: string, folder: string) {
             });
           });
       });
+    });
+    request.on("error", (err: Error) => {
+      console.error(`Error: Unable to download ${url}.`, err);
+      reject(err);
     });
   });
 }
