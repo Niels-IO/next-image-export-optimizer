@@ -156,6 +156,8 @@ for (let index = 0; index < widths.length; index++) {
       const image = await getImageById(page, "test_image");
       expect(image.currentSrc).toBe(correctSrc[width.toString()]);
       expect(image.naturalWidth).toBe(width);
+      // check that the additional classNames are added
+      expect(image.className).toBe("additionalClassName");
 
       const image_future = await getImageById(page, "test_image_future_fill");
       expect(image_future.currentSrc).toBe(correctSrc[width.toString()]);

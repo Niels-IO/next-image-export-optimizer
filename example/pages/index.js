@@ -72,6 +72,7 @@ export default function Home() {
             width={500}
             height={300}
             basePath={basePath}
+            className="additionalClassName"
           />
         </div>
         <h2>Optimized example (fill)</h2>
