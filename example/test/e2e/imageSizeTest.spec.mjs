@@ -3,7 +3,8 @@ import getImageById from "./getImageById.js";
 
 // get the environment variable flag for the test
 const testBasePath = process.env.BASEPATH === "true";
-const imagesWebP = process.env.IMAGESWEBP === "true" ?? true;
+const imagesWebP =
+  process.env.IMAGESWEBP === "true" || process.env.IMAGESWEBP === undefined;
 const basePath = testBasePath ? "/subsite" : "";
 
 const widths = [640, 750, 777, 828, 1080, 1200, 1920, 2048, 3840];
