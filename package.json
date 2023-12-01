@@ -36,7 +36,7 @@
   "scripts": {
     "build": "rimraf dist && tsc && tsc --project tsconfig.optimizeImages.json",
     "test": "jest",
-    "test:e2e:basePath": "npx playwright install && BASEPATH=true playwright test --config playwright-basePath.config.js",
+    "test:e2e:basePath": "npx playwright install && BASEPATH=true IMAGESWEBP=false playwright test --config playwright-basePath.config.js",
     "test:e2e": "npx playwright install && playwright test",
     "exportExample": "cd example && npm run export && cd ..",
     "prepublishOnly": "npm run build && npm test && npm run test:e2e:basePath && npm run test:e2e",
