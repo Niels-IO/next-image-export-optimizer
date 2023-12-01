@@ -556,6 +556,7 @@ for (let index = 0; index < widths.length; index++) {
       await img.click();
 
       const image = await getImageById(page, "test_image_static_fixed");
+      await expect(image).toHaveScreenshot();
       expect(image.currentSrc).toBe(
         `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.${
           imagesWebP ? "WEBP" : "JPG"
@@ -567,6 +568,7 @@ for (let index = 0; index < widths.length; index++) {
         page,
         "test_image_static_fixed_future"
       );
+      await expect(image_future).toHaveScreenshot();
       expect(image_future.currentSrc).toBe(
         `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.${
           imagesWebP ? "WEBP" : "JPG"
