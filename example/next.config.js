@@ -4,6 +4,7 @@ module.exports = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     deviceSizes: [640, 750, 777, 828, 1080, 1200, 1920, 2048, 3840],
   },
+  basePath: "/subsite",
   output: "export",
   transpilePackages: ["next-image-export-optimizer"],
   env: {
@@ -11,7 +12,7 @@ module.exports = {
     nextImageExportOptimizer_exportFolderPath: "out",
     nextImageExportOptimizer_exportFolderName: "nextImageExportOptimizer",
     nextImageExportOptimizer_quality: "75",
-    nextImageExportOptimizer_storePicturesInWEBP: "true",
+    nextImageExportOptimizer_storePicturesInWEBP: "false",
     nextImageExportOptimizer_generateAndUseBlurImages: "true",
   },
 };

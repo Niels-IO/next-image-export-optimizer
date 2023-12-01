@@ -15,7 +15,7 @@ const newConfigBasePath = `module.exports = {
     nextImageExportOptimizer_exportFolderPath: "out",
     nextImageExportOptimizer_exportFolderName: "nextImageExportOptimizer",
     nextImageExportOptimizer_quality: "75",
-    nextImageExportOptimizer_storePicturesInWEBP: "true",
+    nextImageExportOptimizer_storePicturesInWEBP: "false",
     nextImageExportOptimizer_generateAndUseBlurImages: "true",
   },
 };
@@ -38,7 +38,8 @@ const config = {
     },
   ],
   webServer: {
-    command: "cd example && npm run export && BASEPATH=true node testServer.js",
+    command:
+      "cd example && npm run export && BASEPATH=true IMAGESWEBP=false node testServer.js",
     port: 8080,
     timeout: 120 * 1000,
     reuseExistingServer: false,

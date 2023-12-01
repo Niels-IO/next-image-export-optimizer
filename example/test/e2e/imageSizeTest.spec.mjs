@@ -3,67 +3,158 @@ import getImageById from "./getImageById.js";
 
 // get the environment variable flag for the test
 const testBasePath = process.env.BASEPATH === "true";
+const imagesWebP = process.env.IMAGESWEBP === "true" ?? true;
 const basePath = testBasePath ? "/subsite" : "";
 
 const widths = [640, 750, 777, 828, 1080, 1200, 1920, 2048, 3840];
 const correctSrc = {
-  640: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-640.WEBP`,
-  750: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-750.WEBP`,
-  777: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-777.WEBP`,
-  828: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-828.WEBP`,
-  1080: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1080.WEBP`,
-  1200: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1200.WEBP`,
-  1920: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1920.WEBP`,
-  2048: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-2048.WEBP`,
-  3840: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-3840.WEBP`,
+  640: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-640.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  750: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-750.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  777: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-777.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  828: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-828.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  1080: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1080.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  1200: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1200.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  1920: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-1920.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  2048: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-2048.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  3840: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash-opt-3840.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
 };
 
 const correctSrcSubfolder = {
-  640: `http://localhost:8080${basePath}/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-640.WEBP`,
-  750: `http://localhost:8080${basePath}/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-750.WEBP`,
-  777: `http://localhost:8080${basePath}/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-777.WEBP`,
-  828: `http://localhost:8080${basePath}/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-828.WEBP`,
-  1080: `http://localhost:8080${basePath}/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1080.WEBP`,
-  1200: `http://localhost:8080${basePath}/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1200.WEBP`,
-  1920: `http://localhost:8080${basePath}/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1920.WEBP`,
-  2048: `http://localhost:8080${basePath}/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-2048.WEBP`,
-  3840: `http://localhost:8080${basePath}/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-3840.WEBP`,
+  640: `http://localhost:8080${basePath}/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-640.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  750: `http://localhost:8080${basePath}/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-750.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  777: `http://localhost:8080${basePath}/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-777.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  828: `http://localhost:8080${basePath}/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-828.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  1080: `http://localhost:8080${basePath}/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1080.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  1200: `http://localhost:8080${basePath}/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1200.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  1920: `http://localhost:8080${basePath}/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-1920.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  2048: `http://localhost:8080${basePath}/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-2048.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  3840: `http://localhost:8080${basePath}/images/subfolder/nextImageExportOptimizer/ollie-barker-jones-K52HVSPVvKI-unsplash-opt-3840.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
 };
 
 const correctSrcStaticImage = {
-  640: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-640.WEBP`,
-  750: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-750.WEBP`,
-  777: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-777.WEBP`,
-  828: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-828.WEBP`,
-  1080: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1080.WEBP`,
-  1200: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1200.WEBP`,
-  1920: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1920.WEBP`,
-  2048: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-2048.WEBP`,
-  3840: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-3840.WEBP`,
+  640: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-640.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  750: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-750.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  777: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-777.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  828: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-828.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  1080: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1080.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  1200: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1200.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  1920: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1920.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  2048: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-2048.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  3840: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-3840.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
 };
 
 const correctSrcSmallImage = {
-  640: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-640.WEBP`,
-  750: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-750.WEBP`,
-  777: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-777.WEBP`,
-  828: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-828.WEBP`,
-  1080: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-1080.WEBP`,
-  1200: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-1080.WEBP`,
-  1920: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-1080.WEBP`,
-  2048: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-1080.WEBP`,
-  3840: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-1080.WEBP`,
+  640: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-640.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  750: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-750.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  777: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-777.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  828: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-828.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  1080: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-1080.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  1200: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-1080.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  1920: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-1080.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  2048: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-1080.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
+  3840: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-1080.${
+    imagesWebP ? "WEBP" : "JPG"
+  }`,
 };
 
 const correctSrcTransparentImage = {
-  640: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/transparentImage-opt-640.WEBP`,
-  750: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/transparentImage-opt-750.WEBP`,
-  777: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/transparentImage-opt-777.WEBP`,
-  828: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/transparentImage-opt-828.WEBP`,
-  1080: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/transparentImage-opt-1080.WEBP`,
-  1200: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/transparentImage-opt-1200.WEBP`,
-  1920: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/transparentImage-opt-1920.WEBP`,
-  2048: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/transparentImage-opt-2048.WEBP`,
-  3840: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/transparentImage-opt-3840.WEBP`,
+  640: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/transparentImage-opt-640.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  750: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/transparentImage-opt-750.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  777: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/transparentImage-opt-777.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  828: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/transparentImage-opt-828.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  1080: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/transparentImage-opt-1080.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  1200: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/transparentImage-opt-1200.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  1920: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/transparentImage-opt-1920.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  2048: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/transparentImage-opt-2048.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  3840: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/transparentImage-opt-3840.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
 };
 
 const correctSrcRemoteImage = {
@@ -79,15 +170,33 @@ const correctSrcRemoteImage = {
 };
 
 const correctSrcAnimatedPNGImage = {
-  640: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.WEBP`,
-  750: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.WEBP`,
-  777: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.WEBP`,
-  828: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.WEBP`,
-  1080: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.WEBP`,
-  1200: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.WEBP`,
-  1920: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.WEBP`,
-  2048: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.WEBP`,
-  3840: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.WEBP`,
+  640: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  750: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  777: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  828: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  1080: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  1200: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  1920: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  2048: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  3840: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
 };
 
 const correctSrcAnimatedWEBPImage = {
@@ -103,15 +212,33 @@ const correctSrcAnimatedWEBPImage = {
 };
 
 const correctSrcAnimatedGIFImage = {
-  640: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-640.WEBP`,
-  750: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-750.WEBP`,
-  777: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-777.WEBP`,
-  828: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-828.WEBP`,
-  1080: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-1080.WEBP`,
-  1200: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-1200.WEBP`,
-  1920: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-1920.WEBP`,
-  2048: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-2048.WEBP`,
-  3840: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-3840.WEBP`,
+  640: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-640.${
+    imagesWebP ? "WEBP" : "GIF"
+  }`,
+  750: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-750.${
+    imagesWebP ? "WEBP" : "GIF"
+  }`,
+  777: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-777.${
+    imagesWebP ? "WEBP" : "GIF"
+  }`,
+  828: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-828.${
+    imagesWebP ? "WEBP" : "GIF"
+  }`,
+  1080: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-1080.${
+    imagesWebP ? "WEBP" : "GIF"
+  }`,
+  1200: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-1200.${
+    imagesWebP ? "WEBP" : "GIF"
+  }`,
+  1920: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-1920.${
+    imagesWebP ? "WEBP" : "GIF"
+  }`,
+  2048: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-2048.${
+    imagesWebP ? "WEBP" : "GIF"
+  }`,
+  3840: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/402107790_STATIC_NOISE_GIF-opt-3840.${
+    imagesWebP ? "WEBP" : "GIF"
+  }`,
 };
 function generateSrcset(widths, correctSrc) {
   const baseURL = "http://localhost:8080";
@@ -351,7 +478,9 @@ for (let index = 0; index < widths.length; index++) {
 
       const image = await getImageById(page, "test_image_static_fixed");
       expect(image.currentSrc).toBe(
-        `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.WEBP`
+        `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.${
+          imagesWebP ? "WEBP" : "JPG"
+        }`
       );
       expect(image.naturalWidth).toBe(384);
 
@@ -360,7 +489,9 @@ for (let index = 0; index < widths.length; index++) {
         "test_image_static_fixed_future"
       );
       expect(image_future.currentSrc).toBe(
-        `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.WEBP`
+        `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.${
+          imagesWebP ? "WEBP" : "JPG"
+        }`
       );
       expect(image_future.naturalWidth).toBe(384);
     });
@@ -483,7 +614,9 @@ for (let index = 0; index < widths.length; index++) {
       await expect(img).toHaveCSS("position", "absolute");
       await expect(img).not.toHaveCSS(
         "background-image",
-        `url("/images/nextImageExportOptimizer/transparentImage-opt-10.WEBP")`
+        `url("/images/nextImageExportOptimizer/transparentImage-opt-10${
+          imagesWebP ? "WEBP" : "GIF"
+        }")`
       );
       await expect(img).not.toHaveCSS("background-repeat", "no-repeat");
 
@@ -512,7 +645,9 @@ for (let index = 0; index < widths.length; index++) {
       await expect(img).toHaveCSS("position", "absolute");
       await expect(img).not.toHaveCSS(
         "background-image",
-        `url("/images/nextImageExportOptimizer/transparentImage-opt-10.WEBP")`
+        `url("/images/nextImageExportOptimizer/transparentImage-opt-10${
+          imagesWebP ? "WEBP" : "GIF"
+        }")`
       );
       await expect(img).not.toHaveCSS("background-repeat", "no-repeat");
 

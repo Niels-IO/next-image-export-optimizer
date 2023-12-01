@@ -29,7 +29,7 @@ const generateImageURL = (
   const { filename, path, extension } = splitFilePath({ filePath: src });
   const useWebp =
     process.env.nextImageExportOptimizer_storePicturesInWEBP != undefined
-      ? process.env.nextImageExportOptimizer_storePicturesInWEBP
+      ? process.env.nextImageExportOptimizer_storePicturesInWEBP == "true"
       : true;
 
   if (
