@@ -51,6 +51,10 @@ module.exports = {
     // nextImageExportOptimizer_generateAndUseBlurImages to false and pass
     // `placeholder="empty"` to all <ExportedImage> components.
     nextImageExportOptimizer_generateAndUseBlurImages: "true",
+
+    // If you want to cache the remote images, you can set the time to live of the cache in seconds.
+    // The default value is 0 seconds.
+    nextImageExportOptimizer_remoteImageCacheTTL: "0",
   },
 };
 ```
@@ -164,7 +168,18 @@ module.exports = {
    });
    ```
 
-   At build time, the images will be downloaded each time (as they might have changed) and optimized if an image is not yet in the cache or the image changed.
+   At build time, the images will be either downloaded or read from the cache. The image urls will be replaced with the optimized image urls in the Exported Image component.
+
+   You can specify the time to live of the cache in seconds by setting the `nextImageExportOptimizer_remoteImageCacheTTL` environment variable in your **next.config.js** file. The default value is 0 seconds (as the image might have changed).
+
+   Set it to:
+
+   - 60 for 1 minute
+   - 3600 for 1 hour
+   - 86400 for 1 day
+   - 604800 for 1 week
+   - 2592000 for 1 month
+   - 31536000 for 1 year
 
 7. You can output the original, unoptimized images using the `unoptimized` prop.
    Example:

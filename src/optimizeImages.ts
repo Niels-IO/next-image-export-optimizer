@@ -3,11 +3,11 @@
 import { ImageObject } from "./utils/ImageObject";
 
 const defineProgressBar = require("./utils/defineProgressBar");
-const downloadImagesInBatches = require("./utils/downloadImagesInBatches");
 const ensureDirectoryExists = require("./utils/ensureDirectoryExists");
 const getAllFilesAsObject = require("./utils/getAllFilesAsObject");
 const getHash = require("./utils/getHash");
-const getRemoteImageURLs = require("./utils/getRemoteImageURLs");
+import { getRemoteImageURLs } from "./utils/getRemoteImageURLs";
+import { downloadImagesInBatches } from "./utils/downloadImagesInBatches";
 
 const fs = require("fs");
 const sharp = require("sharp");
@@ -77,6 +77,7 @@ const nextImageExportOptimizer = async function () {
   let quality = 75;
   let storePicturesInWEBP = true;
   let blurSize: number[] = [];
+  let remoteImageCacheTTL = 60;
   let exportFolderName = "nextImageExportOptimizer";
   const { remoteImageFilenames, remoteImageURLs } = await getRemoteImageURLs(
     nextConfigFolder,
@@ -143,6 +144,12 @@ const nextImageExportOptimizer = async function () {
     if (newPath.nextImageExportOptimizer_exportFolderName !== undefined) {
       exportFolderName = newPath.nextImageExportOptimizer_exportFolderName;
     }
+    if (newPath.nextImageExportOptimizer_remoteImageCacheTTL !== undefined) {
+      remoteImageCacheTTL = Number(
+        newPath.nextImageExportOptimizer_remoteImageCacheTTL
+      );
+    }
+
     // Give the user a warning if the transpilePackages: ["next-image-export-optimizer"], is not set in the next.config.js
     if (
       nextjsConfig.transpilePackages === undefined || // transpilePackages is not set
@@ -181,15 +188,6 @@ const nextImageExportOptimizer = async function () {
         console.log(
           `Create remote image output folder: ${folderNameForRemoteImages}`
         );
-      } else {
-        // Delete all remote images in the folder synchronously
-        // This is necessary, because the user may have changed the remote images
-        // and the old images would be used otherwise
-
-        fs.readdirSync(folderNameForRemoteImages).forEach((file: string) => {
-          // delete the file synchronously
-          fs.unlinkSync(path.join(folderNameForRemoteImages, file));
-        });
       }
     } catch (err) {
       console.error(err);
@@ -199,7 +197,7 @@ const nextImageExportOptimizer = async function () {
   // Download the remote images specified in the remoteOptimizedImages.js file
   if (remoteImageURLs.length > 0)
     console.log(
-      `Downloading ${remoteImageURLs.length} remote image${
+      `Found ${remoteImageURLs.length} remote image${
         remoteImageURLs.length > 1 ? "s" : ""
       }...`
     );
@@ -207,7 +205,8 @@ const nextImageExportOptimizer = async function () {
     remoteImageURLs,
     remoteImageFilenames,
     folderPathForRemoteImages,
-    Math.min(remoteImageURLs.length, 20)
+    Math.min(remoteImageURLs.length, 20),
+    remoteImageCacheTTL
   );
 
   // Create or read the JSON containing the hashes of the images in the image directory
