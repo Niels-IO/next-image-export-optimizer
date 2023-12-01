@@ -36,5 +36,24 @@ test.describe(`Test unoptimized image prop`, () => {
     expect(image_legacy.currentSrc).toBe(
       `http://localhost:8080${basePath}/images/chris-zhang-Jq8-3Bmh1pQ-unsplash.jpg`
     );
+
+    const svg = await page.locator("#test_image_unoptimized_svg");
+    await svg.click();
+
+    const svg_image = await getImageById(page, "test_image_unoptimized_svg");
+
+    expect(svg_image.currentSrc).toBe(
+      `http://localhost:8080${basePath}/_next/static/media/vercel.1be6ab75.svg`
+    );
+
+    const svg_remote = await page.locator("#test_image_unoptimized_svg_remote");
+    await svg_remote.click();
+
+    const svg_image_remote = await getImageById(
+      page,
+      "test_image_unoptimized_svg_remote"
+    );
+    // TODO: Could be improved by first using a local copy of this remote image
+    expect(svg_image_remote.currentSrc).toBe(`https://reactapp.dev/nextjs.svg`);
   });
 });

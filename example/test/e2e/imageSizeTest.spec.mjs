@@ -241,6 +241,65 @@ const correctSrcAnimatedGIFImage = {
     imagesWebP ? "WEBP" : "GIF"
   }`,
 };
+
+const correctSrcSVGImage = {
+  640: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/vercel-opt-384.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  750: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/vercel-opt-384.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  777: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/vercel-opt-384.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  828: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/vercel-opt-384.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  1080: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/vercel-opt-384.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  1200: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/vercel-opt-384.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  1920: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/vercel-opt-384.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  2048: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/vercel-opt-384.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  3840: `http://localhost:8080${basePath}/images/nextImageExportOptimizer/vercel-opt-384.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+};
+const correctSrcSVGImageRemote = {
+  640: `http://localhost:8080${basePath}/nextImageExportOptimizer/reactapp.dev_nextjs-opt-640.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  750: `http://localhost:8080${basePath}/nextImageExportOptimizer/reactapp.dev_nextjs-opt-750.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  777: `http://localhost:8080${basePath}/nextImageExportOptimizer/reactapp.dev_nextjs-opt-777.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  828: `http://localhost:8080${basePath}/nextImageExportOptimizer/reactapp.dev_nextjs-opt-828.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  1080: `http://localhost:8080${basePath}/nextImageExportOptimizer/reactapp.dev_nextjs-opt-1080.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  1200: `http://localhost:8080${basePath}/nextImageExportOptimizer/reactapp.dev_nextjs-opt-1200.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  1920: `http://localhost:8080${basePath}/nextImageExportOptimizer/reactapp.dev_nextjs-opt-1920.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  2048: `http://localhost:8080${basePath}/nextImageExportOptimizer/reactapp.dev_nextjs-opt-2048.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+  3840: `http://localhost:8080${basePath}/nextImageExportOptimizer/reactapp.dev_nextjs-opt-3840.${
+    imagesWebP ? "WEBP" : "PNG"
+  }`,
+};
 function generateSrcset(widths, correctSrc) {
   const baseURL = "http://localhost:8080";
   return widths
@@ -299,7 +358,26 @@ for (let index = 0; index < widths.length; index++) {
 
       // check the number of images on the page
       const images = await page.$$("img");
-      expect(images.length).toBe(10);
+      expect(images.length).toBe(15);
+
+      // check the SVG images
+      const imgSVG = await page.locator("#test_image_svg");
+      await imgSVG.click();
+
+      const imageSVG = await getImageById(page, "test_image_svg");
+
+      expect(imageSVG.currentSrc).toBe(correctSrcSVGImage[width.toString()]);
+      expect(imageSVG.naturalWidth).toBe(384);
+
+      const imgSVG_remote = await page.locator("#test_image_svg_remote");
+      await imgSVG_remote.click();
+
+      const imageSVG_remote = await getImageById(page, "test_image_svg_remote");
+
+      expect(imageSVG_remote.currentSrc).toBe(
+        correctSrcSVGImageRemote[width.toString()]
+      );
+      expect(imageSVG_remote.naturalWidth).toBe(width);
     });
     test("should check the image size for the appdir", async ({ page }) => {
       await page.goto(`${basePath}/appdir`, {

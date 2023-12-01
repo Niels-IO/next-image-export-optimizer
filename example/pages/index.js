@@ -3,6 +3,7 @@ import ExportedImageLegacy from "../src/legacy/ExportedImage";
 // import ExportedImageLegacy from "next-image-export-optimizer/legacy/ExportedImage";
 // import ExportedImage from "next-image-export-optimizer";
 import ExportedImage from "../src/ExportedImage";
+import vercelLogo from "../public/vercel.svg";
 
 import styles from "../styles/Home.module.css";
 import testPictureStatic from "../public/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.jpg";
@@ -210,13 +211,60 @@ export default function Home() {
             basePath={basePath}
           />
         </div>
-        {/* <ExportedImage
-          src="vercel.svg"
-          layout="fixed"
+        <ExportedImage
+          src="images/vercel.svg"
+          width={300}
+          height={100}
+          id="test_image_svg"
+          alt="VercelLogo"
+          style={{ objectFit: "contain" }}
+          basePath={basePath}
+        />
+        <ExportedImage
+          src={vercelLogo}
           width={300}
           height={100}
           alt="VercelLogo"
-        /> */}
+          style={{ objectFit: "contain" }}
+          basePath={basePath}
+        />
+        <ExportedImage
+          unoptimized
+          id="test_image_unoptimized_svg"
+          src={vercelLogo}
+          width={300}
+          height={100}
+          alt="VercelLogo-unoptimized"
+          basePath={basePath}
+        />
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            height: "200px",
+            marginBottom: "3rem",
+          }}
+        >
+          <ExportedImage
+            src="https://reactapp.dev/nextjs.svg"
+            id="test_image_svg_remote"
+            fill
+            sizes="100vw"
+            alt="NextjsLogo"
+            style={{ objectFit: "contain" }}
+            basePath={basePath}
+          />
+        </div>
+        <ExportedImage
+          unoptimized
+          src="https://reactapp.dev/nextjs.svg"
+          id="test_image_unoptimized_svg_remote"
+          width={300}
+          height={100}
+          alt="NextjsLogo"
+          style={{ objectFit: "contain" }}
+          basePath={basePath}
+        />
       </main>
     </div>
   );
