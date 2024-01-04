@@ -171,7 +171,7 @@ export async function downloadImagesInBatches(
           cachedImages++;
         }
       } else {
-        console.log("No .lastUpdated file found");
+        // console.log("No .lastUpdated file found");
       }
 
       if (skipDownload) {
