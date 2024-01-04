@@ -77,7 +77,7 @@ const nextImageExportOptimizer = async function () {
   let quality = 75;
   let storePicturesInWEBP = true;
   let blurSize: number[] = [];
-  let remoteImageCacheTTL = 60;
+  let remoteImageCacheTTL = 0;
   let exportFolderName = "nextImageExportOptimizer";
   const { remoteImageFilenames, remoteImageURLs } = await getRemoteImageURLs(
     nextConfigFolder,
