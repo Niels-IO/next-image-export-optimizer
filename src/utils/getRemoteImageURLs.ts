@@ -1,11 +1,9 @@
-export {};
-
-const path = require("path");
-const fs = require("fs");
+import path from "path";
+import fs from "fs";
 
 const urlToFilename = require("./urlToFilename");
 
-module.exports = async function getRemoteImageURLs(
+export async function getRemoteImageURLs(
   nextConfigFolder: string,
   folderPathForRemoteImages: string
 ) {
@@ -33,4 +31,4 @@ module.exports = async function getRemoteImageURLs(
     };
   });
   return { remoteImageFilenames, remoteImageURLs };
-};
+}

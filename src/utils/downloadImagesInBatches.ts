@@ -1,5 +1,6 @@
 import { ImageObject } from "./ImageObject";
-const fs = require("fs");
+import path from "path";
+import fs from "fs";
 const http = require("http");
 const https = require("https");
 const urlModule = require("url"); // Import url module to parse the url
@@ -93,6 +94,13 @@ async function downloadImage(url: string, filename: string, folder: string) {
                 reject(new Error("Empty file"));
                 return;
               }
+              // to cache the image locally, we store a file with the same name as the image, but with a .lastUpdated extension and the timestamp
+              storeLastUpdated({
+                basePath: folder,
+                file: formattedFilename,
+                dirPathWithoutBasePath: "",
+                fullPath: formattedFilename,
+              });
 
               resolve();
             });
@@ -106,12 +114,15 @@ async function downloadImage(url: string, filename: string, folder: string) {
   });
 }
 
-module.exports = async function downloadImagesInBatches(
+export async function downloadImagesInBatches(
   imagesURLs: string[],
   imageFileNames: ImageObject[],
   folder: string,
-  batchSize: number
+  batchSize: number,
+  remoteImageCacheTTL: number
 ) {
+  let downloadedImages = 0;
+  let cachedImages = 0;
   const batches = Math.ceil(imagesURLs.length / batchSize); // determine the number of batches
   for (let i = 0; i < batches; i++) {
     const start = i * batchSize; // calculate the start index of the batch
@@ -127,17 +138,86 @@ module.exports = async function downloadImagesInBatches(
       }
     }
 
-    const promises = batchURLs.map((url, index) =>
-      downloadImage(url, batchFileNames[index].fullPath as string, folder)
-    ); // create an array of promises for downloading images in the batch
+    const promises = batchURLs.map((url, index) => {
+      const file = batchFileNames[index];
+      if (file.fullPath === undefined) {
+        console.error(
+          `Error: Unable to download ${url} (fullPath is undefined).`
+        );
+        return Promise.resolve();
+      }
+
+      // check if the image was downloaded before and if it's still valid
+      // if it's valid, skip downloading it again
+      // if there is no .lastUpdated file, download the image
+      // if there is a .lastUpdated file, check if it's older than the image
+      // if it's older, download the image
+
+      const lastUpdatedFilename = `${file.file}.lastUpdated`;
+      const lastUpdatedPath = path.join(file.basePath, lastUpdatedFilename);
+
+      let skipDownload = false;
+      if (fs.existsSync(lastUpdatedPath) && fs.existsSync(file.fullPath)) {
+        const lastUpdated = fs.readFileSync(lastUpdatedPath, "utf8");
+        const lastUpdatedTimestamp = parseInt(lastUpdated);
+        const now = Date.now();
+        const timeDifferenceInSeconds = (now - lastUpdatedTimestamp) / 1000;
+
+        if (timeDifferenceInSeconds < remoteImageCacheTTL) {
+          // console.log(
+          //   `Skipping download of ${file.file} because it was downloaded ${timeDifferenceInSeconds} seconds ago.`
+          // );
+          skipDownload = true;
+          cachedImages++;
+        }
+      } else {
+        // console.log("No .lastUpdated file found");
+      }
+
+      if (skipDownload) {
+        return Promise.resolve();
+      }
+      downloadedImages++;
+      return downloadImage(url, file.fullPath as string, folder);
+    }); // create an array of promises for downloading images in the batch
 
     try {
       await Promise.all(promises); // download images in parallel for the current batch
+      downloadedImages > 0 &&
+        console.log(
+          `Downloaded ${downloadedImages} remote image${
+            downloadedImages > 1 ? "s" : ""
+          }.`
+        );
+      cachedImages > 0 &&
+        console.log(
+          `Used ${cachedImages} cached remote image${
+            cachedImages > 1 ? "s" : ""
+          }.`
+        );
     } catch (err: any) {
       console.error(
         `Error: Unable to download remote images (${err.message}).`
       );
       throw err;
     }
+  }
+}
+
+const storeLastUpdated = (file: ImageObject) => {
+  // to cache the image locally, we need to know last time it was downloaded
+  // so we can check if it's still valid
+  // store a file with the same name as the image, but with a .lastUpdated extension and the timestamp
+  const lastUpdated = Date.now();
+
+  const lastUpdatedFilename = `${file.file}.lastUpdated`;
+  try {
+    fs.writeFileSync(lastUpdatedFilename, lastUpdated.toString());
+  } catch (error) {
+    console.error(
+      `Error writing the cache file for ${lastUpdatedFilename}: `,
+      error
+    );
+    throw error;
   }
 };
