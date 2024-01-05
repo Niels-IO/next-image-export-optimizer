@@ -11,10 +11,12 @@
   "exports": {
     ".": {
       "types": "./dist/ExportedImage.d.ts",
+      "require": "./dist/ExportedImage.js",
       "import": "./dist/ExportedImage.js"
     },
     "./legacy/ExportedImage": {
       "types": "./dist/legacy/ExportedImage.d.ts",
+      "require": "./dist/legacy/ExportedImage.js",
       "import": "./dist/legacy/ExportedImage.js"
     }
   },
