@@ -34,6 +34,7 @@ Configure the library in your **Next.js** configuration file:
 ```javascript
 // next.config.js
 module.exports = {
+  output: "export", // use nextjs static export
   images: {
     loader: "custom",
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
@@ -65,27 +66,26 @@ module.exports = {
 
    ```diff
    {
-   -  "export": "next build && next export",
-   +  "export": "next build && next export && next-image-export-optimizer"
+   -  "export": "next build",
+   +  "export": "next build && next-image-export-optimizer"
    }
    ```
 
    If your Next.js project is not at the root directory where you are running the commands, for example if you are using a monorepo, you can specify the location of the next.config.js as an argument to the script:
 
    ```json
-   "export": "next build && next export && next-image-export-optimizer --nextConfigPath path/to/my/next.config.js"
+   "export": "next build && next-image-export-optimizer --nextConfigPath path/to/my/next.config.js"
    ```
 
    If you want to specify the path to the output folder, you can either do so by setting the `nextImageExportOptimizer_exportFolderPath` environment variable in your **next.config.js** file or by passing the `--exportFolderPath` argument to the script:
 
    ```json
-    "export": "next build && next export && next-image-export-optimizer --exportFolderPath path/to/my/export/folder"
+    "export": "next build && next-image-export-optimizer --exportFolderPath path/to/my/export/folder"
    ```
 
 4. Change the **\<Image />** component to the **\<ExportedImage />** component of this library.
 
    Example:
-
    ```javascript
    // Old
    import Image from "next/image";
@@ -115,9 +115,20 @@ module.exports = {
      height={500}
    />;
    ```
+   **static import:**  
+   The static import method is recommended as it informs the client about the original image size. For image sizes larger than the original width, the next largest image size in the deviceSizes array (specified in the next.config.js) will be used for the generation of the srcset attribute.  
 
-   The static import method is recommended as it informs the client about the original image size. For image sizes larger than the original width, the next largest image size in the deviceSizes array (specified in the next.config.js) will be used for the generation of the srcset attribute.
-
+   For static Import it is important placing the images somewhere within the "src" folder. Adjust the `nextImageExportOptimizer_imageFolderPath` in the `next.config.js` accordingling.
+   ```javascript
+    module.exports = {
+      ...
+      env: {
+        nextImageExportOptimizer_imageFolderPath: "src/images"
+        ...
+     }
+    }
+   ```
+   **dynamic import:**  
    For the dynamic import method, this library will create duplicates of the original image for each image size in the deviceSizes array that is larger than the original image size.
 
 5. In the development mode, either the original image will be served as a fallback when the optimized images are not yet generated or the optimized image once the image transformation was executed for the specific image. The optimized images are created at build time only. In the exported, static React app, the responsive images are available as srcset and dynamically loaded by the browser.
@@ -214,6 +225,7 @@ module.exports = {
 
    <ExportedImage src={testPictureStatic} alt="Static Image" layout="fixed" />;
    ```
+
 
 10. BasePath:
     You can set the basePath in the next.config.js file. This is useful if you want to deploy your app to a subfolder of your domain.
