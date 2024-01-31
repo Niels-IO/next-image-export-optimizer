@@ -116,21 +116,20 @@ module.exports = {
      height={500}
    />;
    ```
-
+   **static import:**  
    The static import method is recommended as it informs the client about the original image size. For image sizes larger than the original width, the next largest image size in the deviceSizes array (specified in the next.config.js) will be used for the generation of the srcset attribute.  
 
-   For static Import it is important placing the images inside your "src" folder instead of "public" folder. Adjust the `nextImageExportOptimizer_imageFolderPath` in the `next.config.js` accordingling.
- 
-```javascript
-module.exports = {
-...
-  env: {
-  nextImageExportOptimizer_imageFolderPath: "src/images"
-  ...
-  }
- }
- ```
-
+   For static Import it is important placing the images somewhere within the "src" folder. Adjust the `nextImageExportOptimizer_imageFolderPath` in the `next.config.js` accordingling.
+   ```javascript
+    module.exports = {
+      ...
+      env: {
+        nextImageExportOptimizer_imageFolderPath: "src/images"
+        ...
+     }
+    }
+   ```
+   **dynamic import:**  
    For the dynamic import method, this library will create duplicates of the original image for each image size in the deviceSizes array that is larger than the original image size.
 
 6. In the development mode, either the original image will be served as a fallback when the optimized images are not yet generated or the optimized image once the image transformation was executed for the specific image. The optimized images are created at build time only. In the exported, static React app, the responsive images are available as srcset and dynamically loaded by the browser.
