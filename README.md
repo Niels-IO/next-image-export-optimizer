@@ -117,13 +117,25 @@ module.exports = {
    />;
    ```
 
-   The static import method is recommended as it informs the client about the original image size. For image sizes larger than the original width, the next largest image size in the deviceSizes array (specified in the next.config.js) will be used for the generation of the srcset attribute.
+   The static import method is recommended as it informs the client about the original image size. For image sizes larger than the original width, the next largest image size in the deviceSizes array (specified in the next.config.js) will be used for the generation of the srcset attribute.  
+
+   For static Import it is important placing the images inside your "src" folder instead of "public" folder. Adjust the `nextImageExportOptimizer_imageFolderPath` in the `next.config.js` accordingling.
+ 
+```javascript
+module.exports = {
+...
+  env: {
+  nextImageExportOptimizer_imageFolderPath: "src/images"
+  ...
+  }
+ }
+ ```
 
    For the dynamic import method, this library will create duplicates of the original image for each image size in the deviceSizes array that is larger than the original image size.
 
-5. In the development mode, either the original image will be served as a fallback when the optimized images are not yet generated or the optimized image once the image transformation was executed for the specific image. The optimized images are created at build time only. In the exported, static React app, the responsive images are available as srcset and dynamically loaded by the browser.
+6. In the development mode, either the original image will be served as a fallback when the optimized images are not yet generated or the optimized image once the image transformation was executed for the specific image. The optimized images are created at build time only. In the exported, static React app, the responsive images are available as srcset and dynamically loaded by the browser.
 
-6. This library also supports remote images. You have to specify the src as a string starting with either http or https in the ExportedImage component.
+7. This library also supports remote images. You have to specify the src as a string starting with either http or https in the ExportedImage component.
 
    ```javascript
    import ExportedImage from "next-image-export-optimizer";
@@ -182,7 +194,7 @@ module.exports = {
    - 2592000 for 1 month
    - 31536000 for 1 year
 
-7. You can output the original, unoptimized images using the `unoptimized` prop.
+8. You can output the original, unoptimized images using the `unoptimized` prop.
    Example:
 
    ```javascript
@@ -195,7 +207,7 @@ module.exports = {
    />;
    ```
 
-8. Overriding presets in **next.config.js**:
+9. Overriding presets in **next.config.js**:
 
    **Placeholder images:**
    If you do not want the automatic generation of tiny, blurry placeholder images, set the `nextImageExportOptimizer_generateAndUseBlurImages` environment variable to `false` and set the `placeholder` prop from the **\<ExportedImage />** component to `empty`.
@@ -206,7 +218,7 @@ module.exports = {
    **Rename the export folder name:**
    If you want to rename the export folder name, set the `nextImageExportOptimizer_exportFolderPath` environment variable to the desired folder name. The default is `nextImageExportOptimizer`.
 
-9. You can still use the legacy image component `next/legacy/image`:
+10. You can still use the legacy image component `next/legacy/image`:
 
    ```javascript
    import ExportedImage from "next-image-export-optimizer/legacy/ExportedImage";
@@ -216,7 +228,7 @@ module.exports = {
    <ExportedImage src={testPictureStatic} alt="Static Image" layout="fixed" />;
    ```
 
-10. BasePath:
+11. BasePath:
     You can set the basePath in the next.config.js file. This is useful if you want to deploy your app to a subfolder of your domain.
 
     ```javascript
@@ -238,7 +250,7 @@ module.exports = {
     />;
     ```
 
-11. Animated images:
+12. Animated images:
     You can use .gif and animated .webp images. Next-image-export-optimizer will automatically optimize the animated images and generate the srcset for the different resolutions.
 
     If you set the variable nextImageExportOptimizer_storePicturesInWEBP to true, the animated images will be converted to .webp format which can reduce the file size significantly.
