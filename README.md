@@ -34,6 +34,9 @@ Configure the library in your **Next.js** configuration file:
 ```javascript
 // next.config.js
 module.exports = {
+  // If you're on a newer version of Next, "output: export" is preferred over export command
+  output: 'export',
+   
   images: {
     loader: "custom",
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
@@ -65,10 +68,12 @@ module.exports = {
 
    ```diff
    {
-   -  "export": "next build && next export",
-   +  "export": "next build && next export && next-image-export-optimizer"
+   -  "export": "next build",
+   +  "export": "next build && next-image-export-optimizer"
    }
    ```
+Note: if you use an old version of Next and still use the 'next export' command, keep this command between `next build` & `next-image-export-optimizer`
+
 
    If your Next.js project is not at the root directory where you are running the commands, for example if you are using a monorepo, you can specify the location of the next.config.js as an argument to the script:
 
