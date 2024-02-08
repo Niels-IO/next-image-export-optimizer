@@ -34,6 +34,7 @@ Configure the library in your **Next.js** configuration file:
 ```javascript
 // next.config.js
 module.exports = {
+  output: "export",
   images: {
     loader: "custom",
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
@@ -65,21 +66,21 @@ module.exports = {
 
    ```diff
    {
-   -  "export": "next build && next export",
-   +  "export": "next build && next export && next-image-export-optimizer"
+   -  "export": "next build",
+   +  "export": "next build && next-image-export-optimizer"
    }
    ```
 
    If your Next.js project is not at the root directory where you are running the commands, for example if you are using a monorepo, you can specify the location of the next.config.js as an argument to the script:
 
    ```json
-   "export": "next build && next export && next-image-export-optimizer --nextConfigPath path/to/my/next.config.js"
+   "export": "next build && next-image-export-optimizer --nextConfigPath path/to/my/next.config.js"
    ```
 
    If you want to specify the path to the output folder, you can either do so by setting the `nextImageExportOptimizer_exportFolderPath` environment variable in your **next.config.js** file or by passing the `--exportFolderPath` argument to the script:
 
    ```json
-    "export": "next build && next export && next-image-export-optimizer --exportFolderPath path/to/my/export/folder"
+    "export": "next build && next-image-export-optimizer --exportFolderPath path/to/my/export/folder"
    ```
 
 4. Change the **\<Image />** component to the **\<ExportedImage />** component of this library.
