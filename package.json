@@ -1,5 +1,5 @@
 {
-  "name": "next-image-export-optimizer",
+  "name": "@exdst/next-image-export-optimizer",
   "version": "1.12.3",
   "description": "Optimizes all static images for Next.js static HTML export functionality",
   "main": "dist/ExportedImage.js",
