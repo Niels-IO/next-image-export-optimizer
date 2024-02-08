@@ -1,5 +1,9 @@
 # Next-Image-Export-Optimizer
 
+## It is fork from the original https://github.com/Niels-IO/next-image-export-optimizer
+
+## The main difference is that this fork is aimed to have a better support of different CMSs. (We will start with Sitecore)
+
 [![npm](https://img.shields.io/npm/v/next-image-export-optimizer)](https://www.npmjs.com/package/next-image-export-optimizer)
 
 Use [Next.js advanced **\<Image/>** component](https://nextjs.org/docs/basic-features/image-optimization) with the static export functionality. Optimizes all static images in an additional step after the Next.js static export.
