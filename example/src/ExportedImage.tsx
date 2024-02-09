@@ -7,7 +7,7 @@ const splitFilePath = ({ filePath }: { filePath: string }) => {
   const filenameWithExtension =
     filePath.split("\\").pop()?.split("/").pop() || "";
   const filePathWithoutFilename = filePath.split(filenameWithExtension).shift();
-  const fileExtension = filePath.split(".").pop();
+  const fileExtension = filePath.split(".").pop()?.split('_')[0];
   const filenameWithoutExtension =
     filenameWithExtension.substring(
       0,
