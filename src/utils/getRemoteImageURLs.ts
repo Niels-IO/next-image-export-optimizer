@@ -10,9 +10,9 @@ const stat = promisify(require('fs').stat)
 const urlToFilename = require("./urlToFilename");
 
 async function GetImages(){
-	var newArr = [];
+	let  newArr: string[]= [];
 	let files = await readdir(directoryPath);
-	files.forEach(function (file) {
+	files.forEach(function (file: any) {
 
 		const contents =  fs2.readFileSync(path2.join(directoryPath, file), 'utf-8');
 		newArr = newArr.concat(JSON.parse(contents));
