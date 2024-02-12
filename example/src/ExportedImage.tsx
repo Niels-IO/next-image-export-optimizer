@@ -33,7 +33,7 @@ const generateImageURL = (
       : true;
 
   if (
-    !["JPG", "JPEG", "WEBP", "PNG", "AVIF", "GIF"].includes(
+    !["JPG", "JPEG", "WEBP", "PNG", "AVIF", "GIF", "SVG"].includes(
       extension.toUpperCase()
     )
   ) {
@@ -47,9 +47,11 @@ const generateImageURL = (
 
   if (
     useWebp &&
-    ["JPG", "JPEG", "PNG", "GIF"].includes(extension.toUpperCase())
+    ["JPG", "JPEG", "PNG", "GIF", "SVG"].includes(extension.toUpperCase())
   ) {
     processedExtension = "WEBP";
+  } else if (extension.toUpperCase() === "SVG") {
+    processedExtension = "PNG";
   }
 
   let correctedPath = path;
@@ -236,17 +238,12 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
       return generateImageURL(_src, 10, basePath);
     }, [blurDataURL, src, unoptimized, basePath]);
 
-    // check if the src is a SVG image -> then we should not use the blurDataURL and use unoptimized
-    const isSVG =
-      typeof src === "object" ? src.src.endsWith(".svg") : src.endsWith(".svg");
-
     const [blurComplete, setBlurComplete] = useState(false);
 
     // Currently, we have to handle the blurDataURL ourselves as the new Image component
     // is expecting a base64 encoded string, but the generated blurDataURL is a normal URL
     const blurStyle =
       placeholder === "blur" &&
-      !isSVG &&
       automaticallyCalculatedBlurDataURL &&
       automaticallyCalculatedBlurDataURL.startsWith("/") &&
       !blurComplete
@@ -260,10 +257,20 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
     const isStaticImage = typeof src === "object";
 
     let _src = isStaticImage ? src.src : src;
-    if (basePath && !isStaticImage && _src.startsWith("/")) {
+    if (
+      basePath &&
+      !isStaticImage &&
+      _src.startsWith("/") &&
+      !_src.startsWith("http")
+    ) {
       _src = basePath + _src;
     }
-    if (basePath && !isStaticImage && !_src.startsWith("/")) {
+    if (
+      basePath &&
+      !isStaticImage &&
+      !_src.startsWith("/") &&
+      !_src.startsWith("http")
+    ) {
       _src = basePath + "/" + _src;
     }
 
@@ -285,7 +292,6 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
         })}
         {...(unoptimized && { unoptimized })}
         {...(priority && { priority })}
-        {...(isSVG && { unoptimized: true })}
         style={{ ...style, ...blurStyle }}
         loader={
           imageError || unoptimized === true

@@ -9,9 +9,9 @@ const getHash = require("./utils/getHash");
 import { getRemoteImageURLs } from "./utils/getRemoteImageURLs";
 import { downloadImagesInBatches } from "./utils/downloadImagesInBatches";
 
-const fs = require("fs");
-const sharp = require("sharp");
-const path = require("path");
+import fs from "fs";
+import sharp from "sharp";
+import path from "path";
 
 const loadConfig = require("next/dist/server/config").default;
 
@@ -79,6 +79,16 @@ const nextImageExportOptimizer = async function () {
   let blurSize: number[] = [];
   let remoteImageCacheTTL = 0;
   let exportFolderName = "nextImageExportOptimizer";
+  const imageExtensions = [
+    ".PNG",
+    ".GIF",
+    ".JPG",
+    ".JPEG",
+    ".AVIF",
+    ".WEBP",
+    ".SVG",
+  ];
+
   const { remoteImageFilenames, remoteImageURLs } = await getRemoteImageURLs(
     nextConfigFolder,
     folderPathForRemoteImages
@@ -216,7 +226,7 @@ const nextImageExportOptimizer = async function () {
   const hashFilePath = `${imageFolderPath}/next-image-export-optimizer-hashes.json`;
   try {
     let rawData = fs.readFileSync(hashFilePath);
-    imageHashes = JSON.parse(rawData);
+    imageHashes = JSON.parse(rawData.toString());
   } catch (e) {
     // No image hashes yet
   }
@@ -275,7 +285,7 @@ const nextImageExportOptimizer = async function () {
       if (filenameSplit.length === 1) return false;
       const extension = filenameSplit.pop()!.toUpperCase();
       // Only include file with image extensions
-      return ["JPG", "JPEG", "WEBP", "PNG", "AVIF", "GIF"].includes(extension);
+      return imageExtensions.includes(`.${extension}`);
     }
   );
   console.log(
@@ -347,6 +357,11 @@ const nextImageExportOptimizer = async function () {
         const filename = path.parse(file).name;
         if (storePicturesInWEBP) {
           extension = "WEBP";
+        } else {
+          // if the image is an SVG, we turned it into a PNG and need to change the extension
+          if (extension === "SVG") {
+            extension = "PNG";
+          }
         }
 
         const isStaticImage = basePath === staticImageFolderPath;
@@ -387,6 +402,7 @@ const nextImageExportOptimizer = async function () {
         const transformer = sharp(imageBuffer, {
           animated: true,
           limitInputPixels: false, // disable pixel limit
+          density: 600,
         });
 
         transformer.rotate();
@@ -399,6 +415,7 @@ const nextImageExportOptimizer = async function () {
         let nextLargestSize = -1;
         for (let i = 0; i < widths.length; i++) {
           if (
+            metaWidth &&
             Number(widths[i]) >= metaWidth &&
             (nextLargestSize === -1 || Number(widths[i]) < nextLargestSize)
           ) {
@@ -437,7 +454,6 @@ const nextImageExportOptimizer = async function () {
 
           continue;
         }
-
         const resize = metaWidth && metaWidth > width;
         if (resize) {
           transformer.resize(width);
@@ -460,7 +476,7 @@ const nextImageExportOptimizer = async function () {
         } else if (extension === "JPEG" || extension === "JPG") {
           transformer.jpeg({ quality });
         } else if (extension === "GIF") {
-          transformer.gif({ quality });
+          transformer.gif();
         }
 
         // Write the optimized image to the file system
@@ -499,10 +515,14 @@ const nextImageExportOptimizer = async function () {
   console.log("Copy optimized images to build folder...");
   for (let index = 0; index < allGeneratedImages.length; index++) {
     const filePath = allGeneratedImages[index];
-    const fileInBuildFolder = path.join(
-      exportFolderPath,
-      filePath.split("public").pop()
-    );
+    const splitPath = filePath.split("public");
+    const lastElement = splitPath.pop();
+
+    if (lastElement === undefined) {
+      throw new Error(`Failed to split filePath: ${filePath}`);
+    }
+
+    const fileInBuildFolder = path.join(exportFolderPath, lastElement);
 
     // Create the folder for the optimized images in the build directory if it does not exists
     ensureDirectoryExists(fileInBuildFolder);
@@ -558,8 +578,6 @@ const nextImageExportOptimizer = async function () {
     }
     return results;
   }
-
-  const imageExtensions = [".PNG", ".GIF", ".JPG", ".JPEG", ".AVIF", ".WEBP"];
 
   const imagePaths: string[] = [];
   for (const subfolderPath of optimizedImagesFolders) {

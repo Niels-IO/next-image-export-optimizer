@@ -26,6 +26,7 @@ const config = {
   use: {
     baseURL: "http://localhost:8080/",
   },
+  retries: 2,
   testDir: "example/test/e2e",
   projects: [
     {
