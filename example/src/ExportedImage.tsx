@@ -94,7 +94,6 @@ const generateImageURL = (
 
   // if the generatedImageURL is not starting with a slash, then we add one as long as it is not a remote image
   if (!isRemoteImage && generatedImageURL.charAt(0) !== "/" && !imagesDomain) {
-    console.log('WE should add slash at start of');
     generatedImageURL = "/" + generatedImageURL;
   }
   return generatedImageURL;
