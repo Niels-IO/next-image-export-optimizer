@@ -109,6 +109,16 @@ function urlToFilename(url: string) {
   // Trim any leading or trailing spaces
   filename = filename.trim();
 
+  try {
+    const parsedUrl = new URL(url);
+    const extension = parsedUrl.pathname.split(".").pop();
+    if (parsedUrl.search && extension) {
+      filename += "." + extension;
+    }
+  } catch (error) {
+    console.error("Error parsing URL", url, error);
+  }
+
   return filename;
 }
 
