@@ -501,7 +501,15 @@ const nextImageExportOptimizer = async function () {
     const filePath = allGeneratedImages[index];
     const fileInBuildFolder = path.join(
       exportFolderPath,
-      filePath.split("public").pop()
+      (() => {
+        const parts = filePath.split("public");
+        if (parts.length > 1) {
+          return parts.slice(1).join("public");
+        } else {
+          // Handle case where 'public' is not found
+          return filePath;
+        }
+      })()
     );
 
     // Create the folder for the optimized images in the build directory if it does not exists
