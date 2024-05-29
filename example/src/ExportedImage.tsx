@@ -134,14 +134,19 @@ const optimizedLoader = ({
   src,
   width,
   basePath,
+  mobileSrc
 }: {
   src: string | StaticImageData;
   width: number;
   basePath: string | undefined;
+  mobileSrc?: string | StaticImageData | undefined;
 }) => {
   const isStaticImage = typeof src === "object";
+  const isStaticMobileImage = typeof mobileSrc === "object";
   const _src = isStaticImage ? src.src : src;
+  const _mobileSrc = isStaticMobileImage ? mobileSrc.src : mobileSrc;
   const originalImageWidth = (isStaticImage && src.width) || undefined;
+  const originalMobileImageWidth = (isStaticMobileImage && mobileSrc.width) || undefined;
 
   // if it is a static image, we can use the width of the original image to generate a reduced srcset that returns
   // the same image url for widths that are larger than the original image
@@ -168,6 +173,9 @@ const optimizedLoader = ({
     }
 
     if (nextLargestSize !== null) {
+      if(nextLargestSize <= 828 && _mobileSrc) {
+        return generateImageURL(_mobileSrc, nextLargestSize, basePath);
+      }
       return generateImageURL(_src, nextLargestSize, basePath);
     }
   }
@@ -196,12 +204,14 @@ export interface ExportedImageProps
   extends Omit<ImageProps, "src" | "loader" | "quality"> {
   src: string | StaticImageData;
   basePath?: string;
+  mobileSrc?: string | StaticImageData;
 }
 
 const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
   (
     {
       src,
+      mobileSrc,
       priority = false,
       loading,
       className,
@@ -296,7 +306,7 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
         loader={
           imageError || unoptimized === true
             ? fallbackLoader
-            : (e) => optimizedLoader({ src, width: e.width, basePath })
+            : (e) => optimizedLoader({ src, width: e.width, basePath, mobileSrc })
         }
         blurDataURL={automaticallyCalculatedBlurDataURL}
         onError={(error) => {
