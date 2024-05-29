@@ -286,7 +286,14 @@ const nextImageExportOptimizer = async function () {
     } remote image${remoteImageURLs.length > 1 ? "s" : ""}.`
   );
 
-  const widths = [...blurSize, ...imageSizes, ...deviceSizes];
+  let widths = [...blurSize, ...imageSizes, ...deviceSizes];
+
+  // sort the widths in ascending order to make sure the logic works for limiting the number of images
+  widths.sort((a, b) => a - b);
+
+  // remove duplicate widths from the array
+  widths = widths.filter((item, index) => widths.indexOf(item) === index);
+
 
   const progressBar = defineProgressBar();
   if (allImagesInImageFolder.length > 0) {
@@ -405,6 +412,7 @@ const nextImageExportOptimizer = async function () {
             nextLargestSize = Number(widths[i]);
           }
         }
+
         if (
           isStaticImage &&
           nextLargestSize !== -1 &&
@@ -501,7 +509,15 @@ const nextImageExportOptimizer = async function () {
     const filePath = allGeneratedImages[index];
     const fileInBuildFolder = path.join(
       exportFolderPath,
-      filePath.split("public").pop()
+      (() => {
+        const parts = filePath.split("public");
+        if (parts.length > 1) {
+          return parts.slice(1).join("public");
+        } else {
+          // Handle case where 'public' is not found
+          return filePath;
+        }
+      })()
     );
 
     // Create the folder for the optimized images in the build directory if it does not exists
@@ -595,3 +611,4 @@ if (require.main === module) {
   nextImageExportOptimizer();
 }
 module.exports = nextImageExportOptimizer;
+

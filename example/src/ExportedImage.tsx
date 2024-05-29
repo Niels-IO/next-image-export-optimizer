@@ -146,13 +146,15 @@ const optimizedLoader = ({
   // if it is a static image, we can use the width of the original image to generate a reduced srcset that returns
   // the same image url for widths that are larger than the original image
   if (isStaticImage && originalImageWidth && width > originalImageWidth) {
-    const deviceSizes = process.env.__NEXT_IMAGE_OPTS?.deviceSizes || [
+    const deviceSizes = (process.env.__NEXT_IMAGE_OPTS?.deviceSizes || [
       640, 750, 828, 1080, 1200, 1920, 2048, 3840,
-    ];
-    const imageSizes = process.env.__NEXT_IMAGE_OPTS?.imageSizes || [
+    ]).map(Number);
+    const imageSizes = (process.env.__NEXT_IMAGE_OPTS?.imageSizes || [
       16, 32, 48, 64, 96, 128, 256, 384,
-    ];
-    const allSizes = [...deviceSizes, ...imageSizes];
+    ]).map(Number);
+    let allSizes: number[] = [...deviceSizes, ...imageSizes];
+    allSizes = allSizes.filter((v, i, a) => a.indexOf(v) === i);
+    allSizes.sort((a, b) => a - b);
 
     // only use the width if it is smaller or equal to the next size in the allSizes array
     let nextLargestSize = null;
