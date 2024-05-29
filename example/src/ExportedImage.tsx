@@ -78,6 +78,10 @@ const generateImageURL = (
       correctedPath = basePath + correctedPath;
     }
   }
+  const imagesDomain = process.env.nextImageExportOptimizer_imagesDomain;
+  if(imagesDomain) {
+    correctedPath = imagesDomain + correctedPath;
+  }
 
   const exportFolderName =
     process.env.nextImageExportOptimizer_exportFolderName ||
@@ -89,7 +93,7 @@ const generateImageURL = (
   }${exportFolderName}/${filename}-opt-${width}.${processedExtension.toUpperCase()}`;
 
   // if the generatedImageURL is not starting with a slash, then we add one as long as it is not a remote image
-  if (!isRemoteImage && generatedImageURL.charAt(0) !== "/") {
+  if (!isRemoteImage && generatedImageURL.charAt(0) !== "/" && !imagesDomain) {
     generatedImageURL = "/" + generatedImageURL;
   }
   return generatedImageURL;
@@ -130,14 +134,19 @@ const optimizedLoader = ({
   src,
   width,
   basePath,
+  mobileSrc
 }: {
   src: string | StaticImageData;
   width: number;
   basePath: string | undefined;
+  mobileSrc?: string | StaticImageData | undefined;
 }) => {
   const isStaticImage = typeof src === "object";
+  const isStaticMobileImage = typeof mobileSrc === "object";
   const _src = isStaticImage ? src.src : src;
+  const _mobileSrc = isStaticMobileImage ? mobileSrc.src : mobileSrc;
   const originalImageWidth = (isStaticImage && src.width) || undefined;
+  const originalMobileImageWidth = (isStaticMobileImage && mobileSrc.width) || undefined;
 
   // if it is a static image, we can use the width of the original image to generate a reduced srcset that returns
   // the same image url for widths that are larger than the original image
@@ -164,6 +173,9 @@ const optimizedLoader = ({
     }
 
     if (nextLargestSize !== null) {
+      if(nextLargestSize <= 828 && _mobileSrc) {
+        return generateImageURL(_mobileSrc, nextLargestSize, basePath);
+      }
       return generateImageURL(_src, nextLargestSize, basePath);
     }
   }
@@ -192,12 +204,14 @@ export interface ExportedImageProps
   extends Omit<ImageProps, "src" | "loader" | "quality"> {
   src: string | StaticImageData;
   basePath?: string;
+  mobileSrc?: string | StaticImageData;
 }
 
 const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
   (
     {
       src,
+      mobileSrc,
       priority = false,
       loading,
       className,
@@ -292,7 +306,7 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
         loader={
           imageError || unoptimized === true
             ? fallbackLoader
-            : (e) => optimizedLoader({ src, width: e.width, basePath })
+            : (e) => optimizedLoader({ src, width: e.width, basePath, mobileSrc })
         }
         blurDataURL={automaticallyCalculatedBlurDataURL}
         onError={(error) => {
