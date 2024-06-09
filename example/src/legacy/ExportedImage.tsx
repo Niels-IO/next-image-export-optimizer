@@ -81,19 +81,28 @@ const generateImageURL = (
   return generatedImageURL;
 };
 
+// Credits to https://github.com/bryc/code/blob/master/jshash/experimental/cyrb53.js
+// This is a hash function that is used to generate a hash from the image URL
+const hashAlgorithm = (str: string, seed = 0) => {
+  let h1 = 0xdeadbeef ^ seed,
+    h2 = 0x41c6ce57 ^ seed;
+  for (let i = 0, ch; i < str.length; i++) {
+    ch = str.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507);
+  h1 ^= Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507);
+  h2 ^= Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+
+  return 4294967296 * (2097151 & h2) + (h1 >>> 0);
+};
+
 function urlToFilename(url: string) {
-  // Remove the protocol from the URL
-  let filename = url.replace(/^(https?|ftp):\/\//, "");
 
-  // Replace special characters with underscores
-  filename = filename.replace(/[/\\:*?"<>|#%]/g, "_");
-
-  // Remove control characters
-  // eslint-disable-next-line no-control-regex
-  filename = filename.replace(/[\x00-\x1F\x7F]/g, "");
-
-  // Trim any leading or trailing spaces
-  filename = filename.trim();
+  const { extension } = splitFilePath({ filePath: url });
+  let filename = hashAlgorithm(url).toString().concat(".", extension);
 
   return filename;
 }

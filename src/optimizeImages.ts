@@ -9,6 +9,8 @@ const getHash = require("./utils/getHash");
 import { getRemoteImageURLs } from "./utils/getRemoteImageURLs";
 import { downloadImagesInBatches } from "./utils/downloadImagesInBatches";
 
+const urlToFilename = require("./utils/urlToFilename");
+
 const fs = require("fs");
 const sharp = require("sharp");
 const path = require("path");
@@ -201,6 +203,40 @@ const nextImageExportOptimizer = async function () {
         remoteImageURLs.length > 1 ? "s" : ""
       }...`
     );
+
+  // we clear all images in the remote image folder that are not in the remoteImageURLs array
+  const allFilesInRemoteImageFolder: string[] = fs.readdirSync(
+    folderNameForRemoteImages
+  );
+  const encodedRemoteImageURLs = remoteImageURLs.map((url: string) =>
+    urlToFilename(url)
+  );
+
+  function removeLastUpdated(str: string) {
+    const suffix = ".lastUpdated";
+    if (str.endsWith(suffix)) {
+      return str.slice(0, -suffix.length);
+    }
+    return str;
+  }
+
+  for (const filename of allFilesInRemoteImageFolder) {
+    if (
+      encodedRemoteImageURLs.includes(filename) ||
+      encodedRemoteImageURLs.includes(removeLastUpdated(filename))
+    ) {
+      // the filename is in the remoteImageURLs array or the filename without the .lastUpdated suffix
+      // so we do not delete it
+      continue;
+    }
+
+    console.log(
+      `Delete ${filename} from remote image folder as it is not retrieved from remoteOptimizedImages.js.`
+    );
+
+    fs.unlinkSync(path.join(folderNameForRemoteImages, filename));
+  }
+
   await downloadImagesInBatches(
     remoteImageURLs,
     remoteImageFilenames,
@@ -293,7 +329,6 @@ const nextImageExportOptimizer = async function () {
 
   // remove duplicate widths from the array
   widths = widths.filter((item, index) => widths.indexOf(item) === index);
-
 
   const progressBar = defineProgressBar();
   if (allImagesInImageFolder.length > 0) {
@@ -611,4 +646,3 @@ if (require.main === module) {
   nextImageExportOptimizer();
 }
 module.exports = nextImageExportOptimizer;
-
