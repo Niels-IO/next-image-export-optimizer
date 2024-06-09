@@ -100,11 +100,16 @@ const hashAlgorithm = (str: string, seed = 0) => {
 };
 
 function urlToFilename(url: string) {
-
-  const { extension } = splitFilePath({ filePath: url });
-  let filename = hashAlgorithm(url).toString().concat(".", extension);
-
-  return filename;
+  try {
+    const parsedUrl = new URL(url);
+    const extension = parsedUrl.pathname.split(".").pop();
+    if (extension) {
+      return hashAlgorithm(url).toString().concat(".", extension);
+    }
+  } catch (error) {
+    console.error("Error parsing URL", url, error);
+  }
+  return hashAlgorithm(url).toString();
 }
 
 const imageURLForRemoteImage = ({

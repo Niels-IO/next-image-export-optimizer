@@ -230,11 +230,11 @@ const nextImageExportOptimizer = async function () {
       continue;
     }
 
-    console.log(
-      `Delete ${filename} from remote image folder as it is not retrieved from remoteOptimizedImages.js.`
-    );
-
     fs.unlinkSync(path.join(folderNameForRemoteImages, filename));
+
+    console.log(
+      `Deleted ${filename} from remote image folder as it is not retrieved from remoteOptimizedImages.js.`
+    );
   }
 
   await downloadImagesInBatches(

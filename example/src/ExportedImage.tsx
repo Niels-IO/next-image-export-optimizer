@@ -115,10 +115,16 @@ const hashAlgorithm = (str: string, seed = 0) => {
 };
 
 function urlToFilename(url: string) {
-  const { extension } = splitFilePath({ filePath: url });
-  let filename = hashAlgorithm(url).toString().concat(".", extension);
-
-  return filename;
+  try {
+    const parsedUrl = new URL(url);
+    const extension = parsedUrl.pathname.split(".").pop();
+    if (extension) {
+      return hashAlgorithm(url).toString().concat(".", extension);
+    }
+  } catch (error) {
+    console.error("Error parsing URL", url, error);
+  }
+  return hashAlgorithm(url).toString();
 }
 
 const imageURLForRemoteImage = ({
@@ -224,6 +230,7 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
       blurDataURL,
       style,
       onError,
+      overrideSrc,
       ...rest
     },
     ref
@@ -292,6 +299,7 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
         {...(loading && { loading })}
         {...(className && { className })}
         {...(onLoad && { onLoad })}
+        {...(overrideSrc && { overrideSrc })}
         // if the blurStyle is not "empty", then we take care of the blur behavior ourselves
         // if the blur is complete, we also set the placeholder to empty as it otherwise shows
         // the background image on transparent images
@@ -304,7 +312,7 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
         style={{ ...style, ...blurStyle }}
         loader={
           imageError || unoptimized === true
-            ? fallbackLoader
+            ? () => fallbackLoader({ src: overrideSrc || src })
             : (e) => optimizedLoader({ src, width: e.width, basePath })
         }
         blurDataURL={automaticallyCalculatedBlurDataURL}

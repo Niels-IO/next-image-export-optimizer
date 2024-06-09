@@ -1,14 +1,14 @@
 module.exports = function urlToFilename(url: string) {
-  const extension = url.split(".").pop();
-
-  if (!extension) {
-    // Throw an error if the URL does not have an extension
-    throw new Error(`URL does not have an extension: ${url}`);
+  try {
+    const parsedUrl = new URL(url);
+    const extension = parsedUrl.pathname.split(".").pop();
+    if (extension) {
+      return hashAlgorithm(url).toString().concat(".", extension);
+    }
+    return hashAlgorithm(url).toString();
+  } catch (error) {
+    console.error("Error parsing URL", url, error);
   }
-
-  let filename = hashAlgorithm(url).toString().concat(".", extension);
-
-  return filename;
 };
 
 // Credits to https://github.com/bryc/code/blob/master/jshash/experimental/cyrb53.js
