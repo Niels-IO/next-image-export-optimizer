@@ -169,7 +169,17 @@ const correctSrcRemoteImage = {
   2048: `http://localhost:8080${basePath}/nextImageExportOptimizer/5206242668571649-opt-2048.WEBP`,
   3840: `http://localhost:8080${basePath}/nextImageExportOptimizer/5206242668571649-opt-3840.WEBP`,
 };
-
+const correctSrcRemoteImageWithQueryParams = {
+  640: `http://localhost:8080${basePath}/nextImageExportOptimizer/6725071117443837-opt-640.WEBP`,
+  750: `http://localhost:8080${basePath}/nextImageExportOptimizer/6725071117443837-opt-750.WEBP`,
+  777: `http://localhost:8080${basePath}/nextImageExportOptimizer/6725071117443837-opt-777.WEBP`,
+  828: `http://localhost:8080${basePath}/nextImageExportOptimizer/6725071117443837-opt-828.WEBP`,
+  1080: `http://localhost:8080${basePath}/nextImageExportOptimizer/6725071117443837-opt-1080.WEBP`,
+  1200: `http://localhost:8080${basePath}/nextImageExportOptimizer/6725071117443837-opt-1200.WEBP`,
+  1920: `http://localhost:8080${basePath}/nextImageExportOptimizer/6725071117443837-opt-1920.WEBP`,
+  2048: `http://localhost:8080${basePath}/nextImageExportOptimizer/6725071117443837-opt-2048.WEBP`,
+  3840: `http://localhost:8080${basePath}/nextImageExportOptimizer/6725071117443837-opt-3840.WEBP`,
+};
 const correctSrcAnimatedPNGImage = {
   640: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.${
     imagesWebP ? "WEBP" : "PNG"
@@ -696,9 +706,30 @@ for (let index = 0; index < widths.length; index++) {
 
       // check the number of images on the page
       const images = await page.$$("img");
-      expect(images.length).toBe(1);
+      expect(images.length).toBe(2);
       const srcset = generateSrcset(widths, correctSrcRemoteImage);
       expect(image.srcset).toBe(srcset);
+
+      const img_query = await page.locator("#test_image_queryParam");
+      await img_query.click();
+
+      const image_query = await getImageById(page, "test_image_queryParam");
+      expect(image_query.currentSrc).toBe(
+        correctSrcRemoteImageWithQueryParams[width.toString()]
+      );
+      expect(image_query.naturalWidth).toBe(width >= 2048 ? 2048 : width);
+      await expect(img_query).toHaveCSS("position", "absolute");
+      await expect(img_query).not.toHaveCSS(
+        "background-image",
+        `url("/images/nextImageExportOptimizer/transparentImage-opt-10.WEBP")`
+      );
+      await expect(img_query).not.toHaveCSS("background-repeat", "no-repeat");
+
+      const srcset_query = generateSrcset(
+        widths,
+        correctSrcRemoteImageWithQueryParams
+      );
+      expect(image_query.srcset).toBe(srcset_query);
     });
     test("should check the image size for the animated test page", async ({
       page,
