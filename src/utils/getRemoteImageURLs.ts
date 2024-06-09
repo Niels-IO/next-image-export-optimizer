@@ -7,7 +7,7 @@ export async function getRemoteImageURLs(
   nextConfigFolder: string,
   folderPathForRemoteImages: string
 ) {
-  let remoteImageURLs = [];
+  let remoteImageURLs: string[] = [];
   const remoteImagesFilePath = path.join(
     nextConfigFolder,
     "remoteOptimizedImages.js"
@@ -30,5 +30,6 @@ export async function getRemoteImageURLs(
       fullPath: filename,
     };
   });
+
   return { remoteImageFilenames, remoteImageURLs };
 }

@@ -38,6 +38,25 @@ export default function Home() {
             basePath={basePath}
           />
         </div>
+        <div
+          style={{
+            position: "relative",
+            width: "50%",
+            height: "200px",
+            marginBottom: "3rem",
+          }}
+        >
+          <ExportedImage
+            src="https://reactapp.dev/images/nextImageExportOptimizer/christopher-gower-m_HRfLhgABo-unsplash-opt-2048.WEBP?ref=next-image-export-optimizer"
+            fill
+            id="test_image_queryParam"
+            style={{ objectFit: "cover" }}
+            priority
+            alt={"test_image_queryParam"}
+            basePath={basePath}
+            // overrideSrc="/test_image.jpg"
+          />
+        </div>
       </main>
     </div>
   );

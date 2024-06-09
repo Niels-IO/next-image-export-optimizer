@@ -92,24 +92,39 @@ const generateImageURL = (
   if (!isRemoteImage && generatedImageURL.charAt(0) !== "/") {
     generatedImageURL = "/" + generatedImageURL;
   }
+
   return generatedImageURL;
 };
 
+// Credits to https://github.com/bryc/code/blob/master/jshash/experimental/cyrb53.js
+// This is a hash function that is used to generate a hash from the image URL
+const hashAlgorithm = (str: string, seed = 0) => {
+  let h1 = 0xdeadbeef ^ seed,
+    h2 = 0x41c6ce57 ^ seed;
+  for (let i = 0, ch; i < str.length; i++) {
+    ch = str.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507);
+  h1 ^= Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507);
+  h2 ^= Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+
+  return 4294967296 * (2097151 & h2) + (h1 >>> 0);
+};
+
 function urlToFilename(url: string) {
-  // Remove the protocol from the URL
-  let filename = url.replace(/^(https?|ftp):\/\//, "");
-
-  // Replace special characters with underscores
-  filename = filename.replace(/[/\\:*?"<>|#%]/g, "_");
-
-  // Remove control characters
-  // eslint-disable-next-line no-control-regex
-  filename = filename.replace(/[\x00-\x1F\x7F]/g, "");
-
-  // Trim any leading or trailing spaces
-  filename = filename.trim();
-
-  return filename;
+  try {
+    const parsedUrl = new URL(url);
+    const extension = parsedUrl.pathname.split(".").pop();
+    if (extension) {
+      return hashAlgorithm(url).toString().concat(".", extension);
+    }
+  } catch (error) {
+    console.error("Error parsing URL", url, error);
+  }
+  return hashAlgorithm(url).toString();
 }
 
 const imageURLForRemoteImage = ({
@@ -142,12 +157,16 @@ const optimizedLoader = ({
   // if it is a static image, we can use the width of the original image to generate a reduced srcset that returns
   // the same image url for widths that are larger than the original image
   if (isStaticImage && originalImageWidth && width > originalImageWidth) {
-    const deviceSizes = (process.env.__NEXT_IMAGE_OPTS?.deviceSizes || [
-      640, 750, 828, 1080, 1200, 1920, 2048, 3840,
-    ]).map(Number);
-    const imageSizes = (process.env.__NEXT_IMAGE_OPTS?.imageSizes || [
-      16, 32, 48, 64, 96, 128, 256, 384,
-    ]).map(Number);
+    const deviceSizes = (
+      process.env.__NEXT_IMAGE_OPTS?.deviceSizes || [
+        640, 750, 828, 1080, 1200, 1920, 2048, 3840,
+      ]
+    ).map(Number);
+    const imageSizes = (
+      process.env.__NEXT_IMAGE_OPTS?.imageSizes || [
+        16, 32, 48, 64, 96, 128, 256, 384,
+      ]
+    ).map(Number);
     let allSizes: number[] = [...deviceSizes, ...imageSizes];
     allSizes = allSizes.filter((v, i, a) => a.indexOf(v) === i);
     allSizes.sort((a, b) => a - b);
@@ -211,6 +230,7 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
       blurDataURL,
       style,
       onError,
+      overrideSrc,
       ...rest
     },
     ref
@@ -279,6 +299,7 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
         {...(loading && { loading })}
         {...(className && { className })}
         {...(onLoad && { onLoad })}
+        {...(overrideSrc && { overrideSrc })}
         // if the blurStyle is not "empty", then we take care of the blur behavior ourselves
         // if the blur is complete, we also set the placeholder to empty as it otherwise shows
         // the background image on transparent images
@@ -291,7 +312,7 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
         style={{ ...style, ...blurStyle }}
         loader={
           imageError || unoptimized === true
-            ? fallbackLoader
+            ? () => fallbackLoader({ src: overrideSrc || src })
             : (e) => optimizedLoader({ src, width: e.width, basePath })
         }
         blurDataURL={automaticallyCalculatedBlurDataURL}
