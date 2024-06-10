@@ -6,7 +6,7 @@ const defineProgressBar = require("./utils/defineProgressBar");
 const ensureDirectoryExists = require("./utils/ensureDirectoryExists");
 const getAllFilesAsObject = require("./utils/getAllFilesAsObject");
 const getHash = require("./utils/getHash");
-import { getRemoteImageURLs } from "./utils/getRemoteImageURLs";
+import { RemoteImage, getRemoteImageURLs } from "./utils/getRemoteImageURLs";
 import { downloadImagesInBatches } from "./utils/downloadImagesInBatches";
 
 const urlToFilename = require("./utils/urlToFilename");
@@ -210,8 +210,8 @@ const nextImageExportOptimizer = async function () {
   )
     ? fs.readdirSync(folderNameForRemoteImages)
     : [];
-  const encodedRemoteImageURLs = remoteImageURLs.map((url: string) =>
-    urlToFilename(url)
+  const encodedRemoteImageURLs = remoteImageURLs.map((urlObj: RemoteImage) =>
+    urlToFilename(urlObj.url)
   );
 
   function removeLastUpdated(str: string) {
