@@ -1,19 +1,29 @@
 import { ImageObject } from "./ImageObject";
 import path from "path";
 import fs from "fs";
+import { RemoteImage } from "./getRemoteImageURLs";
 const http = require("http");
 const https = require("https");
 const urlModule = require("url"); // Import url module to parse the url
 
-async function downloadImage(url: string, filename: string, folder: string) {
+async function downloadImage(
+  urlObj: RemoteImage,
+  filename: string,
+  folder: string
+) {
   return new Promise<void>((resolve, reject) => {
     // Choose the right http library:
-    const httpLib = urlModule.parse(url).protocol === "http:" ? http : https;
+    const httpLib =
+      urlModule.parse(urlObj.url).protocol === "http:" ? http : https;
 
-    const request = httpLib.get(url, function (response: any) {
+    const options = {
+      headers: urlObj.headers || {},
+    };
+
+    const request = httpLib.get(urlObj.url, options, function (response: any) {
       if (response.statusCode !== 200) {
         console.error(
-          `Error: Unable to download ${url} (status code: ${response.statusCode}).`
+          `Error: Unable to download ${urlObj.url} (status code: ${response.statusCode}).`
         );
         reject(new Error(`Status code: ${response.statusCode}`));
         return;
@@ -24,7 +34,7 @@ async function downloadImage(url: string, filename: string, folder: string) {
         !response.headers["content-type"].startsWith("application/octet-stream")
       ) {
         console.error(
-          `Error: Unable to download ${url} (invalid content type: ${response.headers["content-type"]}).`
+          `Error: Unable to download ${urlObj.url} (invalid content type: ${response.headers["content-type"]}).`
         );
         reject(
           new Error(`Invalid content type: ${response.headers["content-type"]}`)
@@ -108,14 +118,14 @@ async function downloadImage(url: string, filename: string, folder: string) {
       });
     });
     request.on("error", (err: Error) => {
-      console.error(`Error: Unable to download ${url}.`, err);
+      console.error(`Error: Unable to download ${urlObj.url}.`, err);
       reject(err);
     });
   });
 }
 
 export async function downloadImagesInBatches(
-  imagesURLs: string[],
+  imagesURLs: RemoteImage[],
   imageFileNames: ImageObject[],
   folder: string,
   batchSize: number,
@@ -138,11 +148,11 @@ export async function downloadImagesInBatches(
       }
     }
 
-    const promises = batchURLs.map((url, index) => {
+    const promises = batchURLs.map((urlObj, index) => {
       const file = batchFileNames[index];
       if (file.fullPath === undefined) {
         console.error(
-          `Error: Unable to download ${url} (fullPath is undefined).`
+          `Error: Unable to download ${urlObj.url} (fullPath is undefined).`
         );
         return Promise.resolve();
       }
@@ -178,7 +188,7 @@ export async function downloadImagesInBatches(
         return Promise.resolve();
       }
       downloadedImages++;
-      return downloadImage(url, file.fullPath as string, folder);
+      return downloadImage(urlObj, file.fullPath as string, folder);
     }); // create an array of promises for downloading images in the batch
 
     try {
