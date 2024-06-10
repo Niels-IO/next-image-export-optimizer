@@ -205,9 +205,11 @@ const nextImageExportOptimizer = async function () {
     );
 
   // we clear all images in the remote image folder that are not in the remoteImageURLs array
-  const allFilesInRemoteImageFolder: string[] = fs.readdirSync(
+  const allFilesInRemoteImageFolder: string[] = fs.existsSync(
     folderNameForRemoteImages
-  );
+  )
+    ? fs.readdirSync(folderNameForRemoteImages)
+    : [];
   const encodedRemoteImageURLs = remoteImageURLs.map((url: string) =>
     urlToFilename(url)
   );
