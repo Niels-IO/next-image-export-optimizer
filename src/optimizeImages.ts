@@ -541,7 +541,7 @@ const nextImageExportOptimizer = async function () {
 
   // Copy the optimized images to the build folder
 
-  console.log("Copy optimized images to build folder...");
+  console.log("\nCopy optimized images to build folder...");
   for (let index = 0; index < allGeneratedImages.length; index++) {
     const filePath = allGeneratedImages[index];
     const fileInBuildFolder = path.join(
@@ -640,6 +640,7 @@ const nextImageExportOptimizer = async function () {
         unusedImages.length > 1 ? "s" : ""
       } from the optimized images folders.`
     );
+  progressBar.stop();
 
   console.log("---- next-image-export-optimizer: Done ---- ");
 };
