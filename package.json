@@ -61,7 +61,6 @@
   "author": "Niels Grafen",
   "license": "MIT",
   "dependencies": {
-    "cli-progress": "^3.10.0",
     "sharp": "^0.33.1",
     "typescript": "^5.2.2"
   },
