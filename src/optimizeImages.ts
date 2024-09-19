@@ -266,6 +266,13 @@ const nextImageExportOptimizer = async function () {
   const isImageFolderSubdirectoryOfPublicFolder =
     imageFolderPath.includes("public");
 
+  // Generate a warning if the image folder is not a subdirectory of the public folder
+  if (!isImageFolderSubdirectoryOfPublicFolder) {
+    console.warn(
+      "\x1b[41mWarning: The image folder is not a subdirectory of the public folder. The images in the image folder are not optimized.\x1b[0m"
+    );
+  }
+
   const allFilesInImageFolderAndSubdirectories =
     isImageFolderSubdirectoryOfPublicFolder
       ? getAllFilesAsObject(imageFolderPath, imageFolderPath, exportFolderName)
