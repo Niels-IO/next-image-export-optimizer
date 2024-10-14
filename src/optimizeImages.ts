@@ -110,13 +110,6 @@ const nextImageExportOptimizer = async function () {
       remoteImageFileName =
         newPath.nextImageExportOptimizer_remoteImagesFilename;
     }
-    const result = await getRemoteImageURLs(
-      remoteImageFileName,
-      nextConfigFolder,
-      folderPathForRemoteImages
-    );
-    remoteImageFilenames = result.remoteImageFilenames;
-    remoteImageURLs = result.remoteImageURLs;
 
     if (legacyPath?.imageFolderPath !== undefined) {
       imageFolderPath = legacyPath.imageFolderPath;
@@ -189,6 +182,14 @@ const nextImageExportOptimizer = async function () {
   } catch (e) {
     // Configuration file not found
     console.log("Could not find a next.config.js file. Use of default values");
+  } finally {
+    const result = await getRemoteImageURLs(
+      remoteImageFileName,
+      nextConfigFolder,
+      folderPathForRemoteImages
+    );
+    remoteImageFilenames = result.remoteImageFilenames;
+    remoteImageURLs = result.remoteImageURLs;
   }
 
   // if the user has specified a path for the export folder via the command line, use this path
