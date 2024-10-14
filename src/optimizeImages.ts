@@ -81,10 +81,16 @@ const nextImageExportOptimizer = async function () {
   let blurSize: number[] = [];
   let remoteImageCacheTTL = 0;
   let exportFolderName = "nextImageExportOptimizer";
-  const { remoteImageFilenames, remoteImageURLs } = await getRemoteImageURLs(
-    nextConfigFolder,
-    folderPathForRemoteImages
-  );
+  let remoteImageFileName = "remoteOptimizedImages.js";
+
+  let remoteImageFilenames: {
+    basePath: string;
+    file: any;
+    dirPathWithoutBasePath: string;
+    fullPath: string;
+  }[] = [];
+  let remoteImageURLs: string[] = [];
+
   try {
     // Read in the configuration parameters
     const nextjsConfig = await loadConfig("phase-export", nextConfigFolder);
@@ -95,6 +101,22 @@ const nextImageExportOptimizer = async function () {
     }
     const legacyPath = nextjsConfig.images?.nextImageExportOptimizer;
     const newPath = nextjsConfig.env;
+
+    if (legacyPath?.remoteImagesFilename !== undefined) {
+      remoteImageFileName = legacyPath.remoteImagesFilename;
+    } else if (
+      newPath?.nextImageExportOptimizer_remoteImagesFilename !== undefined
+    ) {
+      remoteImageFileName =
+        newPath.nextImageExportOptimizer_remoteImagesFilename;
+    }
+    const result = await getRemoteImageURLs(
+      remoteImageFileName,
+      nextConfigFolder,
+      folderPathForRemoteImages
+    );
+    remoteImageFilenames = result.remoteImageFilenames;
+    remoteImageURLs = result.remoteImageURLs;
 
     if (legacyPath?.imageFolderPath !== undefined) {
       imageFolderPath = legacyPath.imageFolderPath;
@@ -235,7 +257,7 @@ const nextImageExportOptimizer = async function () {
     fs.unlinkSync(path.join(folderNameForRemoteImages, filename));
 
     console.log(
-      `Deleted ${filename} from remote image folder as it is not retrieved from remoteOptimizedImages.js.`
+      `Deleted ${filename} from remote image folder as it is not retrieved from ${remoteImageFileName}.`
     );
   }
 

@@ -171,6 +171,18 @@ If you want to hide the remote image urls from the user, you can use the [overri
 
 Beware that the Image component cannot fall back to the original image URL if the optimized images are not yet generated when you use the overrideSrc prop. This will result in a broken image link.
 
+You can customize the filename for remote optimized images by adding the following to your `next.config.js`:
+
+```javascript
+module.exports = {
+  env: {
+    // ... other env variables
+    nextImageExportOptimizer_remoteImagesFilename: "remoteOptimizedImages.cjs",
+  },
+  // ... other config options
+};
+```
+
 ### Custom next.config.js path
 
 If your Next.js project is not at the root directory where you are running the commands, for example when you are using a monorepo, you can specify the location of the next.config.js as an argument to the script:
