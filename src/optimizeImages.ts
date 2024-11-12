@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 import { ImageObject } from "./utils/ImageObject";
+import { downloadImagesInBatches } from "./utils/downloadImagesInBatches";
+import { getRemoteImageURLs } from "./utils/getRemoteImageURLs";
 
 const defineProgressBar = require("./utils/defineProgressBar");
 const ensureDirectoryExists = require("./utils/ensureDirectoryExists");
 const getAllFilesAsObject = require("./utils/getAllFilesAsObject");
 const getHash = require("./utils/getHash");
-import { getRemoteImageURLs } from "./utils/getRemoteImageURLs";
-import { downloadImagesInBatches } from "./utils/downloadImagesInBatches";
 
 const urlToFilename = require("./utils/urlToFilename");
 
@@ -654,5 +654,8 @@ const nextImageExportOptimizer = async function () {
 
 if (require.main === module) {
   nextImageExportOptimizer();
+
+  // if running on CLI, consequently exit with 0/success code
+  process.exit(0);
 }
 module.exports = nextImageExportOptimizer;
