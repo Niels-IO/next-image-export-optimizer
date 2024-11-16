@@ -43,7 +43,7 @@ pnpm install next-image-export-optimizer
 
 ## Basic configuration
 
-Add the following to your next.config.js:
+Add the following to your `next.config.js`. You can also use `next.config.ts` for TypeScript projects.:
 
 ```javascript
 // next.config.js
@@ -122,7 +122,7 @@ import ExportedImage from "next-image-export-optimizer";
 <ExportedImage src="https://example.com/remote-image.jpg" alt="Remote Image" />;
 ```
 
-In order for the image optimization at build time to work correctly, you have to specify all remote image urls in a file called **remoteOptimizedImages.js** in the root directory of your project (where the next.config.js is stored as well). The file should export an array of strings containing the urls of the remote images. Returning a promise of such array is also supported.
+In order for the image optimization at build time to work correctly, you have to specify all remote image urls in a file called **remoteOptimizedImages.js** in the root directory of your project (where the `next.config.js` is stored as well). The file should export an array of strings containing the urls of the remote images. Returning a promise of such array is also supported.
 
 Example:
 
@@ -156,7 +156,7 @@ module.exports = fetch("https://example.com/api/images").catch((error) => {
 
 At build time, the images will be either downloaded or read from the cache. The image urls will be replaced with the optimized image urls in the Exported Image component.
 
-You can specify the time to live of the cache in seconds by setting the `nextImageExportOptimizer_remoteImageCacheTTL` environment variable in your **next.config.js** file. The default value is 0 seconds (as the image might have changed).
+You can specify the time to live of the cache in seconds by setting the `nextImageExportOptimizer_remoteImageCacheTTL` environment variable in your `next.config.js` file. The default value is 0 seconds (as the image might have changed).
 
 Set it to:
 
@@ -185,7 +185,7 @@ module.exports = {
 
 ### Custom next.config.js path
 
-If your Next.js project is not at the root directory where you are running the commands, for example when you are using a monorepo, you can specify the location of the next.config.js as an argument to the script:
+If your Next.js project is not at the root directory where you are running the commands, for example when you are using a monorepo, you can specify the location of the `next.config.js` as an argument to the script:
 
 ```json
 "export": "next build && next-image-export-optimizer --nextConfigPath path/to/my/next.config.js"
@@ -210,7 +210,7 @@ Or by passing the argument to the script:
 
 ### Base path
 
-If you want to deploy your app to a subfolder of your domain, you can set the basePath in the next.config.js file:
+If you want to deploy your app to a subfolder of your domain, you can set the basePath in the `next.config.js` file:
 
 ```javascript
 module.exports = {
@@ -253,7 +253,7 @@ If you do not want to use the WEBP format, set the `nextImageExportOptimizer_sto
 
 - The **\<ExportedImage />** component falls back to the original image if the optimized images are not yet generated in the development mode. In the exported, static React app, the responsive images are available as srcset and dynamically loaded by the browser.
 
-- The static import method is recommended as it informs the client about the original image size. When widths larger than the original image width are requested, the next largest image size in the deviceSizes array (specified in the next.config.js) will be used for the generation of the srcset attribute.
+- The static import method is recommended as it informs the client about the original image size. When widths larger than the original image width are requested, the next largest image size in the deviceSizes array (specified in the `next.config.js`) will be used for the generation of the srcset attribute.
   When you specify the images as a path string, this library will create duplicates of the original image for each image size in the deviceSizes array that is larger than the original image size.
 
 - You can output the original, unoptimized images using the `unoptimized` prop.
