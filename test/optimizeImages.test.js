@@ -126,7 +126,7 @@ async function testConfig(config) {
     "example/public/images/subfolder/subfolder2/nextImageExportOptimizer2"
   );
   // write config file for the to be tested configuration variables to the folder
-  fs.writeFileSync("example/next.config.js", config);
+  fs.writeFileSync("example/next.config.ts", config);
 
   deleteFolder("example/out/images/nextImageExportOptimizer");
   deleteFolder("example/out/nextImageExportOptimizer");

@@ -1,7 +1,10 @@
 const { devices } = require("@playwright/test");
 const fs = require("fs");
 
-const newConfigBasePath = `module.exports = {
+const newConfigBasePath = `
+import type { NextConfig } from 'next'
+ 
+const nextConfig: NextConfig = {
   images: {
     loader: "custom",
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
@@ -18,9 +21,10 @@ const newConfigBasePath = `module.exports = {
     nextImageExportOptimizer_generateAndUseBlurImages: "true",
   },
 };
+export default nextConfig
 `;
 // write config file for the to be tested configuration variables to the folder
-fs.writeFileSync("example/next.config.js", newConfigBasePath);
+fs.writeFileSync("example/next.config.ts", newConfigBasePath);
 const config = {
   use: {
     baseURL: "http://localhost:8080/",

@@ -1,4 +1,7 @@
-module.exports = {
+
+import type { NextConfig } from 'next'
+ 
+const nextConfig: NextConfig = {
   images: {
     loader: "custom",
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
@@ -15,3 +18,4 @@ module.exports = {
     nextImageExportOptimizer_generateAndUseBlurImages: "true",
   },
 };
+export default nextConfig
