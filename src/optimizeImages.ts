@@ -689,6 +689,7 @@ const nextImageExportOptimizer = async function () {
   progressBar.stop();
 
   console.log("---- next-image-export-optimizer: Done ---- ");
+  process.exit(0);
 };
 
 if (require.main === module) {
