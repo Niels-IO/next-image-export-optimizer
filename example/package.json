@@ -10,14 +10,13 @@
   },
   "dependencies": {
     "next": "^14.0.2",
-    "next-image-export-optimizer": "^1.9.0",
+    "next-image-export-optimizer": "^1.15.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.9.0",
     "@types/react": "^18.0.26",
-    "eslint-config-next": "^14.0.2",
-    "express": "^4.18.2"
+    "eslint-config-next": "^14.0.2"
   }
 }
