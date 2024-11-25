@@ -1,6 +1,6 @@
 {
   "name": "next-image-export-optimizer",
-  "version": "1.16.0",
+  "version": "1.18.0",
   "description": "Optimizes all static images for Next.js static HTML export functionality",
   "main": "dist/ExportedImage.js",
   "types": "dist/ExportedImage.d.ts",
@@ -65,17 +65,21 @@
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
-    "next": "^15.0.3",
-    "react": "^18.0.0-0"
+    "next": "^14.2.18 || ^15.0.3",
+    "react": "^18.2.0 || ^19.0.0-0"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^15.0.3",
     "@playwright/test": "^1.39.0",
-    "@types/react": "^18.0.0",
+    "@types/react": "npm:types-react@rc",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.33.2",
     "jest": "^29.7.0",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.1"
+  },
+  "overrides": {
+    "@types/react": "npm:types-react@rc",
+    "@types/react-dom": "npm:types-react-dom@rc"
   }
 }

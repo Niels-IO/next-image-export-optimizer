@@ -10,14 +10,18 @@
   },
   "dependencies": {
     "next": "^15.0.3",
-    "next-image-export-optimizer": "^1.9.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "next-image-export-optimizer": "^1.17.0-beta.3",
+    "react": "19.0.0-rc-66855b96-20241106",
+    "react-dom": "19.0.0-rc-66855b96-20241106"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
-    "@types/react": "^18.0.26",
+    "@types/react": "npm:types-react@rc",
     "eslint-config-next": "^15.0.3",
     "express": "^4.18.2"
+  },
+  "overrides": {
+    "@types/react": "npm:types-react@rc",
+    "@types/react-dom": "npm:types-react-dom@rc"
   }
 }
