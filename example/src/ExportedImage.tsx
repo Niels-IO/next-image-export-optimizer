@@ -1,7 +1,7 @@
 "use client";
 
 import Image, { ImageProps, StaticImageData } from "next/image";
-import React, { forwardRef, useMemo, useState } from "react";
+import { forwardRef, useCallback, useMemo, useState } from "react";
 
 const splitFilePath = ({ filePath }: { filePath: string }) => {
   const filenameWithExtension =
@@ -289,6 +289,41 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
       _src = basePath + "/" + _src;
     }
 
+    // Memoize the loader function
+    const imageLoader = useMemo(() => {
+      return imageError || unoptimized === true
+        ? () => fallbackLoader({ src: overrideSrc || src })
+        : (e: { width: number }) =>
+            optimizedLoader({ src, width: e.width, basePath });
+    }, [imageError, unoptimized, overrideSrc, src, basePath]);
+
+    const handleError = useCallback(
+      (error: any) => {
+        setImageError(true);
+        setBlurComplete(true);
+        // execute the onError function if provided
+        onError && onError(error);
+      },
+      [onError]
+    );
+
+    const handleLoad = useCallback(
+      (e: any) => {
+        // for some configurations, the onError handler is not called on an error occurrence
+        // so we need to check if the image is loaded correctly
+        const target = e.target as HTMLImageElement;
+        if (target.naturalWidth === 0) {
+          // Broken image, fall back to unoptimized (meaning the original image src)
+          setImageError(true);
+        }
+        setBlurComplete(true);
+
+        // execute the onLoad callback if present
+        onLoad && onLoad(e);
+      },
+      [onLoad]
+    );
+
     return (
       <Image
         ref={ref}
@@ -310,31 +345,10 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
         {...(priority && { priority })}
         {...(isSVG && { unoptimized: true })}
         style={{ ...style, ...blurStyle }}
-        loader={
-          imageError || unoptimized === true
-            ? () => fallbackLoader({ src: overrideSrc || src })
-            : (e) => optimizedLoader({ src, width: e.width, basePath })
-        }
+        loader={imageLoader}
         blurDataURL={automaticallyCalculatedBlurDataURL}
-        onError={(error) => {
-          setImageError(true);
-          setBlurComplete(true);
-          // execute the onError function if provided
-          onError && onError(error);
-        }}
-        onLoad={(e) => {
-          // for some configurations, the onError handler is not called on an error occurrence
-          // so we need to check if the image is loaded correctly
-          const target = e.target as HTMLImageElement;
-          if (target.naturalWidth === 0) {
-            // Broken image, fall back to unoptimized (meaning the original image src)
-            setImageError(true);
-          }
-          setBlurComplete(true);
-
-          // execute the onLoad callback if present
-          onLoad && onLoad(e);
-        }}
+        onError={handleError}
+        onLoad={handleLoad}
         src={isStaticImage ? src : _src}
       />
     );
