@@ -1,7 +1,7 @@
 "use client";
 
 import Image, { ImageProps, StaticImageData } from "next/image";
-import { forwardRef, useCallback, useMemo, useState } from "react";
+import React, { forwardRef, useCallback, useMemo, useState } from "react";
 
 const splitFilePath = ({ filePath }: { filePath: string }) => {
   const filenameWithExtension =
