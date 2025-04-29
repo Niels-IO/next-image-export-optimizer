@@ -49,17 +49,21 @@ if (nextConfigPath) {
     ? nextConfigPath
     : path.join(process.cwd(), nextConfigPath);
 } else {
-  // Check for both next.config.js and next.config.ts
+  // Check for next.config.js, next.config.ts, and next.config.mjs
   const jsConfigPath = path.join(process.cwd(), "next.config.js");
   const tsConfigPath = path.join(process.cwd(), "next.config.ts");
+  const mjsConfigPath = path.join(process.cwd(), "next.config.mjs");
+
   if (fs.existsSync(jsConfigPath)) {
     nextConfigPath = jsConfigPath;
   } else if (fs.existsSync(tsConfigPath)) {
     nextConfigPath = tsConfigPath;
+  } else if (fs.existsSync(mjsConfigPath)) {
+    nextConfigPath = mjsConfigPath;
   } else {
     console.error("\x1b[31m");
     console.error(
-      "next-image-export-optimizer: Could not find next.config.js or next.config.ts. Please provide the path to the configuration file."
+      "next-image-export-optimizer: Could not find next.config.js, next.config.ts, or next.config.mjs. Please provide the path to the configuration file."
     );
     console.error("\x1b[0m");
     process.exit(1);
