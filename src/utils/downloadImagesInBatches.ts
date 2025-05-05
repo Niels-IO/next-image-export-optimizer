@@ -56,7 +56,7 @@ async function downloadImage(url: string, filename: string, folder: string) {
       const hasMatchingExtension = regex.test(filename);
 
       // Add appropriate extension to filename based on image format
-      const formattedFilename = hasMatchingExtension
+      const formattedFilename = hasMatchingExtension || imageFormat === 'octet-stream'
         ? filename
         : `${filename}.${imageFormat}`;
 
