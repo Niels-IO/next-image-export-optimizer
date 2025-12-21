@@ -26,5 +26,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       - run: npm ci
-      - run: cd example/ && npm ci && cd ..
+      - run: cd example/ && npm ci --legacy-peer-deps && cd ..
       - run: npm run build && npm run test:e2e:basePath
