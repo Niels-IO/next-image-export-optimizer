@@ -5,6 +5,7 @@ module.exports = function defineProgressBar() {
   let total: number;
   let current: number = 0;
   let sizeOfGeneratedImages: number = 0;
+  let lastDisplayedPercentage: number = -2;
 
   const updateProgress = () => {
     const percentage = Math.floor((current / total) * 100);
@@ -15,12 +16,16 @@ module.exports = function defineProgressBar() {
       (((Date.now() - startTime) / current) * (total - current)) / 1000
     );
 
-    // Use process.stdout.write for more consistent cross-platform behavior
-    process.stdout.write(
-      `\r${bar} ${percentage}% | ETA: ${eta}s | ${current}/${total} | Total size: ${sizeOfGeneratedImages.toFixed(
-        1
-      )} MB`
-    );
+    // Only update display every 2% or at 100%
+    if (percentage % 2 === 0 && percentage !== lastDisplayedPercentage) {
+      lastDisplayedPercentage = percentage;
+      // Use process.stdout.write for more consistent cross-platform behavior
+      process.stdout.write(
+        `\r${bar} ${percentage}% | ETA: ${eta}s | ${current}/${total} | Total size: ${sizeOfGeneratedImages.toFixed(
+          1
+        )} MB`
+      );
+    }
   };
 
   return {

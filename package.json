@@ -65,21 +65,17 @@
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
-    "next": "^14.2.18 || ^15.0.3",
-    "react": "^18.2.0 || ^19.0.0-0"
+    "next": "^16.1.0",
+    "react": "^19.2.3"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "^15.0.3",
+    "@next/eslint-plugin-next": "^16.1.0",
     "@playwright/test": "^1.39.0",
-    "@types/react": "npm:types-react@rc",
+    "@types/react": "^19.2.7",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.33.2",
     "jest": "^29.7.0",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.1"
-  },
-  "overrides": {
-    "@types/react": "npm:types-react@rc",
-    "@types/react-dom": "npm:types-react-dom@rc"
   }
 }
