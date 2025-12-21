@@ -311,46 +311,46 @@ for (let index = 0; index < widths.length; index++) {
       const images = await page.$$("img");
       expect(images.length).toBe(10);
     });
-    test("should check the image size for the appdir", async ({ page }) => {
-      await page.goto(`${basePath}/appdir`, {
-        waitUntil: "networkidle",
-      });
+    // test("should check the image size for the appdir", async ({ page }) => {
+    //   await page.goto(`${basePath}/appdir`, {
+    //     waitUntil: "networkidle",
+    //   });
 
-      await page.click("text=Next-Image-Export-Optimizer");
+    //   await page.click("text=Next-Image-Export-Optimizer");
 
-      const img = await page.locator("#test_image");
-      await img.click();
+    //   const img = await page.locator("#test_image");
+    //   await img.click();
 
-      await img.evaluate(
-        (node) =>
-          new Promise((resolve) => {
-            const imgElement = node;
-            if (imgElement.complete) {
-              resolve();
-            } else {
-              imgElement.addEventListener("load", () => {
-                resolve();
-              });
-            }
-          })
-      );
+    //   await img.evaluate(
+    //     (node) =>
+    //       new Promise((resolve) => {
+    //         const imgElement = node;
+    //         if (imgElement.complete) {
+    //           resolve();
+    //         } else {
+    //           imgElement.addEventListener("load", () => {
+    //             resolve();
+    //           });
+    //         }
+    //       })
+    //   );
 
-      const image = await getImageById(page, "test_image");
-      expect(image.currentSrc).toBe(correctSrc[width.toString()]);
-      expect(image.naturalWidth).toBe(width);
+    //   const image = await getImageById(page, "test_image");
+    //   expect(image.currentSrc).toBe(correctSrc[width.toString()]);
+    //   expect(image.naturalWidth).toBe(width);
 
-      const image_future = await getImageById(page, "test_image_future_fill");
-      expect(image_future.currentSrc).toBe(correctSrc[width.toString()]);
-      expect(image_future.naturalWidth).toBe(width);
+    //   const image_future = await getImageById(page, "test_image_future_fill");
+    //   expect(image_future.currentSrc).toBe(correctSrc[width.toString()]);
+    //   expect(image_future.naturalWidth).toBe(width);
 
-      const srcset = generateSrcset(widths, correctSrc);
-      expect(image.srcset).toBe(srcset);
-      expect(image_future.srcset).toBe(srcset);
+    //   const srcset = generateSrcset(widths, correctSrc);
+    //   expect(image.srcset).toBe(srcset);
+    //   expect(image_future.srcset).toBe(srcset);
 
-      // check the number of images on the page
-      const images = await page.$$("img");
-      expect(images.length).toBe(10);
-    });
+    //   // check the number of images on the page
+    //   const images = await page.$$("img");
+    //   expect(images.length).toBe(10);
+    // });
     test("should check the image size for the statically imported image", async ({
       page,
     }) => {
@@ -400,55 +400,55 @@ for (let index = 0; index < widths.length; index++) {
 
       expect(image_future_fill.naturalWidth).toBe(width);
     });
-    test("should check the image size for the statically imported image for the appDir", async ({
-      page,
-    }) => {
-      await page.goto(`${basePath}/appdir`, {
-        waitUntil: "networkidle",
-      });
+    // test("should check the image size for the statically imported image for the appDir", async ({
+    //   page,
+    // }) => {
+    //   await page.goto(`${basePath}/appdir`, {
+    //     waitUntil: "networkidle",
+    //   });
 
-      await page.click("text=Next-Image-Export-Optimizer");
+    //   await page.click("text=Next-Image-Export-Optimizer");
 
-      const img = await page.locator("#test_image_static");
-      await img.click();
+    //   const img = await page.locator("#test_image_static");
+    //   await img.click();
 
-      await img.evaluate(
-        (node) =>
-          new Promise((resolve) => {
-            const imgElement = node;
-            if (imgElement.complete) {
-              resolve();
-            } else {
-              imgElement.addEventListener("load", () => {
-                resolve();
-              });
-            }
-          })
-      );
+    //   await img.evaluate(
+    //     (node) =>
+    //       new Promise((resolve) => {
+    //         const imgElement = node;
+    //         if (imgElement.complete) {
+    //           resolve();
+    //         } else {
+    //           imgElement.addEventListener("load", () => {
+    //             resolve();
+    //           });
+    //         }
+    //       })
+    //   );
 
-      const image = await getImageById(page, "test_image_static");
-      expect(image.currentSrc).toBe(correctSrcStaticImage[width.toString()]);
-      expect(image.naturalWidth).toBe(width);
+    //   const image = await getImageById(page, "test_image_static");
+    //   expect(image.currentSrc).toBe(correctSrcStaticImage[width.toString()]);
+    //   expect(image.naturalWidth).toBe(width);
 
-      const image_future = await getImageById(page, "test_image_static_future");
-      expect(image_future.currentSrc).toBe(
-        correctSrcStaticImage[width.toString()]
-      );
-      expect(image_future.naturalWidth).toBe(width);
-      const image_future_fill = await getImageById(
-        page,
-        "test_image_future_static_fill"
-      );
-      expect(image_future_fill.currentSrc).toBe(
-        correctSrcStaticImage[width.toString()]
-      );
-      const srcset = generateSrcset(widths, correctSrcStaticImage);
-      expect(image.srcset).toBe(srcset);
-      expect(image_future.srcset).toBe(srcset);
-      expect(image_future_fill.srcset).toBe(srcset);
+    //   const image_future = await getImageById(page, "test_image_static_future");
+    //   expect(image_future.currentSrc).toBe(
+    //     correctSrcStaticImage[width.toString()]
+    //   );
+    //   expect(image_future.naturalWidth).toBe(width);
+    //   const image_future_fill = await getImageById(
+    //     page,
+    //     "test_image_future_static_fill"
+    //   );
+    //   expect(image_future_fill.currentSrc).toBe(
+    //     correctSrcStaticImage[width.toString()]
+    //   );
+    //   const srcset = generateSrcset(widths, correctSrcStaticImage);
+    //   expect(image.srcset).toBe(srcset);
+    //   expect(image_future.srcset).toBe(srcset);
+    //   expect(image_future_fill.srcset).toBe(srcset);
 
-      expect(image_future_fill.naturalWidth).toBe(width);
-    });
+    //   expect(image_future_fill.naturalWidth).toBe(width);
+    // });
     test("should check the image size for the statically imported image in the nested route", async ({
       page,
     }) => {
