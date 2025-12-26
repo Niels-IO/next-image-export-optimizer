@@ -3,6 +3,7 @@ const fs = require("fs");
 
 const newConfigBasePath = `
 import type { NextConfig } from 'next'
+import path from 'path';
  
 const nextConfig: NextConfig = {
   images: {
@@ -11,6 +12,9 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 777, 828, 1080, 1200, 1920, 2048, 3840],
   },
   basePath: "/subsite",
+    turbopack: {
+    root: path.join(__dirname, ".."),
+  },
   output: "export",
   transpilePackages: ["next-image-export-optimizer"],
   env: {

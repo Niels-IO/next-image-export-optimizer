@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [24.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -26,5 +26,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       - run: npm ci
-      - run: cd example/ && npm ci && cd ..
+      - run: cd example/ && npm ci --legacy-peer-deps && cd ..
       - run: npm run build && npm run test:e2e:basePath

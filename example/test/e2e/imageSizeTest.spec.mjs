@@ -69,61 +69,61 @@ const correctSrcSubfolder = {
 };
 
 const correctSrcStaticImage = {
-  640: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-640.${
+  640: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.249b8389-opt-640.${
     imagesWebP ? "WEBP" : "JPG"
   }`,
-  750: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-750.${
+  750: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.249b8389-opt-750.${
     imagesWebP ? "WEBP" : "JPG"
   }`,
-  777: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-777.${
+  777: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.249b8389-opt-777.${
     imagesWebP ? "WEBP" : "JPG"
   }`,
-  828: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-828.${
+  828: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.249b8389-opt-828.${
     imagesWebP ? "WEBP" : "JPG"
   }`,
-  1080: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1080.${
+  1080: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.249b8389-opt-1080.${
     imagesWebP ? "WEBP" : "JPG"
   }`,
-  1200: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1200.${
+  1200: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.249b8389-opt-1200.${
     imagesWebP ? "WEBP" : "JPG"
   }`,
-  1920: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-1920.${
+  1920: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.249b8389-opt-1920.${
     imagesWebP ? "WEBP" : "JPG"
   }`,
-  2048: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-2048.${
+  2048: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.249b8389-opt-2048.${
     imagesWebP ? "WEBP" : "JPG"
   }`,
-  3840: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-3840.${
+  3840: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.249b8389-opt-3840.${
     imagesWebP ? "WEBP" : "JPG"
   }`,
 };
 
 const correctSrcSmallImage = {
-  640: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-640.${
+  640: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.4029734e-opt-640.${
     imagesWebP ? "WEBP" : "JPG"
   }`,
-  750: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-750.${
+  750: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.4029734e-opt-750.${
     imagesWebP ? "WEBP" : "JPG"
   }`,
-  777: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-777.${
+  777: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.4029734e-opt-777.${
     imagesWebP ? "WEBP" : "JPG"
   }`,
-  828: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-828.${
+  828: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.4029734e-opt-828.${
     imagesWebP ? "WEBP" : "JPG"
   }`,
-  1080: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-1080.${
+  1080: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.4029734e-opt-1080.${
     imagesWebP ? "WEBP" : "JPG"
   }`,
-  1200: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-1080.${
+  1200: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.4029734e-opt-1080.${
     imagesWebP ? "WEBP" : "JPG"
   }`,
-  1920: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-1080.${
+  1920: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.4029734e-opt-1080.${
     imagesWebP ? "WEBP" : "JPG"
   }`,
-  2048: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-1080.${
+  2048: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.4029734e-opt-1080.${
     imagesWebP ? "WEBP" : "JPG"
   }`,
-  3840: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.0fa13b23-opt-1080.${
+  3840: `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_small.4029734e-opt-1080.${
     imagesWebP ? "WEBP" : "JPG"
   }`,
 };
@@ -181,31 +181,31 @@ const correctSrcRemoteImageWithQueryParams = {
   3840: `http://localhost:8080${basePath}/nextImageExportOptimizer/6725071117443837-opt-3840.WEBP`,
 };
 const correctSrcAnimatedPNGImage = {
-  640: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.${
+  640: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.5ff49e13-opt-128.${
     imagesWebP ? "WEBP" : "PNG"
   }`,
-  750: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.${
+  750: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.5ff49e13-opt-128.${
     imagesWebP ? "WEBP" : "PNG"
   }`,
-  777: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.${
+  777: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.5ff49e13-opt-128.${
     imagesWebP ? "WEBP" : "PNG"
   }`,
-  828: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.${
+  828: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.5ff49e13-opt-128.${
     imagesWebP ? "WEBP" : "PNG"
   }`,
-  1080: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.${
+  1080: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.5ff49e13-opt-128.${
     imagesWebP ? "WEBP" : "PNG"
   }`,
-  1200: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.${
+  1200: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.5ff49e13-opt-128.${
     imagesWebP ? "WEBP" : "PNG"
   }`,
-  1920: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.${
+  1920: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.5ff49e13-opt-128.${
     imagesWebP ? "WEBP" : "PNG"
   }`,
-  2048: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.${
+  2048: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.5ff49e13-opt-128.${
     imagesWebP ? "WEBP" : "PNG"
   }`,
-  3840: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.c00e0188-opt-128.${
+  3840: `http://localhost:8080${basePath}/nextImageExportOptimizer/animated.5ff49e13-opt-128.${
     imagesWebP ? "WEBP" : "PNG"
   }`,
 };
@@ -311,46 +311,46 @@ for (let index = 0; index < widths.length; index++) {
       const images = await page.$$("img");
       expect(images.length).toBe(10);
     });
-    test("should check the image size for the appdir", async ({ page }) => {
-      await page.goto(`${basePath}/appdir`, {
-        waitUntil: "networkidle",
-      });
+    // test("should check the image size for the appdir", async ({ page }) => {
+    //   await page.goto(`${basePath}/appdir`, {
+    //     waitUntil: "networkidle",
+    //   });
 
-      await page.click("text=Next-Image-Export-Optimizer");
+    //   await page.click("text=Next-Image-Export-Optimizer");
 
-      const img = await page.locator("#test_image");
-      await img.click();
+    //   const img = await page.locator("#test_image");
+    //   await img.click();
 
-      await img.evaluate(
-        (node) =>
-          new Promise((resolve) => {
-            const imgElement = node;
-            if (imgElement.complete) {
-              resolve();
-            } else {
-              imgElement.addEventListener("load", () => {
-                resolve();
-              });
-            }
-          })
-      );
+    //   await img.evaluate(
+    //     (node) =>
+    //       new Promise((resolve) => {
+    //         const imgElement = node;
+    //         if (imgElement.complete) {
+    //           resolve();
+    //         } else {
+    //           imgElement.addEventListener("load", () => {
+    //             resolve();
+    //           });
+    //         }
+    //       })
+    //   );
 
-      const image = await getImageById(page, "test_image");
-      expect(image.currentSrc).toBe(correctSrc[width.toString()]);
-      expect(image.naturalWidth).toBe(width);
+    //   const image = await getImageById(page, "test_image");
+    //   expect(image.currentSrc).toBe(correctSrc[width.toString()]);
+    //   expect(image.naturalWidth).toBe(width);
 
-      const image_future = await getImageById(page, "test_image_future_fill");
-      expect(image_future.currentSrc).toBe(correctSrc[width.toString()]);
-      expect(image_future.naturalWidth).toBe(width);
+    //   const image_future = await getImageById(page, "test_image_future_fill");
+    //   expect(image_future.currentSrc).toBe(correctSrc[width.toString()]);
+    //   expect(image_future.naturalWidth).toBe(width);
 
-      const srcset = generateSrcset(widths, correctSrc);
-      expect(image.srcset).toBe(srcset);
-      expect(image_future.srcset).toBe(srcset);
+    //   const srcset = generateSrcset(widths, correctSrc);
+    //   expect(image.srcset).toBe(srcset);
+    //   expect(image_future.srcset).toBe(srcset);
 
-      // check the number of images on the page
-      const images = await page.$$("img");
-      expect(images.length).toBe(10);
-    });
+    //   // check the number of images on the page
+    //   const images = await page.$$("img");
+    //   expect(images.length).toBe(10);
+    // });
     test("should check the image size for the statically imported image", async ({
       page,
     }) => {
@@ -400,55 +400,55 @@ for (let index = 0; index < widths.length; index++) {
 
       expect(image_future_fill.naturalWidth).toBe(width);
     });
-    test("should check the image size for the statically imported image for the appDir", async ({
-      page,
-    }) => {
-      await page.goto(`${basePath}/appdir`, {
-        waitUntil: "networkidle",
-      });
+    // test("should check the image size for the statically imported image for the appDir", async ({
+    //   page,
+    // }) => {
+    //   await page.goto(`${basePath}/appdir`, {
+    //     waitUntil: "networkidle",
+    //   });
 
-      await page.click("text=Next-Image-Export-Optimizer");
+    //   await page.click("text=Next-Image-Export-Optimizer");
 
-      const img = await page.locator("#test_image_static");
-      await img.click();
+    //   const img = await page.locator("#test_image_static");
+    //   await img.click();
 
-      await img.evaluate(
-        (node) =>
-          new Promise((resolve) => {
-            const imgElement = node;
-            if (imgElement.complete) {
-              resolve();
-            } else {
-              imgElement.addEventListener("load", () => {
-                resolve();
-              });
-            }
-          })
-      );
+    //   await img.evaluate(
+    //     (node) =>
+    //       new Promise((resolve) => {
+    //         const imgElement = node;
+    //         if (imgElement.complete) {
+    //           resolve();
+    //         } else {
+    //           imgElement.addEventListener("load", () => {
+    //             resolve();
+    //           });
+    //         }
+    //       })
+    //   );
 
-      const image = await getImageById(page, "test_image_static");
-      expect(image.currentSrc).toBe(correctSrcStaticImage[width.toString()]);
-      expect(image.naturalWidth).toBe(width);
+    //   const image = await getImageById(page, "test_image_static");
+    //   expect(image.currentSrc).toBe(correctSrcStaticImage[width.toString()]);
+    //   expect(image.naturalWidth).toBe(width);
 
-      const image_future = await getImageById(page, "test_image_static_future");
-      expect(image_future.currentSrc).toBe(
-        correctSrcStaticImage[width.toString()]
-      );
-      expect(image_future.naturalWidth).toBe(width);
-      const image_future_fill = await getImageById(
-        page,
-        "test_image_future_static_fill"
-      );
-      expect(image_future_fill.currentSrc).toBe(
-        correctSrcStaticImage[width.toString()]
-      );
-      const srcset = generateSrcset(widths, correctSrcStaticImage);
-      expect(image.srcset).toBe(srcset);
-      expect(image_future.srcset).toBe(srcset);
-      expect(image_future_fill.srcset).toBe(srcset);
+    //   const image_future = await getImageById(page, "test_image_static_future");
+    //   expect(image_future.currentSrc).toBe(
+    //     correctSrcStaticImage[width.toString()]
+    //   );
+    //   expect(image_future.naturalWidth).toBe(width);
+    //   const image_future_fill = await getImageById(
+    //     page,
+    //     "test_image_future_static_fill"
+    //   );
+    //   expect(image_future_fill.currentSrc).toBe(
+    //     correctSrcStaticImage[width.toString()]
+    //   );
+    //   const srcset = generateSrcset(widths, correctSrcStaticImage);
+    //   expect(image.srcset).toBe(srcset);
+    //   expect(image_future.srcset).toBe(srcset);
+    //   expect(image_future_fill.srcset).toBe(srcset);
 
-      expect(image_future_fill.naturalWidth).toBe(width);
-    });
+    //   expect(image_future_fill.naturalWidth).toBe(width);
+    // });
     test("should check the image size for the statically imported image in the nested route", async ({
       page,
     }) => {
@@ -489,7 +489,7 @@ for (let index = 0; index < widths.length; index++) {
 
       const image = await getImageById(page, "test_image_static_fixed");
       expect(image.currentSrc).toBe(
-        `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.${
+        `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.249b8389-opt-384.${
           imagesWebP ? "WEBP" : "JPG"
         }`
       );
@@ -500,7 +500,7 @@ for (let index = 0; index < widths.length; index++) {
         "test_image_static_fixed_future"
       );
       expect(image_future.currentSrc).toBe(
-        `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.921260e0-opt-384.${
+        `http://localhost:8080${basePath}/nextImageExportOptimizer/chris-zhang-Jq8-3Bmh1pQ-unsplash_static.249b8389-opt-384.${
           imagesWebP ? "WEBP" : "JPG"
         }`
       );

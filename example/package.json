@@ -2,26 +2,20 @@
   "name": "example",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "export": "next build && cd .. && npm run build && cd example && node ../dist/optimizeImages.js",
+    "dev": "next dev --turbo",
+    "build": "next build --turbo",
+    "export": "next build --turbo && cd .. && npm run build && cd example && node ../dist/optimizeImages.js",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "^15.0.3",
-    "next-image-export-optimizer": "^1.17.0-beta.3",
-    "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106"
+    "next": "^16.1.0",
+    "next-image-export-optimizer": "^1.19.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
   },
   "devDependencies": {
-    "@types/node": "^22.9.0",
-    "@types/react": "npm:types-react@rc",
-    "eslint-config-next": "^15.0.3",
-    "express": "^4.18.2"
-  },
-  "overrides": {
-    "@types/react": "npm:types-react@rc",
-    "@types/react-dom": "npm:types-react-dom@rc"
+    "eslint-config-next": "^16.1.0",
+    "express": "^5.1.0"
   }
 }
