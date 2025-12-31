@@ -6,7 +6,7 @@
   "types": "dist/ExportedImage.d.ts",
   "bin": "dist/optimizeImages.js",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=17.5.0"
   },
   "exports": {
     ".": {

@@ -1,116 +1,136 @@
 import { ImageObject } from "./ImageObject";
 import path from "path";
 import fs from "fs";
-const http = require("http");
-const https = require("https");
-const urlModule = require("url"); // Import url module to parse the url
 
-async function downloadImage(url: string, filename: string, folder: string) {
-  return new Promise<void>((resolve, reject) => {
-    // Choose the right http library:
-    const httpLib = urlModule.parse(url).protocol === "http:" ? http : https;
+// Helper function to delay execution (e.g., between retries)
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
-    const request = httpLib.get(url, function (response: any) {
-      if (response.statusCode !== 200) {
-        console.error(
-          `Error: Unable to download ${url} (status code: ${response.statusCode}).`
-        );
-        reject(new Error(`Status code: ${response.statusCode}`));
-        return;
-      }
-      // check if the file is a valid image by checking the content type
-      if (
-        !response.headers["content-type"].startsWith("image/") &&
-        !response.headers["content-type"].startsWith("application/octet-stream")
-      ) {
-        console.error(
-          `Error: Unable to download ${url} (invalid content type: ${response.headers["content-type"]}).`
-        );
-        reject(
-          new Error(`Invalid content type: ${response.headers["content-type"]}`)
-        );
-        return;
-      }
+// Function with retry logic
+async function downloadImage(
+  url: string,
+  filename: string,
+  folder: string,
+  retries: number = 3,
+  retryDelay: number = 1000
+) {
+  return new Promise<void>(async (resolve, reject) => {
+    async function retryDownload(attempt: number) {
+      try {
+        const response = await fetch(url);
 
-      // Extract image format from response headers
-      const contentType = response.headers["content-type"];
-      let imageFormat = contentType.split("/").pop();
-
-      // Further split on semicolon (;) if exists
-      if (imageFormat.includes(";")) {
-        imageFormat = imageFormat.split(";")[0];
-      }
-
-      // Further split on plus (+) if exists, e.g. image/svg+xml
-      if (imageFormat.includes("+")) {
-        imageFormat = imageFormat.split("+")[0];
-      }
-
-      // Check for jpeg and change it to jpg if necessary
-      if (imageFormat === "jpeg") {
-        imageFormat = "jpg";
-      }
-
-      // Check if filename already has an extension that matches the image format
-      const regex = new RegExp(`.${imageFormat}$`, "i");
-      const hasMatchingExtension = regex.test(filename);
-
-      // Add appropriate extension to filename based on image format
-      const formattedFilename = hasMatchingExtension
-        ? filename
-        : `${filename}.${imageFormat}`;
-
-      fs.access(folder, fs.constants.W_OK, function (err: any) {
-        if (err) {
+        if (!response.ok) {
           console.error(
-            `Error: Unable to write to ${folder} (${err.message}).`
+            `Error: Unable to download ${url} (status code: ${response.status}). Attempt ${attempt} of ${retries}.`
           );
-          reject(err);
+          if (attempt < retries) {
+            console.log(`Retrying in ${retryDelay}ms...`);
+            await delay(retryDelay);
+            return retryDownload(attempt + 1);
+          } else {
+            reject(new Error(`Status code: ${response.status}`));
+            return;
+          }
+        }
+
+        const contentType = response.headers.get("content-type");
+        if (!contentType) {
+          console.error(`Error: No content-type header for ${url}`);
+          if (attempt < retries) {
+            console.log(`Retrying in ${retryDelay}ms...`);
+            await delay(retryDelay);
+            return retryDownload(attempt + 1);
+          } else {
+            reject(new Error("No content-type header"));
+            return;
+          }
+        }
+
+        if (
+          !contentType.startsWith("image/") &&
+          !contentType.startsWith("application/octet-stream")
+        ) {
+          console.error(
+            `Error: Unable to download ${url} (invalid content type: ${contentType}).`
+          );
+          if (attempt < retries) {
+            console.log(`Retrying in ${retryDelay}ms...`);
+            await delay(retryDelay);
+            return retryDownload(attempt + 1);
+          } else {
+            reject(new Error(`Invalid content type: ${contentType}`));
+            return;
+          }
+        }
+
+        let imageFormat = contentType.split("/").pop();
+        if (!imageFormat) {
+          reject(new Error("Unable to determine image format"));
           return;
         }
-        // on close, check the file size and reject if it's 0 otherwise resolve
-        response
-          .pipe(fs.createWriteStream(formattedFilename))
-          .on("error", function (err: any) {
-            console.error(
-              `Error: Unable to save ${formattedFilename} (${err.message}).`
-            );
-            reject(err);
-          })
-          .on("close", function () {
-            fs.stat(formattedFilename, function (err: any, stats: any) {
-              if (err) {
-                console.error(
-                  `Error: Unable to get the size of ${formattedFilename} (${err.message}).`
-                );
-                reject(err);
-                return;
-              }
+        // Further split on semicolon (;) if exists
+        if (imageFormat.includes(";")) {
+          imageFormat = imageFormat.split(";")[0];
+        }
+        // Further split on plus (+) if exists, e.g., image/svg+xml
+        if (imageFormat.includes("+")) {
+          imageFormat = imageFormat.split("+")[0];
+        }
+        // Check for jpeg and change it to jpg if necessary
+        if (imageFormat === "jpeg") {
+          imageFormat = "jpg";
+        }
+        // Check if filename already has an extension that matches the image format
+        const regex = new RegExp(`.${imageFormat}$`, "i");
+        const hasMatchingExtension = regex.test(filename);
+        // Add appropriate extension to filename based on image format
+        const formattedFilename = hasMatchingExtension
+          ? filename
+          : `${filename}.${imageFormat}`;
 
-              if (stats.size === 0) {
-                console.error(
-                  `Error: Unable to save ${formattedFilename} (empty file).`
-                );
-                reject(new Error("Empty file"));
-                return;
-              }
-              // to cache the image locally, we store a file with the same name as the image, but with a .lastUpdated extension and the timestamp
-              storeLastUpdated({
-                basePath: folder,
-                file: formattedFilename,
-                dirPathWithoutBasePath: "",
-                fullPath: formattedFilename,
-              });
+        await fs.promises.access(folder, fs.constants.W_OK);
 
-              resolve();
-            });
-          });
-      });
-    });
-    request.on("error", (err: Error) => {
-      console.error(`Error: Unable to download ${url}.`, err);
-      reject(err);
-    });
+        const arrayBuffer = await response.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+
+        await fs.promises.writeFile(formattedFilename, buffer);
+
+        const stats = await fs.promises.stat(formattedFilename);
+
+        if (stats.size === 0) {
+          console.error(
+            `Error: Unable to save ${formattedFilename} (empty file).`
+          );
+          reject(new Error("Empty file"));
+          return;
+        }
+        // Cache the image locally by storing a file with the same name as the image, but with a .lastUpdated extension and the timestamp
+        storeLastUpdated({
+          basePath: folder,
+          file: formattedFilename,
+          dirPathWithoutBasePath: "",
+          fullPath: formattedFilename,
+        });
+
+        resolve();
+      } catch (err) {
+        console.error(
+          `Error: Unable to download ${url}. Attempt ${attempt} of ${retries}.`,
+          err
+        );
+        if (attempt < retries) {
+          console.log(`Retrying in ${retryDelay}ms...`);
+          await delay(retryDelay);
+          return retryDownload(attempt + 1);
+        } else {
+          reject(err);
+        }
+      }
+    }
+
+    // Start the retry logic with the first attempt
+    retryDownload(1);
   });
 }
 
@@ -123,12 +143,14 @@ export async function downloadImagesInBatches(
 ) {
   let downloadedImages = 0;
   let cachedImages = 0;
-  const batches = Math.ceil(imagesURLs.length / batchSize); // determine the number of batches
+  const batches = Math.ceil(imagesURLs.length / batchSize);
+
   for (let i = 0; i < batches; i++) {
-    const start = i * batchSize; // calculate the start index of the batch
-    const end = Math.min(imagesURLs.length, start + batchSize); // calculate the end index of the batch
-    const batchURLs = imagesURLs.slice(start, end); // slice the URLs for the current batch
-    const batchFileNames = imageFileNames.slice(start, end); // slice the file names for the current batch
+    const start = i * batchSize;
+    const end = Math.min(imagesURLs.length, start + batchSize);
+    const batchURLs = imagesURLs.slice(start, end);
+    const batchFileNames = imageFileNames.slice(start, end);
+
     for (let j = 0; j < batchFileNames.length; j++) {
       if (batchFileNames[j].fullPath === undefined) {
         console.error(
@@ -164,14 +186,9 @@ export async function downloadImagesInBatches(
         const timeDifferenceInSeconds = (now - lastUpdatedTimestamp) / 1000;
 
         if (timeDifferenceInSeconds < remoteImageCacheTTL) {
-          // console.log(
-          //   `Skipping download of ${file.file} because it was downloaded ${timeDifferenceInSeconds} seconds ago.`
-          // );
           skipDownload = true;
           cachedImages++;
         }
-      } else {
-        // console.log("No .lastUpdated file found");
       }
 
       if (skipDownload) {
@@ -179,7 +196,7 @@ export async function downloadImagesInBatches(
       }
       downloadedImages++;
       return downloadImage(url, file.fullPath as string, folder);
-    }); // create an array of promises for downloading images in the batch
+    });
 
     try {
       await Promise.all(promises); // download images in parallel for the current batch
@@ -208,6 +225,7 @@ const storeLastUpdated = (file: ImageObject) => {
   // to cache the image locally, we need to know last time it was downloaded
   // so we can check if it's still valid
   // store a file with the same name as the image, but with a .lastUpdated extension and the timestamp
+
   const lastUpdated = Date.now();
 
   const lastUpdatedFilename = `${file.file}.lastUpdated`;
