@@ -86,11 +86,16 @@ const generateImageURL = (
 
   let generatedImageURL = `${
     isStaticImage ? basePathPrefixForStaticImages : correctedPath
-  }${exportFolderName}/${filename}-opt-${width}.${processedExtension.toUpperCase()}`;
+    }${exportFolderName}/${filename}-opt-${width}.${processedExtension.toUpperCase()}`;
 
   // if the generatedImageURL is not starting with a slash, then we add one as long as it is not a remote image
   if (!isRemoteImage && generatedImageURL.charAt(0) !== "/") {
     generatedImageURL = "/" + generatedImageURL;
+  }
+
+  const assetPrefix = process.env.nextImageExportOptimizer_assetPrefix;
+  if (assetPrefix) {
+    generatedImageURL = assetPrefix + generatedImageURL;
   }
 
   return generatedImageURL;
@@ -268,16 +273,16 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
     // is expecting a base64 encoded string, but the generated blurDataURL is a normal URL
     const blurStyle =
       placeholder === "blur" &&
-      !isSVG &&
-      automaticallyCalculatedBlurDataURL &&
-      automaticallyCalculatedBlurDataURL.startsWith("/") &&
-      !blurComplete
+        !isSVG &&
+        automaticallyCalculatedBlurDataURL &&
+        automaticallyCalculatedBlurDataURL.startsWith("/") &&
+        !blurComplete
         ? {
-            backgroundSize: style?.objectFit || "cover",
-            backgroundPosition: style?.objectPosition || "50% 50%",
-            backgroundRepeat: "no-repeat",
-            backgroundImage: `url("${automaticallyCalculatedBlurDataURL}")`,
-          }
+          backgroundSize: style?.objectFit || "cover",
+          backgroundPosition: style?.objectPosition || "50% 50%",
+          backgroundRepeat: "no-repeat",
+          backgroundImage: `url("${automaticallyCalculatedBlurDataURL}")`,
+        }
         : undefined;
     const isStaticImage = typeof src === "object";
 
@@ -294,7 +299,7 @@ const ExportedImage = forwardRef<HTMLImageElement | null, ExportedImageProps>(
       return imageError || unoptimized === true
         ? () => fallbackLoader({ src: overrideSrc || src })
         : (e: { width: number }) =>
-            optimizedLoader({ src, width: e.width, basePath });
+          optimizedLoader({ src, width: e.width, basePath });
     }, [imageError, unoptimized, overrideSrc, src, basePath]);
 
     const handleError = useCallback(
