@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "types": ["vitest/globals"]
+  },
+  "include": ["./**/*.ts", "./**/*.tsx"],
+  "exclude": []
+}

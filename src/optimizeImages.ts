@@ -1,702 +1,529 @@
-#!/usr/bin/env node
+import fs from "fs";
+import path from "path";
+import { createRequire } from "module";
+import sharp from "sharp";
+import { ImageObject } from "./utils/ImageObject.js";
+import defineProgressBar from "./utils/defineProgressBar.js";
+import ensureDirectoryExists from "./utils/ensureDirectoryExists.js";
+import getAllFilesAsObject from "./utils/getAllFilesAsObject.js";
+import getHash from "./utils/getHash.js";
+import { getRemoteImageURLs } from "./utils/getRemoteImageURLs.js";
+import { downloadImagesInBatches } from "./utils/downloadImagesInBatches.js";
+import urlToFilename from "./utils/urlToFilename.js";
 
-import { ImageObject } from "./utils/ImageObject";
+export interface OptimizeImagesConfig {
+  imageFolderPath: string;
+  staticImageFolderPath: string;
+  exportFolderPath: string;
+  deviceSizes: number[];
+  imageSizes: number[];
+  quality: number;
+  storePicturesInWEBP: boolean;
+  exportFolderName: string;
+  remoteImagesFolderName: string;
+  basePath: string;
+}
 
-const defineProgressBar = require("./utils/defineProgressBar");
-const ensureDirectoryExists = require("./utils/ensureDirectoryExists");
-const getAllFilesAsObject = require("./utils/getAllFilesAsObject");
-const getHash = require("./utils/getHash");
-import { getRemoteImageURLs } from "./utils/getRemoteImageURLs";
-import { downloadImagesInBatches } from "./utils/downloadImagesInBatches";
+export interface OptimizeImagesResult {
+  generatedImages: string[];
+  sizeInMB: number;
+}
 
-const urlToFilename = require("./utils/urlToFilename");
+export async function optimizeImages(
+  images: ImageObject[],
+  config: OptimizeImagesConfig
+): Promise<OptimizeImagesResult> {
+  const {
+    staticImageFolderPath,
+    exportFolderPath,
+    deviceSizes,
+    imageSizes,
+    quality,
+    storePicturesInWEBP,
+    exportFolderName,
+    remoteImagesFolderName,
+    basePath,
+  } = config;
 
-const fs = require("fs");
-const sharp = require("sharp");
-const path = require("path");
+  let widths = [...imageSizes, ...deviceSizes];
+  widths.sort((a, b) => a - b);
+  widths = widths.filter((item, index) => widths.indexOf(item) === index);
 
-const loadConfig = require("next/dist/server/config").default;
+  // Filter to only supported image formats
+  const allImagesInImageFolder = images.filter((fileObject: ImageObject) => {
+    if (fileObject === undefined) return false;
+    if (fileObject.file === undefined) return false;
+    const filenameSplit = fileObject.file.split(".");
+    if (filenameSplit.length === 1) return false;
+    const extension = filenameSplit.pop()!.toUpperCase();
+    return ["JPG", "JPEG", "WEBP", "PNG", "AVIF", "GIF"].includes(extension);
+  });
 
-// Check if the --name and --age arguments are present
-const nextConfigPathIndex = process.argv.indexOf("--nextConfigPath");
-const exportFolderPathIndex = process.argv.indexOf("--exportFolderPath");
-
-// Check if there is only one argument without a name present -> this is the case if the user does not provide the path to the next.config.[js/ts] file
-if (process.argv.length === 3) {
-  // Colorize the output to red
-  // Colorize the output to red
-  console.error("\x1b[31m");
-  console.error(
-    "next-image-export-optimizer: Breaking change: Please provide the path to the next.config.[js/ts] file as an argument with the name --nextConfigPath."
+  // Load existing hashes
+  let imageHashes: { [key: string]: string } = {};
+  const hashFilePath = path.join(
+    exportFolderName,
+    "next-image-export-optimizer-hashes.json"
   );
-  // Reset the color
-  console.error("\x1b[0m");
-  process.exit(1);
-}
-
-// Set the nextConfigPath and exportFolderPath variables to the corresponding arguments, or to undefined if the arguments are not present
-let nextConfigPath =
-  nextConfigPathIndex !== -1
-    ? process.argv[nextConfigPathIndex + 1]
-    : undefined;
-let exportFolderPathCommandLine =
-  exportFolderPathIndex !== -1
-    ? process.argv[exportFolderPathIndex + 1]
-    : undefined;
-
-if (nextConfigPath) {
-  nextConfigPath = path.isAbsolute(nextConfigPath)
-    ? nextConfigPath
-    : path.join(process.cwd(), nextConfigPath);
-} else {
-  // Check for next.config.js, next.config.ts, and next.config.mjs
-  const jsConfigPath = path.join(process.cwd(), "next.config.js");
-  const tsConfigPath = path.join(process.cwd(), "next.config.ts");
-  const mjsConfigPath = path.join(process.cwd(), "next.config.mjs");
-
-  if (fs.existsSync(jsConfigPath)) {
-    nextConfigPath = jsConfigPath;
-  } else if (fs.existsSync(tsConfigPath)) {
-    nextConfigPath = tsConfigPath;
-  } else if (fs.existsSync(mjsConfigPath)) {
-    nextConfigPath = mjsConfigPath;
-  } else {
-    console.error("\x1b[31m");
-    console.error(
-      "next-image-export-optimizer: Could not find next.config.js, next.config.ts, or next.config.mjs. Please provide the path to the configuration file."
-    );
-    console.error("\x1b[0m");
-    process.exit(1);
-  }
-}
-const nextConfigFolder = path.dirname(nextConfigPath);
-
-const folderNameForRemoteImages = `remoteImagesForOptimization`;
-const folderPathForRemoteImages = path.join(
-  nextConfigFolder,
-  folderNameForRemoteImages
-);
-
-if (exportFolderPathCommandLine) {
-  exportFolderPathCommandLine = path.isAbsolute(exportFolderPathCommandLine)
-    ? exportFolderPathCommandLine
-    : path.join(process.cwd(), exportFolderPathCommandLine);
-}
-
-const nextImageExportOptimizer = async function () {
-  console.log(
-    "---- next-image-export-optimizer: Begin with optimization... ---- "
-  );
-
-  // Default values
-  let imageFolderPath = "public/images";
-  let staticImageFolderPath = ".next/static/media";
-  let exportFolderPath = "out";
-  let deviceSizes = [640, 750, 828, 1080, 1200, 1920, 2048, 3840];
-  let imageSizes = [16, 32, 48, 64, 96, 128, 256, 384];
-  let quality = 75;
-  let storePicturesInWEBP = true;
-  let blurSize: number[] = [];
-  let remoteImageCacheTTL = 0;
-  let exportFolderName = "nextImageExportOptimizer";
-  let remoteImageFileName = "remoteOptimizedImages.js";
-
-  let remoteImageFilenames: {
-    basePath: string;
-    file: any;
-    dirPathWithoutBasePath: string;
-    fullPath: string;
-  }[] = [];
-  let remoteImageURLs: string[] = [];
-
   try {
-    // Read in the configuration parameters
-    const nextjsConfig = await loadConfig("phase-export", nextConfigFolder);
-
-    // Check if nextjsConfig is an object or is undefined
-    if (typeof nextjsConfig !== "object" || nextjsConfig === null) {
-      throw new Error("next.config.[js/ts] is not an object");
-    }
-    const legacyPath = nextjsConfig.images?.nextImageExportOptimizer;
-    const newPath = nextjsConfig.env;
-
-    if (legacyPath?.remoteImagesFilename !== undefined) {
-      remoteImageFileName = legacyPath.remoteImagesFilename;
-    } else if (
-      newPath?.nextImageExportOptimizer_remoteImagesFilename !== undefined
-    ) {
-      remoteImageFileName =
-        newPath.nextImageExportOptimizer_remoteImagesFilename;
-    }
-
-    if (legacyPath?.imageFolderPath !== undefined) {
-      imageFolderPath = legacyPath.imageFolderPath;
-    } else if (
-      newPath?.nextImageExportOptimizer_imageFolderPath !== undefined
-    ) {
-      imageFolderPath = newPath.nextImageExportOptimizer_imageFolderPath;
-      // if the imageFolderPath starts with a slash, remove it
-      if (imageFolderPath.startsWith("/")) {
-        imageFolderPath = imageFolderPath.slice(1);
-      }
-    }
-    if (legacyPath?.exportFolderPath !== undefined) {
-      exportFolderPath = legacyPath.exportFolderPath;
-    } else if (
-      newPath?.nextImageExportOptimizer_exportFolderPath !== undefined
-    ) {
-      exportFolderPath = newPath.nextImageExportOptimizer_exportFolderPath;
-    }
-    if (nextjsConfig.images?.deviceSizes !== undefined) {
-      deviceSizes = nextjsConfig.images.deviceSizes;
-    }
-    if (nextjsConfig.images?.imageSizes !== undefined) {
-      imageSizes = nextjsConfig.images.imageSizes;
-    }
-
-    if (legacyPath?.quality !== undefined) {
-      quality = Number(legacyPath.quality);
-    } else if (newPath?.nextImageExportOptimizer_quality !== undefined) {
-      quality = Number(newPath.nextImageExportOptimizer_quality);
-    }
-    if (nextjsConfig.env?.storePicturesInWEBP !== undefined) {
-      storePicturesInWEBP =
-        nextjsConfig.env.storePicturesInWEBP.toLowerCase() == "true";
-    } else if (
-      newPath?.nextImageExportOptimizer_storePicturesInWEBP !== undefined
-    ) {
-      storePicturesInWEBP =
-        newPath.nextImageExportOptimizer_storePicturesInWEBP.toLowerCase() ==
-        "true";
-    }
-    if (nextjsConfig.env?.generateAndUseBlurImages?.toLowerCase() == "true") {
-      blurSize = [10];
-    } else if (
-      newPath?.nextImageExportOptimizer_generateAndUseBlurImages == "true"
-    ) {
-      blurSize = [10];
-    }
-    if (newPath.nextImageExportOptimizer_exportFolderName !== undefined) {
-      exportFolderName = newPath.nextImageExportOptimizer_exportFolderName;
-    }
-    if (newPath.nextImageExportOptimizer_remoteImageCacheTTL !== undefined) {
-      remoteImageCacheTTL = Number(
-        newPath.nextImageExportOptimizer_remoteImageCacheTTL
-      );
-    }
-
-    // Give the user a warning if the transpilePackages: ["next-image-export-optimizer"], is not set in the next.config.[js/ts]
-    if (
-      nextjsConfig.transpilePackages === undefined || // transpilePackages is not set
-      (nextjsConfig.transpilePackages !== undefined &&
-        !nextjsConfig.transpilePackages.includes("next-image-export-optimizer")) // transpilePackages is set but does not include next-image-export-optimizer
-    ) {
-      console.warn(
-        "\x1b[41m",
-        `Changed in 1.2.0: You have not set transpilePackages: ["next-image-export-optimizer"] in your next.config.[js/ts]. This may cause problems with next-image-export-optimizer. Please add this line to your next.config.[js/ts].`,
-        "\x1b[0m"
-      );
-    }
-  } catch (e) {
-    // Configuration file not found
-    console.log(
-      "Could not find a next.config.js or next.config.ts file. Use of default values"
-    );
-  } finally {
-    const result = await getRemoteImageURLs(
-      remoteImageFileName,
-      nextConfigFolder,
-      folderPathForRemoteImages
-    );
-    remoteImageFilenames = result.remoteImageFilenames;
-    remoteImageURLs = result.remoteImageURLs;
-  }
-
-  // if the user has specified a path for the export folder via the command line, use this path
-  exportFolderPath = exportFolderPathCommandLine || exportFolderPath;
-
-  // Give the user a warning, if the public directory of Next.js is not found as the user
-  // may have run the command in a wrong directory
-  if (!fs.existsSync(path.join(nextConfigFolder, "public"))) {
-    console.warn(
-      "\x1b[41m",
-      `Could not find a public folder in this directory. Make sure you run the command in the main directory of your project.`,
-      "\x1b[0m"
-    );
-  }
-
-  // Create the folder for the remote images if it does not exists
-  if (remoteImageURLs.length > 0) {
-    try {
-      if (!fs.existsSync(folderNameForRemoteImages)) {
-        fs.mkdirSync(folderNameForRemoteImages);
-        console.log(
-          `Create remote image output folder: ${folderNameForRemoteImages}`
-        );
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  // Download the remote images specified in the remoteOptimizedImages.js file
-  if (remoteImageURLs.length > 0)
-    console.log(
-      `Found ${remoteImageURLs.length} remote image${
-        remoteImageURLs.length > 1 ? "s" : ""
-      }...`
-    );
-
-  // we clear all images in the remote image folder that are not in the remoteImageURLs array
-  const allFilesInRemoteImageFolder: string[] = fs.existsSync(
-    folderNameForRemoteImages
-  )
-    ? fs.readdirSync(folderNameForRemoteImages)
-    : [];
-  const encodedRemoteImageURLs = remoteImageURLs.map((url: string) =>
-    urlToFilename(url)
-  );
-
-  function removeLastUpdated(str: string) {
-    const suffix = ".lastUpdated";
-    if (str.endsWith(suffix)) {
-      return str.slice(0, -suffix.length);
-    }
-    return str;
-  }
-
-  for (const filename of allFilesInRemoteImageFolder) {
-    if (
-      encodedRemoteImageURLs.includes(filename) ||
-      encodedRemoteImageURLs.includes(removeLastUpdated(filename))
-    ) {
-      // the filename is in the remoteImageURLs array or the filename without the .lastUpdated suffix
-      // so we do not delete it
-      continue;
-    }
-
-    fs.unlinkSync(path.join(folderNameForRemoteImages, filename));
-
-    console.log(
-      `Deleted ${filename} from remote image folder as it is not retrieved from ${remoteImageFileName}.`
-    );
-  }
-
-  await downloadImagesInBatches(
-    remoteImageURLs,
-    remoteImageFilenames,
-    folderPathForRemoteImages,
-    Math.min(remoteImageURLs.length, 20),
-    remoteImageCacheTTL
-  );
-
-  // Create or read the JSON containing the hashes of the images in the image directory
-  let imageHashes: {
-    [key: string]: string;
-  } = {};
-  const hashFilePath = `${imageFolderPath}/next-image-export-optimizer-hashes.json`;
-  try {
-    let rawData = fs.readFileSync(hashFilePath);
-    imageHashes = JSON.parse(rawData);
+    const rawData = fs.readFileSync(hashFilePath);
+    imageHashes = JSON.parse(rawData.toString());
   } catch (e) {
     // No image hashes yet
   }
 
-  // check if the image folder is a subdirectory of the public folder
-  // if not, the images in the image folder can only be static images and are taken from the static image folder (staticImageFolderPath)
-  // so we do not add them to the images that need to be optimized
-
-  const isImageFolderSubdirectoryOfPublicFolder =
-    imageFolderPath.includes("public");
-
-  // Generate a warning if the image folder is not a subdirectory of the public folder
-  if (!isImageFolderSubdirectoryOfPublicFolder) {
-    console.warn(
-      "\x1b[41mWarning: The image folder is not a subdirectory of the public folder. The images in the image folder are not optimized.\x1b[0m"
-    );
-  }
-
-  const allFilesInImageFolderAndSubdirectories =
-    isImageFolderSubdirectoryOfPublicFolder
-      ? getAllFilesAsObject(imageFolderPath, imageFolderPath, exportFolderName)
-      : [];
-  const allFilesInStaticImageFolder = getAllFilesAsObject(
-    staticImageFolderPath,
-    staticImageFolderPath,
-    exportFolderName
-  );
-  // append the static image folder to the image array
-  allFilesInImageFolderAndSubdirectories.push(...allFilesInStaticImageFolder);
-
-  // append the remote images to the image array
-  if (remoteImageURLs.length > 0) {
-    // get all files in the remote image folder again, as we added extensions to the filenames
-    // if they were not present in the URLs in remoteOptimizedImages.js
-
-    const allFilesInRemoteImageFolder = fs.readdirSync(
-      folderNameForRemoteImages
-    );
-
-    const remoteImageFiles = allFilesInRemoteImageFolder.map(
-      (filename: string) => {
-        const filenameFull = path.join(folderPathForRemoteImages, filename);
-
-        return {
-          basePath: folderPathForRemoteImages,
-          file: filename,
-          dirPathWithoutBasePath: "",
-          fullPath: filenameFull,
-        };
-      }
-    );
-
-    // append the remote images to the image array
-    allFilesInImageFolderAndSubdirectories.push(...remoteImageFiles);
-  }
-
-  const allImagesInImageFolder = allFilesInImageFolderAndSubdirectories.filter(
-    (fileObject: ImageObject) => {
-      if (fileObject === undefined) return false;
-      if (fileObject.file === undefined) return false;
-      // check if the file has a supported extension
-      const filenameSplit = fileObject.file.split(".");
-      if (filenameSplit.length === 1) return false;
-      const extension = filenameSplit.pop()!.toUpperCase();
-      // Only include file with image extensions
-      return ["JPG", "JPEG", "WEBP", "PNG", "AVIF", "GIF"].includes(extension);
-    }
-  );
-  console.log(
-    `Found ${
-      allImagesInImageFolder.length - remoteImageURLs.length
-    } supported images in ${imageFolderPath}, static folder and subdirectories and ${
-      remoteImageURLs.length
-    } remote image${remoteImageURLs.length > 1 ? "s" : ""}.`
-  );
-
-  let widths = [...blurSize, ...imageSizes, ...deviceSizes];
-
-  // sort the widths in ascending order to make sure the logic works for limiting the number of images
-  widths.sort((a, b) => a - b);
-
-  // remove duplicate widths from the array
-  widths = widths.filter((item, index) => widths.indexOf(item) === index);
-
   const progressBar = defineProgressBar();
   if (allImagesInImageFolder.length > 0) {
-    console.log(`Using sizes: ${widths.toString()}`);
-    console.log(
-      `Start optimization of ${allImagesInImageFolder.length} images with ${
-        widths.length
-      } sizes resulting in ${
-        allImagesInImageFolder.length * widths.length
-      } optimized images...`
-    );
     progressBar.start(allImagesInImageFolder.length * widths.length, 0, {
       sizeOfGeneratedImages: 0,
     });
   }
+
   let sizeOfGeneratedImages = 0;
   const allGeneratedImages: string[] = [];
+  const updatedImageHashes: { [key: string]: string } = {};
 
-  const updatedImageHashes: {
-    [key: string]: string;
-  } = {};
-
-  // Loop through all images
   for (let index = 0; index < allImagesInImageFolder.length; index++) {
-    // try catch to catch errors in the loop and let the user know which image caused the error
-    try {
-      const file = allImagesInImageFolder[index].file;
-      let fileDirectory = allImagesInImageFolder[index].dirPathWithoutBasePath;
-      let basePath = allImagesInImageFolder[index].basePath;
+    const file = allImagesInImageFolder[index].file;
+    const fileDirectory = allImagesInImageFolder[index].dirPathWithoutBasePath;
+    const imageBasePath = allImagesInImageFolder[index].basePath;
 
-      let extension = file.split(".").pop()!.toUpperCase();
-      const imageBuffer = fs.readFileSync(
-        path.join(basePath, fileDirectory, file)
-      );
-      const imageHash = getHash([
-        imageBuffer,
-        ...widths,
-        quality,
-        fileDirectory,
-        file,
-      ]);
-      const keyForImageHashes = `${fileDirectory}/${file}`;
+    let extension = file.split(".").pop()!.toLowerCase();
+    const imageBuffer = fs.readFileSync(
+      path.join(imageBasePath, fileDirectory, file)
+    );
+    const imageHash = getHash([
+      imageBuffer,
+      ...widths.map(String),
+      String(quality),
+      fileDirectory,
+      file,
+    ]);
+    const keyForImageHashes = `${fileDirectory}/${file}`;
 
-      let hashContentChanged = false;
-      if (imageHashes[keyForImageHashes] !== imageHash) {
-        hashContentChanged = true;
+    const hashContentChanged = imageHashes[keyForImageHashes] !== imageHash;
+    updatedImageHashes[keyForImageHashes] = imageHash;
+
+    let optimizedOriginalWidthImagePath: string | undefined;
+    let optimizedOriginalWidthImageSizeInMegabytes: number | undefined;
+
+    for (let indexWidth = 0; indexWidth < widths.length; indexWidth++) {
+      const width = widths[indexWidth];
+      const filename = path.parse(file).name;
+
+      if (storePicturesInWEBP) {
+        extension = "webp";
       }
-      // Store image hash in temporary object
-      updatedImageHashes[keyForImageHashes] = imageHash;
 
-      let optimizedOriginalWidthImagePath;
-      let optimizedOriginalWidthImageSizeInMegabytes;
+      const isStaticImage = imageBasePath === staticImageFolderPath;
+      const isRemoteImage = imageBasePath.includes("remoteImagesForOptimization");
 
-      // Loop through all widths
-      for (let indexWidth = 0; indexWidth < widths.length; indexWidth++) {
-        const width = widths[indexWidth];
+      let relativeExportPath: string;
+      if (isStaticImage) {
+        relativeExportPath = path.join("_next/static/media", fileDirectory);
+      } else if (isRemoteImage) {
+        relativeExportPath = remoteImagesFolderName;
+      } else {
+        relativeExportPath = fileDirectory;
+      }
 
-        const filename = path.parse(file).name;
-        if (storePicturesInWEBP) {
-          extension = "WEBP";
-        }
+      const optimizedFileNameAndPath = path.join(
+        exportFolderName,
+        relativeExportPath,
+        `${filename}-opt-${width}.${extension.toLowerCase()}`
+      );
 
-        const isStaticImage = basePath === staticImageFolderPath;
-        // for a static image, we copy the image to public/nextImageExportOptimizer or public/${exportFolderName}
-        // and not the staticImageFolderPath
-        // as the static image folder is deleted before each build
-        const basePathToStoreOptimizedImages =
-          isStaticImage ||
-          basePath === path.join(nextConfigFolder, folderNameForRemoteImages)
-            ? "public"
-            : basePath;
-        const optimizedFileNameAndPath = path.join(
-          basePathToStoreOptimizedImages,
-          fileDirectory,
-          exportFolderName,
-          `${filename}-opt-${width}.${extension.toUpperCase()}`
-        );
-
-        // Check if file is already in hash and specific size and quality is present in the
-        // opt file directory
-        if (
-          !hashContentChanged &&
-          keyForImageHashes in imageHashes &&
-          fs.existsSync(optimizedFileNameAndPath)
-        ) {
-          const stats = fs.statSync(optimizedFileNameAndPath);
-          const fileSizeInBytes = stats.size;
-          const fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
-          sizeOfGeneratedImages += fileSizeInMegabytes;
-          progressBar.increment({
-            sizeOfGeneratedImages: sizeOfGeneratedImages.toFixed(1),
-          });
-          allGeneratedImages.push(optimizedFileNameAndPath);
-
-          continue;
-        }
-
-        const transformer = sharp(imageBuffer, {
-          animated: true,
-          limitInputPixels: false, // disable pixel limit
-        });
-
-        transformer.rotate();
-
-        const { width: metaWidth } = await transformer.metadata();
-
-        // For a static image, we can skip the image optimization and the copying
-        // of the image for images with a width greater than the original image width
-        // we will stop the loop at the first image with a width greater than the original image width
-        let nextLargestSize = -1;
-        for (let i = 0; i < widths.length; i++) {
-          if (
-            Number(widths[i]) >= metaWidth &&
-            (nextLargestSize === -1 || Number(widths[i]) < nextLargestSize)
-          ) {
-            nextLargestSize = Number(widths[i]);
-          }
-        }
-
-        if (
-          isStaticImage &&
-          nextLargestSize !== -1 &&
-          width > nextLargestSize
-        ) {
-          progressBar.increment({
-            sizeOfGeneratedImages: sizeOfGeneratedImages.toFixed(1),
-          });
-          continue;
-        }
-
-        // If the original image's width is X, the optimized images are
-        // identical for all widths >= X. Once we have generated the first of
-        // these identical images, we can simply copy that file instead of redoing
-        // the optimization.
-        if (
-          optimizedOriginalWidthImagePath &&
-          optimizedOriginalWidthImageSizeInMegabytes
-        ) {
-          fs.copyFileSync(
-            optimizedOriginalWidthImagePath,
-            optimizedFileNameAndPath
-          );
-
-          sizeOfGeneratedImages += optimizedOriginalWidthImageSizeInMegabytes;
-          progressBar.increment({
-            sizeOfGeneratedImages: sizeOfGeneratedImages.toFixed(1),
-          });
-          allGeneratedImages.push(optimizedFileNameAndPath);
-
-          continue;
-        }
-
-        const resize = metaWidth && metaWidth > width;
-        if (resize) {
-          transformer.resize(width);
-        }
-
-        if (extension === "AVIF") {
-          if (transformer.avif) {
-            const avifQuality = quality - 15;
-            transformer.avif({
-              quality: Math.max(avifQuality, 0),
-              chromaSubsampling: "4:2:0", // same as webp
-            });
-          } else {
-            transformer.webp({ quality });
-          }
-        } else if (extension === "WEBP" || storePicturesInWEBP) {
-          transformer.webp({ quality });
-        } else if (extension === "PNG") {
-          transformer.png({ quality });
-        } else if (extension === "JPEG" || extension === "JPG") {
-          transformer.jpeg({ quality });
-        } else if (extension === "GIF") {
-          transformer.gif({ quality });
-        }
-
-        // Write the optimized image to the file system
-        ensureDirectoryExists(optimizedFileNameAndPath);
-        const info = await transformer.toFile(optimizedFileNameAndPath);
-        const fileSizeInBytes = info.size;
-        const fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
+      // Check cache
+      if (
+        !hashContentChanged &&
+        keyForImageHashes in imageHashes &&
+        fs.existsSync(optimizedFileNameAndPath)
+      ) {
+        const stats = fs.statSync(optimizedFileNameAndPath);
+        const fileSizeInMegabytes = stats.size / (1024 * 1024);
         sizeOfGeneratedImages += fileSizeInMegabytes;
         progressBar.increment({
           sizeOfGeneratedImages: sizeOfGeneratedImages.toFixed(1),
         });
         allGeneratedImages.push(optimizedFileNameAndPath);
+        continue;
+      }
 
-        if (!resize) {
-          optimizedOriginalWidthImagePath = optimizedFileNameAndPath;
-          optimizedOriginalWidthImageSizeInMegabytes = fileSizeInMegabytes;
+      const transformer = sharp(imageBuffer, {
+        animated: true,
+        limitInputPixels: false,
+      });
+
+      transformer.rotate();
+      const { width: metaWidth } = await transformer.metadata();
+
+      // Find next largest size for static images
+      let nextLargestSize = -1;
+      for (let i = 0; i < widths.length; i++) {
+        if (
+          Number(widths[i]) >= (metaWidth || 0) &&
+          (nextLargestSize === -1 || Number(widths[i]) < nextLargestSize)
+        ) {
+          nextLargestSize = Number(widths[i]);
         }
       }
-    } catch (error) {
-      console.log(
-        `
-      Error while optimizing image ${allImagesInImageFolder[index].file}
-      ${error}
-      `
-      );
-      // throw the error so that the process stops
-      throw error;
+
+      if (isStaticImage && nextLargestSize !== -1 && width > nextLargestSize) {
+        progressBar.increment({
+          sizeOfGeneratedImages: sizeOfGeneratedImages.toFixed(1),
+        });
+        continue;
+      }
+
+      // Copy if we already have the original width optimized
+      if (
+        optimizedOriginalWidthImagePath &&
+        optimizedOriginalWidthImageSizeInMegabytes
+      ) {
+        ensureDirectoryExists(optimizedFileNameAndPath);
+        fs.copyFileSync(optimizedOriginalWidthImagePath, optimizedFileNameAndPath);
+        sizeOfGeneratedImages += optimizedOriginalWidthImageSizeInMegabytes;
+        progressBar.increment({
+          sizeOfGeneratedImages: sizeOfGeneratedImages.toFixed(1),
+        });
+        allGeneratedImages.push(optimizedFileNameAndPath);
+        continue;
+      }
+
+      const resize = metaWidth && metaWidth > width;
+      if (resize) {
+        transformer.resize(width);
+      }
+
+      if (extension === "avif") {
+        if (transformer.avif) {
+          transformer.avif({
+            quality: Math.max(quality - 15, 0),
+            chromaSubsampling: "4:2:0",
+          });
+        } else {
+          transformer.webp({ quality });
+        }
+      } else if (extension === "webp" || storePicturesInWEBP) {
+        transformer.webp({ quality });
+      } else if (extension === "png") {
+        transformer.png({ quality });
+      } else if (extension === "jpeg" || extension === "jpg") {
+        transformer.jpeg({ quality });
+      } else if (extension === "gif") {
+        transformer.gif();
+      }
+
+      ensureDirectoryExists(optimizedFileNameAndPath);
+      const info = await transformer.toFile(optimizedFileNameAndPath);
+      const fileSizeInMegabytes = info.size / (1024 * 1024);
+      sizeOfGeneratedImages += fileSizeInMegabytes;
+      progressBar.increment({
+        sizeOfGeneratedImages: sizeOfGeneratedImages.toFixed(1),
+      });
+      allGeneratedImages.push(optimizedFileNameAndPath);
+
+      if (!resize) {
+        optimizedOriginalWidthImagePath = optimizedFileNameAndPath;
+        optimizedOriginalWidthImageSizeInMegabytes = fileSizeInMegabytes;
+      }
     }
   }
-  let data = JSON.stringify(updatedImageHashes, null, 4);
+
+  // Save hashes
+  const data = JSON.stringify(updatedImageHashes, null, 4);
   ensureDirectoryExists(hashFilePath);
   fs.writeFileSync(hashFilePath, data);
 
-  // Copy the optimized images to the build folder
-
-  console.log("\nCopy optimized images to build folder...");
-  for (let index = 0; index < allGeneratedImages.length; index++) {
-    const filePath = allGeneratedImages[index];
-    const fileInBuildFolder = path.join(
-      exportFolderPath,
-      (() => {
-        const parts = filePath.split("public");
-        if (parts.length > 1) {
-          return parts.slice(1).join("public");
-        } else {
-          // Handle case where 'public' is not found
-          return filePath;
-        }
-      })()
-    );
-
-    // Create the folder for the optimized images in the build directory if it does not exists
+  // Copy to export folder
+  const publicDir = path.join(basePath, "public");
+  for (const filePath of allGeneratedImages) {
+    const relativePath = path.relative(publicDir, filePath);
+    const fileInBuildFolder = path.join(exportFolderPath, relativePath);
     ensureDirectoryExists(fileInBuildFolder);
     fs.copyFileSync(filePath, fileInBuildFolder);
   }
 
-  function findSubfolders(
-    rootPath: string,
-    folderName: string,
-    results: string[] = []
-  ) {
-    const items = fs.readdirSync(rootPath);
-    for (const item of items) {
-      const itemPath = path.join(rootPath, item);
-      const stat = fs.statSync(itemPath);
-      if (stat.isDirectory()) {
-        if (item === folderName) {
-          results.push(itemPath);
-        }
-        findSubfolders(itemPath, folderName, results);
-      }
-    }
-    return results;
+  progressBar.stop();
+
+  return {
+    generatedImages: allGeneratedImages,
+    sizeInMB: sizeOfGeneratedImages,
+  };
+}
+
+// CLI wrapper
+export async function cli() {
+  const require = createRequire(import.meta.url);
+  const loadConfig = require("next/dist/server/config").default;
+
+  const nextConfigPathIndex = process.argv.indexOf("--nextConfigPath");
+  const exportFolderPathIndex = process.argv.indexOf("--exportFolderPath");
+
+  if (process.argv.length === 3) {
+    console.error("\x1b[31m");
+    console.error(
+      "next-image-export-optimizer: Breaking change: Please provide the path to the next.config.[js/ts] file as an argument with the name --nextConfigPath."
+    );
+    console.error("\x1b[0m");
+    process.exit(1);
   }
 
-  const optimizedImagesFolders = findSubfolders(
-    imageFolderPath,
-    exportFolderName
-  );
-  optimizedImagesFolders.push(`public/${exportFolderName}`);
+  let nextConfigPath =
+    nextConfigPathIndex !== -1 ? process.argv[nextConfigPathIndex + 1] : undefined;
+  let exportFolderPathCommandLine =
+    exportFolderPathIndex !== -1 ? process.argv[exportFolderPathIndex + 1] : undefined;
 
-  function findImageFiles(
-    folderPath: string,
-    extensions: string[],
-    results: string[] = []
-  ) {
-    // check if the folder exists
-    if (!fs.existsSync(folderPath)) {
-      return results;
+  if (nextConfigPath) {
+    nextConfigPath = path.isAbsolute(nextConfigPath)
+      ? nextConfigPath
+      : path.join(process.cwd(), nextConfigPath);
+  } else {
+    const jsConfigPath = path.join(process.cwd(), "next.config.js");
+    const tsConfigPath = path.join(process.cwd(), "next.config.ts");
+    const mjsConfigPath = path.join(process.cwd(), "next.config.mjs");
+
+    if (fs.existsSync(jsConfigPath)) {
+      nextConfigPath = jsConfigPath;
+    } else if (fs.existsSync(tsConfigPath)) {
+      nextConfigPath = tsConfigPath;
+    } else if (fs.existsSync(mjsConfigPath)) {
+      nextConfigPath = mjsConfigPath;
+    } else {
+      console.error("\x1b[31m");
+      console.error(
+        "next-image-export-optimizer: Could not find next.config.js, next.config.ts, or next.config.mjs."
+      );
+      console.error("\x1b[0m");
+      process.exit(1);
     }
+  }
+
+  const nextConfigFolder = path.dirname(nextConfigPath);
+  const folderNameForRemoteImages = "remoteImagesForOptimization";
+  const folderPathForRemoteImages = path.join(nextConfigFolder, folderNameForRemoteImages);
+
+  if (exportFolderPathCommandLine) {
+    exportFolderPathCommandLine = path.isAbsolute(exportFolderPathCommandLine)
+      ? exportFolderPathCommandLine
+      : path.join(process.cwd(), exportFolderPathCommandLine);
+  }
+
+  console.log("---- next-image-export-optimizer: Begin with optimization... ----");
+
+  // Default config
+  let config: OptimizeImagesConfig = {
+    imageFolderPath: "public/images",
+    staticImageFolderPath: ".next/static/media",
+    exportFolderPath: "out",
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    quality: 75,
+    storePicturesInWEBP: true,
+    exportFolderName: "nextImageExportOptimizer",
+    remoteImagesFolderName: "remoteImages",
+    basePath: nextConfigFolder,
+  };
+
+  let remoteImageFileName = "remoteOptimizedImages.js";
+  let remoteImageCacheTTL = 0;
+
+  try {
+    const nextjsConfig = await loadConfig("phase-export", nextConfigFolder);
+
+    if (typeof nextjsConfig !== "object" || nextjsConfig === null) {
+      throw new Error("next.config.[js/ts] is not an object");
+    }
+
+    const env = nextjsConfig.env;
+
+    if (env?.nextImageExportOptimizer_remoteImagesFilename !== undefined) {
+      remoteImageFileName = env.nextImageExportOptimizer_remoteImagesFilename;
+    }
+
+    if (env?.nextImageExportOptimizer_imageFolderPath !== undefined) {
+      config.imageFolderPath = env.nextImageExportOptimizer_imageFolderPath;
+      if (config.imageFolderPath.startsWith("/")) {
+        config.imageFolderPath = config.imageFolderPath.slice(1);
+      }
+    }
+
+    if (env?.nextImageExportOptimizer_exportFolderPath !== undefined) {
+      config.exportFolderPath = env.nextImageExportOptimizer_exportFolderPath;
+    }
+
+    if (nextjsConfig.images?.deviceSizes !== undefined) {
+      config.deviceSizes = nextjsConfig.images.deviceSizes;
+    }
+    if (nextjsConfig.images?.imageSizes !== undefined) {
+      config.imageSizes = nextjsConfig.images.imageSizes;
+    }
+
+    if (env?.nextImageExportOptimizer_quality !== undefined) {
+      config.quality = Number(env.nextImageExportOptimizer_quality);
+    }
+
+    if (env?.nextImageExportOptimizer_storePicturesInWEBP !== undefined) {
+      config.storePicturesInWEBP =
+        env.nextImageExportOptimizer_storePicturesInWEBP.toLowerCase() === "true";
+    }
+
+    if (env?.nextImageExportOptimizer_outputFolderPath !== undefined) {
+      config.exportFolderName = env.nextImageExportOptimizer_outputFolderPath;
+    }
+    if (env?.nextImageExportOptimizer_remoteImagesFolderName !== undefined) {
+      config.remoteImagesFolderName = env.nextImageExportOptimizer_remoteImagesFolderName;
+    }
+    if (env?.nextImageExportOptimizer_remoteImageCacheTTL !== undefined) {
+      remoteImageCacheTTL = Number(env.nextImageExportOptimizer_remoteImageCacheTTL);
+    }
+
+    if (
+      nextjsConfig.transpilePackages === undefined ||
+      !nextjsConfig.transpilePackages.includes("next-image-export-optimizer")
+    ) {
+      console.warn(
+        "\x1b[41m",
+        `Changed in 1.2.0: You have not set transpilePackages: ["next-image-export-optimizer"] in your next.config.[js/ts].`,
+        "\x1b[0m"
+      );
+    }
+  } catch (e) {
+    console.error("\x1b[31m");
+    console.error("next-image-export-optimizer: Could not load next.config.[js/ts].");
+    console.error(e);
+    console.error("\x1b[0m");
+    process.exit(1);
+  }
+
+  // Override export folder from command line
+  if (exportFolderPathCommandLine) {
+    config.exportFolderPath = exportFolderPathCommandLine;
+  }
+
+  // Warn if no public folder
+  if (!fs.existsSync(path.join(nextConfigFolder, "public"))) {
+    console.warn(
+      "\x1b[41m",
+      `Could not find a public folder in this directory.`,
+      "\x1b[0m"
+    );
+  }
+
+  // Handle remote images
+  const { remoteImageFilenames, remoteImageURLs } = await getRemoteImageURLs(
+    remoteImageFileName,
+    nextConfigFolder,
+    folderPathForRemoteImages
+  );
+
+  if (remoteImageURLs.length > 0) {
+    if (!fs.existsSync(folderNameForRemoteImages)) {
+      fs.mkdirSync(folderNameForRemoteImages);
+    }
+    console.log(`Found ${remoteImageURLs.length} remote image(s)...`);
+
+    // Clean up old remote images
+    const allFilesInRemoteImageFolder: string[] = fs.existsSync(folderNameForRemoteImages)
+      ? fs.readdirSync(folderNameForRemoteImages)
+      : [];
+    const encodedRemoteImageURLs = remoteImageURLs.map((url: string) => urlToFilename(url));
+
+    for (const filename of allFilesInRemoteImageFolder) {
+      const filenameWithoutSuffix = filename.endsWith(".lastUpdated")
+        ? filename.slice(0, -".lastUpdated".length)
+        : filename;
+      if (
+        !encodedRemoteImageURLs.includes(filename) &&
+        !encodedRemoteImageURLs.includes(filenameWithoutSuffix)
+      ) {
+        fs.unlinkSync(path.join(folderNameForRemoteImages, filename));
+      }
+    }
+
+    await downloadImagesInBatches(
+      remoteImageURLs,
+      remoteImageFilenames,
+      folderPathForRemoteImages,
+      Math.min(remoteImageURLs.length, 20),
+      remoteImageCacheTTL
+    );
+  }
+
+  // Collect images
+  const isImageFolderSubdirectoryOfPublicFolder = config.imageFolderPath.includes("public");
+
+  if (!isImageFolderSubdirectoryOfPublicFolder) {
+    console.warn(
+      "\x1b[41mWarning: The image folder is not a subdirectory of the public folder.\x1b[0m"
+    );
+  }
+
+  const allImages: ImageObject[] = isImageFolderSubdirectoryOfPublicFolder
+    ? getAllFilesAsObject(config.imageFolderPath, config.imageFolderPath, config.exportFolderName)
+    : [];
+
+  const staticImages = getAllFilesAsObject(
+    config.staticImageFolderPath,
+    config.staticImageFolderPath,
+    config.exportFolderName
+  );
+  allImages.push(...staticImages);
+
+  if (remoteImageURLs.length > 0) {
+    const remoteFiles = fs.readdirSync(folderNameForRemoteImages);
+    for (const filename of remoteFiles) {
+      if (!filename.endsWith(".lastUpdated")) {
+        allImages.push({
+          basePath: folderPathForRemoteImages,
+          file: filename,
+          dirPathWithoutBasePath: "",
+        });
+      }
+    }
+  }
+
+  console.log(`Found ${allImages.length} images to optimize.`);
+
+  const result = await optimizeImages(allImages, config);
+
+  // Clean up unused images
+  const imageExtensions = [".png", ".gif", ".jpg", ".jpeg", ".avif", ".webp"];
+  const existingImages: string[] = [];
+
+  function findImageFiles(folderPath: string) {
+    if (!fs.existsSync(folderPath)) return;
     const items = fs.readdirSync(folderPath);
     for (const item of items) {
       const itemPath = path.join(folderPath, item);
       const stat = fs.statSync(itemPath);
       if (stat.isDirectory()) {
-        findImageFiles(itemPath, extensions, results);
+        findImageFiles(itemPath);
       } else {
-        const ext = path.extname(item).toUpperCase();
-        if (extensions.includes(ext)) {
-          results.push(itemPath);
+        const ext = path.extname(item).toLowerCase();
+        if (imageExtensions.includes(ext)) {
+          existingImages.push(itemPath);
         }
       }
     }
-    return results;
   }
 
-  const imageExtensions = [".PNG", ".GIF", ".JPG", ".JPEG", ".AVIF", ".WEBP"];
+  findImageFiles(config.exportFolderName);
 
-  const imagePaths: string[] = [];
-  for (const subfolderPath of optimizedImagesFolders) {
-    const paths = findImageFiles(subfolderPath, imageExtensions);
-    imagePaths.push(...paths);
-  }
-
-  // find the optimized images that are no longer used in the project
-  const unusedImages: string[] = [];
-  for (const imagePath of imagePaths) {
-    const isUsed = allGeneratedImages.includes(imagePath);
-    if (!isUsed) {
-      unusedImages.push(imagePath);
-    }
-  }
-  // delete the unused images
-  for (const imagePath of unusedImages) {
-    if (fs.existsSync(imagePath)) {
+  let deletedCount = 0;
+  for (const imagePath of existingImages) {
+    if (!result.generatedImages.includes(imagePath)) {
       fs.unlinkSync(imagePath);
+      deletedCount++;
     }
   }
-  if (unusedImages.length > 0)
-    console.log(
-      `Deleted ${unusedImages.length} unused image${
-        unusedImages.length > 1 ? "s" : ""
-      } from the optimized images folders.`
-    );
-  progressBar.stop();
 
-  console.log("---- next-image-export-optimizer: Done ---- ");
+  if (deletedCount > 0) {
+    console.log(`Deleted ${deletedCount} unused image(s).`);
+  }
+
+  console.log("---- next-image-export-optimizer: Done ----");
   process.exit(0);
-};
-
-if (require.main === module) {
-  nextImageExportOptimizer();
 }
-module.exports = nextImageExportOptimizer;
+
+export default optimizeImages;

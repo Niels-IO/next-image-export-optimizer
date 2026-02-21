@@ -1,14 +1,14 @@
-import { ImageObject } from "./ImageObject";
+import { ImageObject } from "./ImageObject.js";
 import path from "path";
 import fs from "fs";
-const http = require("http");
-const https = require("https");
-const urlModule = require("url"); // Import url module to parse the url
+import http from "http";
+import https from "https";
+import { parse as parseUrl } from "url";
 
 async function downloadImage(url: string, filename: string, folder: string) {
   return new Promise<void>((resolve, reject) => {
     // Choose the right http library:
-    const httpLib = urlModule.parse(url).protocol === "http:" ? http : https;
+    const httpLib = parseUrl(url).protocol === "http:" ? http : https;
 
     const request = httpLib.get(url, function (response: any) {
       if (response.statusCode !== 200) {

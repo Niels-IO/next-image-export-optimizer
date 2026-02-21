@@ -8,7 +8,6 @@ Use [Next.js advanced **\<Image/>** component](https://nextjs.org/docs/basic-fea
 - Fast image transformation using [sharp.js](https://www.npmjs.com/package/sharp) (also used by the Next.js server in production)
 - Conversion of JPEG and PNG files to the modern WEBP format by default
 - Serve the exported React bundle only via a CDN. No server required
-- Automatic generation of tiny, blurry placeholder images
 - Minimal configuration necessary
 - Supports TypeScript
 - Supports remote images which will be downloaded and optimized
@@ -60,9 +59,9 @@ module.exports = {
     nextImageExportOptimizer_exportFolderPath: "out",
     nextImageExportOptimizer_quality: "75",
     nextImageExportOptimizer_storePicturesInWEBP: "true",
-    nextImageExportOptimizer_exportFolderName: "nextImageExportOptimizer",
-    nextImageExportOptimizer_generateAndUseBlurImages: "true",
+    nextImageExportOptimizer_outputFolderPath: "public/output",
     nextImageExportOptimizer_remoteImageCacheTTL: "0",
+    nextImageExportOptimizer_remoteImagesFolderName: "remoteImages",
   },
 };
 ```
@@ -183,6 +182,18 @@ module.exports = {
 };
 ```
 
+You can also customize the folder name where remote images are stored by setting `nextImageExportOptimizer_remoteImagesFolderName`. The default is `remoteImages`.
+
+```javascript
+module.exports = {
+  env: {
+    // ... other env variables
+    nextImageExportOptimizer_remoteImagesFolderName: "remoteImages",
+  },
+  // ... other config options
+};
+```
+
 ### Custom next.config.js path
 
 If your Next.js project is not at the root directory where you are running the commands, for example when you are using a monorepo, you can specify the location of the `next.config.js` as an argument to the script:
@@ -231,13 +242,21 @@ import testPictureStatic from "PATH_TO_IMAGE/test_static.jpg";
 />;
 ```
 
-### Placeholder images
+### Custom output folder path
 
-If you do not want the automatic generation of tiny, blurry placeholder images, set the `nextImageExportOptimizer_generateAndUseBlurImages` environment variable to `false` and set the `placeholder` prop from the **\<ExportedImage />** component to `empty`.
+If you want to change the output folder path for optimized images, set the `nextImageExportOptimizer_outputFolderPath` environment variable. The default is `public/output`.
 
-### Custom export folder name
+### CDN URL
 
-If you want to rename the export folder name, set the `nextImageExportOptimizer_exportFolderPath` environment variable to the desired folder name. The default is `nextImageExportOptimizer`.
+If you want to serve optimized images from a CDN, set the `nextImageExportOptimizer_cdnUrl` environment variable. In production, all image URLs will be prefixed with this value.
+
+```javascript
+module.exports = {
+  env: {
+    nextImageExportOptimizer_cdnUrl: "https://cdn.example.com",
+  },
+};
+```
 
 ### Image format
 
@@ -247,11 +266,11 @@ If you do not want to use the WEBP format, set the `nextImageExportOptimizer_sto
 
 ## Good to know
 
-- The **\<ExportedImage />** component is a wrapper around the **\<Image />** component of Next.js. It uses the custom loader feature to generate a [srcset](https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images) for different resolutions of the original image. The browser can then load the correct size based on the current viewport size.
+- The **\<ExportedImage />** component generates a [srcset](https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images) for different resolutions of the original image. The browser can then load the correct size based on the current viewport size.
 
 - The image transformation operation is optimized as it uses hashes to determine whether an image has already been optimized or not. This way, the images are only optimized once and not every time the build command is run.
 
-- The **\<ExportedImage />** component falls back to the original image if the optimized images are not yet generated in the development mode. In the exported, static React app, the responsive images are available as srcset and dynamically loaded by the browser.
+- In development mode, the **\<ExportedImage />** component uses the Next.js image optimization endpoint. In production, it uses the pre-generated optimized images with responsive srcset.
 
 - The static import method is recommended as it informs the client about the original image size. When widths larger than the original image width are requested, the next largest image size in the deviceSizes array (specified in the `next.config.js`) will be used for the generation of the srcset attribute.
   When you specify the images as a path string, this library will create duplicates of the original image for each image size in the deviceSizes array that is larger than the original image size.
@@ -269,25 +288,8 @@ If you do not want to use the WEBP format, set the `nextImageExportOptimizer_sto
   />;
   ```
 
-- You can still use the legacy image component `next/legacy/image`:
-
-  ```javascript
-  import ExportedImage from "next-image-export-optimizer/legacy/ExportedImage";
-
-  import testPictureStatic from "PATH_TO_IMAGE/test_static.jpg";
-
-  <ExportedImage src={testPictureStatic} alt="Static Image" layout="fixed" />;
-  ```
-
 - Animated images:
   You can use .gif and animated .webp images. Next-image-export-optimizer will automatically optimize the animated images and generate the srcset for the different resolutions.
 
   If you set the variable nextImageExportOptimizer_storePicturesInWEBP to true, the animated images will be converted to .webp format which can reduce the file size significantly.
   Note that animated png images are not supported by this package.
-
-## Live example
-
-You can see a live example of the use of this library at [reactapp.dev/next-image-export-optimizer](https://reactapp.dev/next-image-export-optimizer)
-
-> **Warning**
-> Version 1.0.0 is a breaking change. It follows the changes introduced in Next 13.0.0 which replaces the `next/image` component with `next/future/image`. If you are using Next 12 or below, please use version _0.17.1_.

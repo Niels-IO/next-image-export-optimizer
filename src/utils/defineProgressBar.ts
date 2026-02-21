@@ -1,6 +1,4 @@
-export {};
-
-module.exports = function defineProgressBar() {
+export default function defineProgressBar() {
   let startTime: number;
   let total: number;
   let current: number = 0;
@@ -19,7 +17,6 @@ module.exports = function defineProgressBar() {
     // Only update display every 2% or at 100%
     if (percentage % 2 === 0 && percentage !== lastDisplayedPercentage) {
       lastDisplayedPercentage = percentage;
-      // Use process.stdout.write for more consistent cross-platform behavior
       process.stdout.write(
         `\r${bar} ${percentage}% | ETA: ${eta}s | ${current}/${total} | Total size: ${sizeOfGeneratedImages.toFixed(
           1
@@ -29,33 +26,32 @@ module.exports = function defineProgressBar() {
   };
 
   return {
-    start: (totalValue: number, startValue: number, payload: any) => {
+    start: (totalValue: number, startValue: number, payload: { sizeOfGeneratedImages: number }) => {
       total = totalValue;
       current = startValue;
       startTime = Date.now();
       sizeOfGeneratedImages = payload.sizeOfGeneratedImages;
       updateProgress();
     },
-    increment: (payload: any) => {
+    increment: (payload: { sizeOfGeneratedImages: string }) => {
       current++;
       sizeOfGeneratedImages = parseFloat(payload.sizeOfGeneratedImages);
       updateProgress();
     },
     stop: () => {
-      const endTime = Date.now();
-      const elapsedTime = endTime - startTime;
+      const elapsedTime = startTime === undefined ? 0 : Date.now() - startTime;
       process.stdout.write(
         `\nFinished optimization in: ${msToTime(elapsedTime)}\n`
       );
     },
   };
-};
+}
 
 function msToTime(ms: number): string {
-  let seconds = (ms / 1000).toFixed(1);
-  let minutes = (ms / (1000 * 60)).toFixed(1);
-  let hours = (ms / (1000 * 60 * 60)).toFixed(1);
-  let days = (ms / (1000 * 60 * 60 * 24)).toFixed(1);
+  const seconds = (ms / 1000).toFixed(1);
+  const minutes = (ms / (1000 * 60)).toFixed(1);
+  const hours = (ms / (1000 * 60 * 60)).toFixed(1);
+  const days = (ms / (1000 * 60 * 60 * 24)).toFixed(1);
   if (parseFloat(seconds) < 60) return seconds + " seconds";
   else if (parseFloat(minutes) < 60) return minutes + " minutes";
   else if (parseFloat(hours) < 24) return hours + " hours";

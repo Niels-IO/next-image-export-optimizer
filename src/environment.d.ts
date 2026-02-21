@@ -6,7 +6,6 @@ declare global {
       nextImageExportOptimizer_outputFolderPath: string | undefined;
       nextImageExportOptimizer_cdnUrl: string | undefined;
       nextImageExportOptimizer_quality: string | undefined;
-      nextImageExportOptimizer_remoteImageCacheTTL: string | undefined;
       __NEXT_IMAGE_OPTS: { deviceSizes: string[]; imageSizes: string[] };
     }
   }

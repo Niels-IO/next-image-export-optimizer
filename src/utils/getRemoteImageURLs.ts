@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 
-const urlToFilename = require("./urlToFilename");
+import urlToFilename from "./urlToFilename.js";
 
 export async function getRemoteImageURLs(
   remoteImageFileName: string,
@@ -12,7 +12,7 @@ export async function getRemoteImageURLs(
   const remoteImagesFilePath = path.join(nextConfigFolder, remoteImageFileName);
 
   if (fs.existsSync(remoteImagesFilePath)) {
-    const remoteOptimizedImages = await require(remoteImagesFilePath);
+    const remoteOptimizedImages = (await import(remoteImagesFilePath)).default;
 
     remoteImageURLs = remoteOptimizedImages;
   }
