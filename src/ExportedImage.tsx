@@ -239,7 +239,10 @@ export function getExportedImageProps(
     effectiveSizes = allSizes.filter((s) => s <= nextLargestSize);
   }
 
-  const isRemoteImage = _src.startsWith("http");
+  // Static imports are objects (StaticImageData), remote images are URL strings
+  // When assetPrefix is set, static imports may have CDN-prefixed URLs in _src,
+  // but they're still static imports, not remote images
+  const isRemoteImage = !isStaticImage && _src.startsWith("http");
   const srcSetEntries = effectiveSizes.map((size) => {
     let url: string;
     if (isRemoteImage) {
