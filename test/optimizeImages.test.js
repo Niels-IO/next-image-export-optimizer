@@ -22,6 +22,14 @@ const filterForImages = (file) => {
 const getFiles = (dirPath) =>
   fs.existsSync(dirPath) ? fs.readdirSync(dirPath) : [];
 
+// Next.js embeds a content hash in the filename of statically imported images
+// (e.g. "photo_static.<hash>-opt-640.JPG"). Both the hash and its format
+// change between Next.js releases, so snapshotting the hash verbatim
+// churns every entry here on an upgrade even though the hash is not what these
+// snapshots assert.
+const withStableHashes = (files) =>
+  files.map((file) => file.replace(/\.[a-z0-9-]+(-opt-\d+\.)/i, ".[hash]$1"));
+
 const legacyConfig = `module.exports = {
   images: {
     loader: "custom",
@@ -210,29 +218,41 @@ async function testConfig(config) {
     config === legacyConfig ||
     config === newConfigBasePath
   ) {
-    expect(allImagesInImageFolder).toMatchSnapshot();
-    expect(allImagesInStaticImageFolder).toMatchSnapshot();
+    expect(withStableHashes(allImagesInImageFolder)).toMatchSnapshot();
+    expect(withStableHashes(allImagesInStaticImageFolder)).toMatchSnapshot();
 
-    expect(allImagesInImageSubFolder).toMatchSnapshot();
-    expect(allFilesInImageBuildFolder).toMatchSnapshot();
-    expect(allFilesInStaticImageFolder).toMatchSnapshot();
-    expect(allFilesInImageBuildSubFolder).toMatchSnapshot();
+    expect(withStableHashes(allImagesInImageSubFolder)).toMatchSnapshot();
+    expect(withStableHashes(allFilesInImageBuildFolder)).toMatchSnapshot();
+    expect(withStableHashes(allFilesInStaticImageFolder)).toMatchSnapshot();
+    expect(withStableHashes(allFilesInImageBuildSubFolder)).toMatchSnapshot();
   } else if (config === newConfigExportFolderName) {
-    expect(allImagesInImageFolderCustomExportFolder).toMatchSnapshot();
-    expect(allImagesInStaticImageFolderCustomExportFolder).toMatchSnapshot();
-    expect(allImagesInImageSubFolderCustomExportFolder).toMatchSnapshot();
-    expect(allFilesInImageBuildFolderCustomExportFolder).toMatchSnapshot();
     expect(
-      allFilesInStaticImageBuildFolderCustomExportFolder
+      withStableHashes(allImagesInImageFolderCustomExportFolder)
     ).toMatchSnapshot();
-    expect(allFilesInImageBuildSubFolderCustomExportFolder).toMatchSnapshot();
+    expect(
+      withStableHashes(allImagesInStaticImageFolderCustomExportFolder)
+    ).toMatchSnapshot();
+    expect(
+      withStableHashes(allImagesInImageSubFolderCustomExportFolder)
+    ).toMatchSnapshot();
+    expect(
+      withStableHashes(allFilesInImageBuildFolderCustomExportFolder)
+    ).toMatchSnapshot();
+    expect(
+      withStableHashes(allFilesInStaticImageBuildFolderCustomExportFolder)
+    ).toMatchSnapshot();
+    expect(
+      withStableHashes(allFilesInImageBuildSubFolderCustomExportFolder)
+    ).toMatchSnapshot();
   } else {
-    expect(allImagesInImageFolder).toMatchSnapshot();
-    expect(allImagesInStaticImageFolder).toMatchSnapshot();
-    expect(allImagesInImageSubFolder).toMatchSnapshot();
-    expect(allFilesInImageBuildFolder).toMatchSnapshot();
-    expect(allFilesInStaticImageBuildFolder).toMatchSnapshot();
-    expect(allFilesInImageBuildSubFolder).toMatchSnapshot();
+    expect(withStableHashes(allImagesInImageFolder)).toMatchSnapshot();
+    expect(withStableHashes(allImagesInStaticImageFolder)).toMatchSnapshot();
+    expect(withStableHashes(allImagesInImageSubFolder)).toMatchSnapshot();
+    expect(withStableHashes(allFilesInImageBuildFolder)).toMatchSnapshot();
+    expect(
+      withStableHashes(allFilesInStaticImageBuildFolder)
+    ).toMatchSnapshot();
+    expect(withStableHashes(allFilesInImageBuildSubFolder)).toMatchSnapshot();
   }
 
   const imageFolders = [
