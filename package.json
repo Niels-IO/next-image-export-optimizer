@@ -38,13 +38,13 @@
   "scripts": {
     "build": "rimraf dist && tsc && tsc --project tsconfig.optimizeImages.json",
     "lint": "eslint .",
-    "setup:example": "npm --prefix example install",
+    "setup:example": "npm --prefix example i && TARBALL=$(npm pack --silent) && npm --prefix example install --no-save \"./$TARBALL\" && rm -f \"./$TARBALL\"",
     "test": "jest",
     "test:e2e:basePath": "npx playwright install && BASEPATH=true IMAGESWEBP=false playwright test --config playwright-basePath.config.js",
     "test:e2e": "npx playwright install && playwright test",
     "exportExample": "cd example && npm run export && cd ..",
     "prepublish": "npm run prepublishOnly",
-    "prepublishOnly": "npm run setup:example && npm run build && npm test && npm run test:e2e:basePath && npm run test:e2e",
+    "prepublishOnly": "npm run build && npm run setup:example && npm test && npm run test:e2e:basePath && npm run test:e2e",
     "fetchTags": "git fetch --tags -f"
   },
   "jest": {

@@ -19,12 +19,16 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
+          cache-dependency-path: |
+            package-lock.json
+            example/package-lock.json
       - run: npm ci
-      - run: cd example/ && npm ci && cd ..
-      - run: npm run build && npm run test:e2e:basePath
+      - run: npm run build
+      - run: npm run setup:example
+      - run: npm run test:e2e:basePath

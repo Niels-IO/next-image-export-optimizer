@@ -3,12 +3,12 @@ import path from "path";
 import fs from "fs";
 const http = require("http");
 const https = require("https");
-const urlModule = require("url"); // Import url module to parse the url
 
 async function downloadImage(url: string, filename: string, folder: string) {
   return new Promise<void>((resolve, reject) => {
+    const parsedUrl = new URL(url);
     // Choose the right http library:
-    const httpLib = urlModule.parse(url).protocol === "http:" ? http : https;
+    const httpLib = parsedUrl.protocol === "http:" ? http : https;
 
     const request = httpLib.get(url, function (response: any) {
       if (response.statusCode !== 200) {
