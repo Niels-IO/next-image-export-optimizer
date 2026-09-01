@@ -4,7 +4,7 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: ["eslint:recommended", "plugin:react/recommended"],
+  extends: ["eslint:recommended"],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -14,6 +14,5 @@ module.exports = {
   },
   //ignore the dist folder
   ignorePatterns: ["dist/"],
-  plugins: ["react"],
-  rules: { "react/react-in-jsx-scope": "off" },
+  rules: {},
 };
