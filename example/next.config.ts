@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
   },
   output: "export",
     turbopack: {
-    root: path.join(__dirname, "."),
+    root: __dirname,
   },
   transpilePackages: ["next-image-export-optimizer"],
   env: {
