@@ -47,11 +47,6 @@
     "prepublishOnly": "npm run build && npm run setup:example && npm test && npm run test:e2e:basePath && npm run test:e2e",
     "fetchTags": "git fetch --tags -f"
   },
-  "jest": {
-    "testPathIgnorePatterns": [
-      "/example/test/e2e/"
-    ]
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Niels-IO/next-image-export-optimizer"
