@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
   },
   basePath: "/subsite",
     turbopack: {
-    root: path.join(__dirname, "."),
+    root: __dirname,
   },
   output: "export",
   transpilePackages: ["next-image-export-optimizer"],
