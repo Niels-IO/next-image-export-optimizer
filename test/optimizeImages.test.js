@@ -37,6 +37,12 @@ const legacyConfig = `module.exports = {
     deviceSizes: [640, 750, 777, 828, 1080, 1200, 1920, 2048, 3840],
   },
   output: "export",
+  experimental: {
+    externalDir: true,
+  },
+  turbopack: {
+    root: __dirname,
+  },
   transpilePackages: ["next-image-export-optimizer"],
   env: {
     storePicturesInWEBP: "false",
@@ -51,6 +57,12 @@ const newConfig = `module.exports = {
     deviceSizes: [640, 750, 777, 828, 1080, 1200, 1920, 2048, 3840],
   },
   output: "export",
+  experimental: {
+    externalDir: true,
+  },
+  turbopack: {
+    root: __dirname,
+  },
   transpilePackages: ["next-image-export-optimizer"],
   env: {
     nextImageExportOptimizer_imageFolderPath: "public/images",
@@ -70,6 +82,12 @@ const newConfigJpeg = `module.exports = {
     deviceSizes: [640, 750, 777, 828, 1080, 1200, 1920, 2048, 3840],
   },
   output: "export",
+  experimental: {
+    externalDir: true,
+  },
+  turbopack: {
+    root: __dirname,
+  },
   transpilePackages: ["next-image-export-optimizer"],
   env: {
     nextImageExportOptimizer_imageFolderPath: "public/images",
@@ -88,6 +106,12 @@ const newConfigExportFolderName = `module.exports = {
     deviceSizes: [640, 750, 777, 828, 1080, 1200, 1920, 2048, 3840],
   },
   output: "export",
+  experimental: {
+    externalDir: true,
+  },
+  turbopack: {
+    root: __dirname,
+  },
   transpilePackages: ["next-image-export-optimizer"],
   env: {
     nextImageExportOptimizer_imageFolderPath: "public/images",
@@ -102,6 +126,12 @@ const newConfigExportFolderName = `module.exports = {
 
 const newConfigBasePath = `module.exports = {
   basePath: "/subsite",
+  experimental: {
+    externalDir: true,
+  },
+  turbopack: {
+    root: __dirname,
+  },
   images: {
     loader: "custom",
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],

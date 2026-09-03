@@ -15,8 +15,6 @@ const fs = require("fs");
 const sharp = require("sharp");
 const path = require("path");
 
-const loadConfig = require("next/dist/server/config").default;
-
 // Check if the --name and --age arguments are present
 const nextConfigPathIndex = process.argv.indexOf("--nextConfigPath");
 const exportFolderPathIndex = process.argv.indexOf("--exportFolderPath");
@@ -110,6 +108,13 @@ const nextImageExportOptimizer = async function () {
   let remoteImageURLs: string[] = [];
 
   try {
+    // Resolve Next.js from the project that owns next.config.* (works in monorepos and local file-linked examples).
+    const loadConfig = require(
+      require.resolve("next/dist/server/config", {
+        paths: [nextConfigFolder],
+      })
+    ).default;
+
     // Read in the configuration parameters
     const nextjsConfig = await loadConfig("phase-export", nextConfigFolder);
 
@@ -519,6 +524,7 @@ const nextImageExportOptimizer = async function () {
           optimizedOriginalWidthImagePath &&
           optimizedOriginalWidthImageSizeInMegabytes
         ) {
+          ensureDirectoryExists(optimizedFileNameAndPath);
           fs.copyFileSync(
             optimizedOriginalWidthImagePath,
             optimizedFileNameAndPath
@@ -560,7 +566,20 @@ const nextImageExportOptimizer = async function () {
 
         // Write the optimized image to the file system
         ensureDirectoryExists(optimizedFileNameAndPath);
-        const info = await transformer.toFile(optimizedFileNameAndPath);
+        let info;
+        try {
+          info = await transformer.toFile(optimizedFileNameAndPath);
+        } catch (error: any) {
+          const isMissingDirectory =
+            error?.code === "ENOENT" ||
+            String(error?.message || "").includes("No such file or directory");
+          if (!isMissingDirectory) {
+            throw error;
+          }
+          // Retry once after recreating parent folders to avoid flaky FS timing issues.
+          ensureDirectoryExists(optimizedFileNameAndPath);
+          info = await transformer.toFile(optimizedFileNameAndPath);
+        }
         const fileSizeInBytes = info.size;
         const fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
         sizeOfGeneratedImages += fileSizeInMegabytes;
