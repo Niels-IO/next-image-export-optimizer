@@ -208,6 +208,19 @@ Or by passing the argument to the script:
  "export": "next build && next-image-export-optimizer --exportFolderPath path/to/my/export/folder"
 ```
 
+### Serve images from CDN / Prefixing a domain before generated optimized image urls
+
+To append a prefix, usually your CDN, to the generated urls, pass the following setting to your `next.config.js`.
+
+This method assume that you already deploy your generated images to your CDN after images are generated. It will simply append a prefix.
+
+```javascript
+// next.config.js
+{ "env": {
+"nextImageExportOptimizer_assetPrefix": "https://cdn.yourhost.com/"
+}}
+```
+
 ### Base path
 
 If you want to deploy your app to a subfolder of your domain, you can set the basePath in the `next.config.js` file:
