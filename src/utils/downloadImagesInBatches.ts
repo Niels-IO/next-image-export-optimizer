@@ -5,6 +5,10 @@ const http = require("http");
 const https = require("https");
 const urlModule = require("url"); // Import url module to parse the url
 
+// `.jpeg` and `.jpg` name the same format, so both must compare equal
+const normalizeImageFormat = (format: string) =>
+  format.toLowerCase() === "jpeg" ? "jpg" : format.toLowerCase();
+
 async function downloadImage(url: string, filename: string, folder: string) {
   return new Promise<void>((resolve, reject) => {
     // Choose the right http library:
@@ -46,14 +50,11 @@ async function downloadImage(url: string, filename: string, folder: string) {
         imageFormat = imageFormat.split("+")[0];
       }
 
-      // Check for jpeg and change it to jpg if necessary
-      if (imageFormat === "jpeg") {
-        imageFormat = "jpg";
-      }
+      imageFormat = normalizeImageFormat(imageFormat);
 
-      // Check if filename already has an extension that matches the image format
-      const regex = new RegExp(`.${imageFormat}$`, "i");
-      const hasMatchingExtension = regex.test(filename);
+      // Check if the filename's extension matches the content-type header
+      const hasMatchingExtension =
+        normalizeImageFormat(path.extname(filename).slice(1)) === imageFormat;
 
       // Add appropriate extension to filename based on image format
       const formattedFilename = hasMatchingExtension
