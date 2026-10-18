@@ -9,13 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "^16.3.2",
-    "next-image-export-optimizer": "^1.21.0",
-    "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "next": "^16.4.1",
+    "next-image-export-optimizer": "^1.21.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
-    "eslint-config-next": "^16.3.2",
-    "express": "^5.2.1"
+    "eslint-config-next": "^16.4.1",
+    "express": "^5.3.0"
   }
 }
