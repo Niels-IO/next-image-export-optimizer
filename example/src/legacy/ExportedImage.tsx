@@ -46,7 +46,7 @@ const generateImageURL = (
 
   if (
     useWebp &&
-    ["JPG", "JPEG", "PNG", "GIF"].includes(extension.toUpperCase())
+    ["JPG", "JPEG", "PNG", "GIF", "AVIF"].includes(extension.toUpperCase())
   ) {
     processedExtension = "WEBP";
   }
